@@ -9,6 +9,12 @@ pub enum Failure {
     #[serde(alias = "invalid_color")]
     InvalidColor,
 
+    #[serde(alias = "invalid_fullmove")]
+    InvalidFullmove,
+
+    #[serde(alias = "invalid_halfmove")]
+    InvalidHalfmove,
+
     #[serde(alias = "invalid_piece")]
     InvalidPiece,
 
