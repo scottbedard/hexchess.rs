@@ -67,6 +67,6 @@ mod tests {
             Err(failure) => panic!("failure: {:?}", failure),
         };
         
-        assert_eq!(Some(Piece::BlackQueen), hexchess.board.e1);
+        assert_eq!(Some(Piece::BlackQueen), hexchess.board.e10);
     }
 }

@@ -596,11 +596,11 @@ impl Board {
             .chars()
             .enumerate()
             .for_each(|(index, p)| {
-                if !valid {
+                if !valid || p == '_' {
                     return
                 }
 
-                let piece = match Piece::from(p.to_string().as_str()) {
+                let piece = match Piece::from_char(p) {
                     Ok(piece) => piece,
                     Err(_) => {
                         valid = false;

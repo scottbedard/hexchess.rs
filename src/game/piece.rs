@@ -23,6 +23,7 @@ impl Color {
         }
     }
 }
+
 /// Colored piece types
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
 pub enum Piece {
@@ -98,6 +99,24 @@ impl Piece {
             _ => Err(InvalidPiece),
         }
     }
+
+    pub fn from_char(value: char) -> Result<Self, Failure> {
+        match value {
+            'P' => Ok(Piece::WhitePawn),
+            'N' => Ok(Piece::WhiteKnight),
+            'B' => Ok(Piece::WhiteBishop),
+            'R' => Ok(Piece::WhiteRook),
+            'Q' => Ok(Piece::WhiteQueen),
+            'K' => Ok(Piece::WhiteKing),
+            'p' => Ok(Piece::BlackPawn),
+            'n' => Ok(Piece::BlackKnight),
+            'b' => Ok(Piece::BlackBishop),
+            'r' => Ok(Piece::BlackRook),
+            'q' => Ok(Piece::BlackQueen),
+            'k' => Ok(Piece::BlackKing),
+            _ => Err(InvalidPiece),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -114,7 +133,7 @@ mod tests {
     }
 
     #[test]
-    fn test_create_piece_from_value() {
+    fn test_create_piece_from_str_value() {
         assert_eq!(Ok(Piece::WhitePawn), Piece::from("P"));
         assert_eq!(Ok(Piece::WhiteKnight), Piece::from("N"));
         assert_eq!(Ok(Piece::WhiteBishop), Piece::from("B"));
@@ -128,5 +147,22 @@ mod tests {
         assert_eq!(Ok(Piece::BlackQueen), Piece::from("q"));
         assert_eq!(Ok(Piece::BlackKing), Piece::from("k"));
         assert_eq!(Err(InvalidPiece), Piece::from("whoops"));
+    }
+
+    #[test]
+    fn test_create_piece_from_char_value() {
+        assert_eq!(Ok(Piece::WhitePawn), Piece::from_char('P'));
+        assert_eq!(Ok(Piece::WhiteKnight), Piece::from_char('N'));
+        assert_eq!(Ok(Piece::WhiteBishop), Piece::from_char('B'));
+        assert_eq!(Ok(Piece::WhiteRook), Piece::from_char('R'));
+        assert_eq!(Ok(Piece::WhiteQueen), Piece::from_char('Q'));
+        assert_eq!(Ok(Piece::WhiteKing), Piece::from_char('K'));
+        assert_eq!(Ok(Piece::BlackPawn), Piece::from_char('p'));
+        assert_eq!(Ok(Piece::BlackKnight), Piece::from_char('n'));
+        assert_eq!(Ok(Piece::BlackBishop), Piece::from_char('b'));
+        assert_eq!(Ok(Piece::BlackRook), Piece::from_char('r'));
+        assert_eq!(Ok(Piece::BlackQueen), Piece::from_char('q'));
+        assert_eq!(Ok(Piece::BlackKing), Piece::from_char('k'));
+        assert_eq!(Err(InvalidPiece), Piece::from_char('x'));
     }
 }
