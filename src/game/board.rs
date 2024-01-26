@@ -1,4 +1,4 @@
-use crate::game::constants::{INITIAL_BOARD, SORTED_POSITIONS};
+use crate::constants::{INITIAL_BOARD, SORTED_POSITIONS};
 use crate::game::failure::Failure;
 use crate::game::piece::{Color, Piece};
 use serde::{Deserialize, Serialize};
@@ -708,6 +708,10 @@ impl Board {
             false => Err(Failure::InvalidBoard),
         }
 
+    }
+
+    pub fn initial() -> Self {
+        Self::from(INITIAL_BOARD).unwrap()
     }
 }
 

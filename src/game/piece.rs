@@ -1,4 +1,4 @@
-use crate::game::constants;
+use crate::constants;
 use crate::game::failure::Failure::{InvalidColor, InvalidPiece};
 use serde::{Deserialize, Serialize};
 

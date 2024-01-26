@@ -1,5 +1,12 @@
-pub fn execute(fen: String) -> Result<String, &'static str> {
-    println!("Parse: fen {:?}", fen);
+use crate::game::hexchess::Hexchess;
 
-    Err("Not implemented")
+pub fn execute(fen: String) -> Result<String, String> {
+    let hexchess = match Hexchess::from(fen.as_str()) {
+        Ok(result) => result,
+        Err(failure) => return Err(failure.to_string()),
+    };
+
+    panic!("hexchess: {:?}", hexchess)
+
+//     Err("Not implemented")
 }

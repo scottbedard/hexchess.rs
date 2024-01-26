@@ -1,23 +1,25 @@
-use serde::{Deserialize, Serialize};
+use std::fmt::{Display, Formatter, Result};
 
 /// Known hexchess failure
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Failure {
-    #[serde(alias = "invalid_board")]
     InvalidBoard,
-
-    #[serde(alias = "invalid_color")]
     InvalidColor,
-
-    #[serde(alias = "invalid_fullmove")]
     InvalidFullmove,
-
-    #[serde(alias = "invalid_halfmove")]
     InvalidHalfmove,
-
-    #[serde(alias = "invalid_piece")]
     InvalidPiece,
-
-    #[serde(alias = "invalid_position")]
     InvalidPosition,
+}
+
+impl Display for Failure {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        match self {
+            Failure::InvalidBoard => write!(f, "invalid_board"),
+            Failure::InvalidColor => write!(f, "invalid_color"),
+            Failure::InvalidFullmove => write!(f, "invalid_fullmove"),
+            Failure::InvalidHalfmove => write!(f, "invalid_halfmove"),
+            Failure::InvalidPiece => write!(f, "invalid_piece"),
+            Failure::InvalidPosition => write!(f, "invalid_position"),
+        }
+    }
 }

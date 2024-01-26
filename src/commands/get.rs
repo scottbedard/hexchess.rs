@@ -1,5 +1,5 @@
-pub fn execute(fen: String, position: String) -> Result<String, &'static str> {
+pub fn execute(fen: String, position: String) -> Result<String, String> {
     println!("Get: fen {:?}, notation: {:?}", fen, position);
 
-    Err("Not implemented")
+    panic!("Not implemented")
 }

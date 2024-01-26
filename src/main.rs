@@ -2,6 +2,7 @@ use clap::{Parser, Subcommand};
 use exitcode::{DATAERR, OK};
 
 mod commands;
+mod constants;
 mod game;
 
 // https://github.com/scottbedard/hexchess/tree/f98a8e6e18fcd67f32c38adf086ba22094fcf6ef
@@ -33,7 +34,7 @@ enum Command {
         position: String,
     },
 
-    /// Parse game state
+    /// Parse game state to JSON
     Parse {
         /// Game start to parse
         fen: String,
@@ -55,7 +56,7 @@ fn main() {
             std::process::exit(OK);
         },
         Err(e) => {
-            eprintln!("Error: {}", e);
+            eprintln!("error: {}", e);
             std::process::exit(DATAERR);
         } 
     }

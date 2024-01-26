@@ -1,5 +1,5 @@
-pub fn execute(fen: String, notation: String) -> Result<String, &'static str> {
+pub fn execute(fen: String, notation: String) -> Result<String, String> {
     println!("Apply: fen {:?}, notation: {:?}", fen, notation);
 
-    Err("Not implemented")
+    panic!("Not implemented")
 }
