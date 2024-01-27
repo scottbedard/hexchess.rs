@@ -1,6 +1,7 @@
 use crate::constants;
 use crate::game::failure::Failure::{InvalidColor, InvalidPiece};
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
 use super::failure::Failure;
 
@@ -119,6 +120,25 @@ impl Piece {
     }
 }
 
+impl fmt::Display for Piece {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Piece::WhitePawn => write!(f, "P"),
+            Piece::WhiteKnight => write!(f, "N"),
+            Piece::WhiteBishop => write!(f, "B"),
+            Piece::WhiteRook => write!(f, "R"),
+            Piece::WhiteQueen => write!(f, "Q"),
+            Piece::WhiteKing => write!(f, "K"),
+            Piece::BlackPawn => write!(f, "p"),
+            Piece::BlackKnight => write!(f, "n"),
+            Piece::BlackBishop => write!(f, "b"),
+            Piece::BlackRook => write!(f, "r"),
+            Piece::BlackQueen => write!(f, "q"),
+            Piece::BlackKing => write!(f, "k"),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -164,5 +184,21 @@ mod tests {
         assert_eq!(Ok(Piece::BlackQueen), Piece::from_char('q'));
         assert_eq!(Ok(Piece::BlackKing), Piece::from_char('k'));
         assert_eq!(Err(InvalidPiece), Piece::from_char('x'));
+    }
+
+    #[test]
+    fn test_convert_piece_to_string() {
+        assert_eq!("P", Piece::WhitePawn.to_string());
+        assert_eq!("N", Piece::WhiteKnight.to_string());
+        assert_eq!("B", Piece::WhiteBishop.to_string());
+        assert_eq!("R", Piece::WhiteRook.to_string());
+        assert_eq!("Q", Piece::WhiteQueen.to_string());
+        assert_eq!("K", Piece::WhiteKing.to_string());
+        assert_eq!("p", Piece::BlackPawn.to_string());
+        assert_eq!("n", Piece::BlackKnight.to_string());
+        assert_eq!("b", Piece::BlackBishop.to_string());
+        assert_eq!("r", Piece::BlackRook.to_string());
+        assert_eq!("q", Piece::BlackQueen.to_string());
+        assert_eq!("k", Piece::BlackKing.to_string());
     }
 }
