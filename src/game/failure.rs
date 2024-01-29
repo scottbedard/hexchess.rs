@@ -7,8 +7,10 @@ pub enum Failure {
     InvalidColor,
     InvalidFullmove,
     InvalidHalfmove,
+    InvalidNotation,
     InvalidPiece,
     InvalidPosition,
+    InvalidPromotion,
 }
 
 impl Display for Failure {
@@ -18,8 +20,10 @@ impl Display for Failure {
             Failure::InvalidColor => write!(f, "invalid_color"),
             Failure::InvalidFullmove => write!(f, "invalid_fullmove"),
             Failure::InvalidHalfmove => write!(f, "invalid_halfmove"),
+            Failure::InvalidNotation => write!(f, "invalid_notation"),
             Failure::InvalidPiece => write!(f, "invalid_piece"),
             Failure::InvalidPosition => write!(f, "invalid_position"),
+            Failure::InvalidPromotion => write!(f, "invalid_promotion"),
         }
     }
 }

@@ -1,5 +1,5 @@
 use crate::constants;
-use crate::game::failure::Failure::{InvalidColor, InvalidPiece};
+use crate::game::failure::Failure::{InvalidColor, InvalidPiece, InvalidPromotion};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -139,6 +139,34 @@ impl fmt::Display for Piece {
     }
 }
 
+/// Generic piece type
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+pub enum PromotionPiece {
+    #[serde(rename(deserialize = "n", serialize = "n"))]
+    Knight,
+
+    #[serde(rename(deserialize = "b", serialize = "b"))]
+    Bishop,
+
+    #[serde(rename(deserialize = "r", serialize = "r"))]
+    Rook,
+
+    #[serde(rename(deserialize = "q", serialize = "q"))]
+    Queen,
+}
+
+impl PromotionPiece {
+    pub fn from(value: &str) -> Result<Self, Failure> {
+        match value {
+            "n" => Ok(PromotionPiece::Knight),
+            "b" => Ok(PromotionPiece::Bishop),
+            "r" => Ok(PromotionPiece::Rook),
+            "q" => Ok(PromotionPiece::Queen),
+            _ => Err(InvalidPromotion),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -200,5 +228,14 @@ mod tests {
         assert_eq!("r", Piece::BlackRook.to_string());
         assert_eq!("q", Piece::BlackQueen.to_string());
         assert_eq!("k", Piece::BlackKing.to_string());
+    }
+
+    #[test]
+    fn test_get_promotion_piece() {
+        assert_eq!(Ok(PromotionPiece::Knight), PromotionPiece::from("n"));
+        assert_eq!(Ok(PromotionPiece::Bishop), PromotionPiece::from("b"));
+        assert_eq!(Ok(PromotionPiece::Rook), PromotionPiece::from("r"));
+        assert_eq!(Ok(PromotionPiece::Queen), PromotionPiece::from("q"));
+        assert_eq!(Err(InvalidPromotion), PromotionPiece::from("whoops"));
     }
 }
