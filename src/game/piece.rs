@@ -167,6 +167,17 @@ impl PromotionPiece {
     }
 }
 
+impl fmt::Display for PromotionPiece {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            PromotionPiece::Knight => write!(f, "n"),
+            PromotionPiece::Bishop => write!(f, "b"),
+            PromotionPiece::Rook => write!(f, "r"),
+            PromotionPiece::Queen => write!(f, "q"),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

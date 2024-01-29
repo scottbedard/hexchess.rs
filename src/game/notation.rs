@@ -1,8 +1,9 @@
-use crate::game::board::{Position, is_promotion_position};
+use crate::game::board::Position;
 use crate::game::failure::Failure;
 use crate::game::piece::PromotionPiece;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use std::fmt;
 use tsify::Tsify;
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
@@ -87,6 +88,15 @@ impl Notation {
     }
 }
 
+impl fmt::Display for Notation {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self.promotion {
+            Some(value) => write!(f, "{}{}{}", self.from, self.to, value),
+            None => write!(f, "{}{}", self.from, self.to),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -137,5 +147,11 @@ mod tests {
     #[test]
     fn test_parse_notation_with_identical_from_and_to() {
         assert_eq!(Err(Failure::InvalidNotation), Notation::from("a1a1"));
+    }
+
+    #[test]
+    fn test_stringify_notation() {
+        assert_eq!("a1a2", Notation::from("a1a2").unwrap().to_string());
+        assert_eq!("f10f11b", Notation::from("f10f11b").unwrap().to_string());
     }
 }
