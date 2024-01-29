@@ -8,10 +8,10 @@ use super::failure::Failure;
 /// Piece color
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
 pub enum Color {
-    #[serde(rename(deserialize = "W", serialize = "W"))]
+    #[serde(rename(deserialize = "w", serialize = "w"))]
     White,
 
-    #[serde(rename(deserialize = "B", serialize = "B"))]
+    #[serde(rename(deserialize = "b", serialize = "b"))]
     Black,
 }
 

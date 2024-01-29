@@ -25,12 +25,12 @@ enum Command {
         notation: String,
     },
 
-    /// Get all moves from a position
+    /// Get piece value at position
     Get {
-        /// Hexchess game state
+        /// Game state
         fen: String,
 
-        /// Position to get moves from
+        /// Position to get value of
         position: String,
     },
 

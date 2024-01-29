@@ -710,6 +710,102 @@ impl Board {
 
     }
 
+    pub fn get(&self, position: Position) -> Option<Piece> {
+        match position {
+            Position::A1 => self.a1,
+            Position::A2 => self.a2,
+            Position::A3 => self.a3,
+            Position::A4 => self.a4,
+            Position::A5 => self.a5,
+            Position::A6 => self.a6,
+            Position::B1 => self.b1,
+            Position::B2 => self.b2,
+            Position::B3 => self.b3,
+            Position::B4 => self.b4,
+            Position::B5 => self.b5,
+            Position::B6 => self.b6,
+            Position::B7 => self.b7,
+            Position::C1 => self.c1,
+            Position::C2 => self.c2,
+            Position::C3 => self.c3,
+            Position::C4 => self.c4,
+            Position::C5 => self.c5,
+            Position::C6 => self.c6,
+            Position::C7 => self.c7,
+            Position::C8 => self.c8,
+            Position::D1 => self.d1,
+            Position::D2 => self.d2,
+            Position::D3 => self.d3,
+            Position::D4 => self.d4,
+            Position::D5 => self.d5,
+            Position::D6 => self.d6,
+            Position::D7 => self.d7,
+            Position::D8 => self.d8,
+            Position::D9 => self.d9,
+            Position::E1 => self.e1,
+            Position::E2 => self.e2,
+            Position::E3 => self.e3,
+            Position::E4 => self.e4,
+            Position::E5 => self.e5,
+            Position::E6 => self.e6,
+            Position::E7 => self.e7,
+            Position::E8 => self.e8,
+            Position::E9 => self.e9,
+            Position::E10 => self.e10,
+            Position::F1 => self.f1,
+            Position::F2 => self.f2,
+            Position::F3 => self.f3,
+            Position::F4 => self.f4,
+            Position::F5 => self.f5,
+            Position::F6 => self.f6,
+            Position::F7 => self.f7,
+            Position::F8 => self.f8,
+            Position::F9 => self.f9,
+            Position::F10 => self.f10,
+            Position::F11 => self.f11,
+            Position::G1 => self.g1,
+            Position::G2 => self.g2,
+            Position::G3 => self.g3,
+            Position::G4 => self.g4,
+            Position::G5 => self.g5,
+            Position::G6 => self.g6,
+            Position::G7 => self.g7,
+            Position::G8 => self.g8,
+            Position::G9 => self.g9,
+            Position::G10 => self.g10,
+            Position::H1 => self.h1,
+            Position::H2 => self.h2,
+            Position::H3 => self.h3,
+            Position::H4 => self.h4,
+            Position::H5 => self.h5,
+            Position::H6 => self.h6,
+            Position::H7 => self.h7,
+            Position::H8 => self.h8,
+            Position::H9 => self.h9,
+            Position::I1 => self.i1,
+            Position::I2 => self.i2,
+            Position::I3 => self.i3,
+            Position::I4 => self.i4,
+            Position::I5 => self.i5,
+            Position::I6 => self.i6,
+            Position::I7 => self.i7,
+            Position::I8 => self.i8,
+            Position::K1 => self.k1,
+            Position::K2 => self.k2,
+            Position::K3 => self.k3,
+            Position::K4 => self.k4,
+            Position::K5 => self.k5,
+            Position::K6 => self.k6,
+            Position::K7 => self.k7,
+            Position::L1 => self.l1,
+            Position::L2 => self.l2,
+            Position::L3 => self.l3,
+            Position::L4 => self.l4,
+            Position::L5 => self.l5,
+            Position::L6 => self.l6,
+        }
+    }
+
     pub fn initial() -> Self {
         Self::from(INITIAL_BOARD).unwrap()
     }
@@ -2011,11 +2107,31 @@ pub fn get_step(position: Position, direction: u8) -> Option<Position> {
 pub fn is_promotion_position(color: Color, position: Position) -> bool {
     match color {
         Color::White => match position {
-            Position::A6 | Position::B7 | Position::C8 | Position::D9 | Position::E10 | Position::F11 | Position::G10 | Position::H9 | Position::I8 | Position::K7 | Position::L6 => true,
+            Position::A6 |
+            Position::B7 |
+            Position::C8 |
+            Position::D9 |
+            Position::E10 |
+            Position::F11 |
+            Position::G10 |
+            Position::H9 |
+            Position::I8 |
+            Position::K7 |
+            Position::L6 => true,
             _ => false,
         },
         Color::Black => match position {
-            Position::A1 | Position::B1 | Position::C1 | Position::D1 | Position::E1 | Position::F1 | Position::G1 | Position::H1 | Position::I1 | Position::K1 | Position::L1 => true,
+            Position::A1
+            | Position::B1
+            | Position::C1
+            | Position::D1
+            | Position::E1
+            | Position::F1
+            | Position::G1
+            | Position::H1
+            | Position::I1
+            | Position::K1
+            | Position::L1 => true,
             _ => false,
         },
     }
@@ -2058,98 +2174,106 @@ mod tests {
 
     #[test]
     fn test_create_board_from_value() {
-        let board = Board::from(INITIAL_BOARD);
+        let board = Board::from(INITIAL_BOARD).unwrap();
 
-        assert_eq!(board.unwrap().a1, None);
-        assert_eq!(board.unwrap().a2, None);
-        assert_eq!(board.unwrap().a3, None);
-        assert_eq!(board.unwrap().a4, None);
-        assert_eq!(board.unwrap().a5, None);
-        assert_eq!(board.unwrap().a6, None);
-        assert_eq!(board.unwrap().b1, Some(Piece::WhitePawn));
-        assert_eq!(board.unwrap().b2, None);
-        assert_eq!(board.unwrap().b3, None);
-        assert_eq!(board.unwrap().b4, None);
-        assert_eq!(board.unwrap().b5, None);
-        assert_eq!(board.unwrap().b6, None);
-        assert_eq!(board.unwrap().b7, Some(Piece::BlackPawn));
-        assert_eq!(board.unwrap().c1, Some(Piece::WhiteRook));
-        assert_eq!(board.unwrap().c2, Some(Piece::WhitePawn));
-        assert_eq!(board.unwrap().c3, None);
-        assert_eq!(board.unwrap().c4, None);
-        assert_eq!(board.unwrap().c5, None);
-        assert_eq!(board.unwrap().c6, None);
-        assert_eq!(board.unwrap().c7, Some(Piece::BlackPawn));
-        assert_eq!(board.unwrap().c8, Some(Piece::BlackRook));
-        assert_eq!(board.unwrap().d1, Some(Piece::WhiteKnight));
-        assert_eq!(board.unwrap().d2, None);
-        assert_eq!(board.unwrap().d3, Some(Piece::WhitePawn));
-        assert_eq!(board.unwrap().d4, None);
-        assert_eq!(board.unwrap().d5, None);
-        assert_eq!(board.unwrap().d6, None);
-        assert_eq!(board.unwrap().d7, Some(Piece::BlackPawn));
-        assert_eq!(board.unwrap().d8, None);
-        assert_eq!(board.unwrap().d9, Some(Piece::BlackKnight));
-        assert_eq!(board.unwrap().e1, Some(Piece::WhiteQueen));
-        assert_eq!(board.unwrap().e2, None);
-        assert_eq!(board.unwrap().e3, None);
-        assert_eq!(board.unwrap().e4, Some(Piece::WhitePawn));
-        assert_eq!(board.unwrap().e5, None);
-        assert_eq!(board.unwrap().e6, None);
-        assert_eq!(board.unwrap().e7, Some(Piece::BlackPawn));
-        assert_eq!(board.unwrap().e8, None);
-        assert_eq!(board.unwrap().e9, None);
-        assert_eq!(board.unwrap().e10, Some(Piece::BlackQueen));
-        assert_eq!(board.unwrap().f1, Some(Piece::WhiteBishop));
-        assert_eq!(board.unwrap().f2, Some(Piece::WhiteBishop));
-        assert_eq!(board.unwrap().f3, Some(Piece::WhiteBishop));
-        assert_eq!(board.unwrap().f4, None);
-        assert_eq!(board.unwrap().f5, Some(Piece::WhitePawn));
-        assert_eq!(board.unwrap().f6, None);
-        assert_eq!(board.unwrap().f7, Some(Piece::BlackPawn));
-        assert_eq!(board.unwrap().f8, None);
-        assert_eq!(board.unwrap().f9, Some(Piece::BlackBishop));
-        assert_eq!(board.unwrap().f10, Some(Piece::BlackBishop));
-        assert_eq!(board.unwrap().f11, Some(Piece::BlackBishop));
-        assert_eq!(board.unwrap().g1, Some(Piece::WhiteKing));
-        assert_eq!(board.unwrap().g2, None);
-        assert_eq!(board.unwrap().g3, None);
-        assert_eq!(board.unwrap().g4, Some(Piece::WhitePawn));
-        assert_eq!(board.unwrap().g5, None);
-        assert_eq!(board.unwrap().g6, None);
-        assert_eq!(board.unwrap().g7, Some(Piece::BlackPawn));
-        assert_eq!(board.unwrap().g8, None);
-        assert_eq!(board.unwrap().g9, None);
-        assert_eq!(board.unwrap().g10, Some(Piece::BlackKing));
-        assert_eq!(board.unwrap().h1, Some(Piece::WhiteKnight));
-        assert_eq!(board.unwrap().h2, None);
-        assert_eq!(board.unwrap().h3, Some(Piece::WhitePawn));
-        assert_eq!(board.unwrap().h4, None);
-        assert_eq!(board.unwrap().h5, None);
-        assert_eq!(board.unwrap().h6, None);
-        assert_eq!(board.unwrap().h7, Some(Piece::BlackPawn));
-        assert_eq!(board.unwrap().h8, None);
-        assert_eq!(board.unwrap().h9, Some(Piece::BlackKnight));
-        assert_eq!(board.unwrap().i1, Some(Piece::WhiteRook));
-        assert_eq!(board.unwrap().i2, Some(Piece::WhitePawn));
-        assert_eq!(board.unwrap().i3, None);
-        assert_eq!(board.unwrap().i4, None);
-        assert_eq!(board.unwrap().i5, None);
-        assert_eq!(board.unwrap().i6, None);
-        assert_eq!(board.unwrap().i7, Some(Piece::BlackPawn));
-        assert_eq!(board.unwrap().i8, Some(Piece::BlackRook));
-        assert_eq!(board.unwrap().k1, Some(Piece::WhitePawn));
-        assert_eq!(board.unwrap().k2, None);
-        assert_eq!(board.unwrap().k3, None);
-        assert_eq!(board.unwrap().k4, None);
-        assert_eq!(board.unwrap().k5, None);
-        assert_eq!(board.unwrap().k6, None);
-        assert_eq!(board.unwrap().k7, Some(Piece::BlackPawn));
-        assert_eq!(board.unwrap().l1, None);
-        assert_eq!(board.unwrap().l2, None);
-        assert_eq!(board.unwrap().l3, None);
-        assert_eq!(board.unwrap().l4, None);
-        assert_eq!(board.unwrap().l5, None);
-        assert_eq!(board.unwrap().l6, None);
+        assert_eq!(board.a1, None);
+        assert_eq!(board.a2, None);
+        assert_eq!(board.a3, None);
+        assert_eq!(board.a4, None);
+        assert_eq!(board.a5, None);
+        assert_eq!(board.a6, None);
+        assert_eq!(board.b1, Some(Piece::WhitePawn));
+        assert_eq!(board.b2, None);
+        assert_eq!(board.b3, None);
+        assert_eq!(board.b4, None);
+        assert_eq!(board.b5, None);
+        assert_eq!(board.b6, None);
+        assert_eq!(board.b7, Some(Piece::BlackPawn));
+        assert_eq!(board.c1, Some(Piece::WhiteRook));
+        assert_eq!(board.c2, Some(Piece::WhitePawn));
+        assert_eq!(board.c3, None);
+        assert_eq!(board.c4, None);
+        assert_eq!(board.c5, None);
+        assert_eq!(board.c6, None);
+        assert_eq!(board.c7, Some(Piece::BlackPawn));
+        assert_eq!(board.c8, Some(Piece::BlackRook));
+        assert_eq!(board.d1, Some(Piece::WhiteKnight));
+        assert_eq!(board.d2, None);
+        assert_eq!(board.d3, Some(Piece::WhitePawn));
+        assert_eq!(board.d4, None);
+        assert_eq!(board.d5, None);
+        assert_eq!(board.d6, None);
+        assert_eq!(board.d7, Some(Piece::BlackPawn));
+        assert_eq!(board.d8, None);
+        assert_eq!(board.d9, Some(Piece::BlackKnight));
+        assert_eq!(board.e1, Some(Piece::WhiteQueen));
+        assert_eq!(board.e2, None);
+        assert_eq!(board.e3, None);
+        assert_eq!(board.e4, Some(Piece::WhitePawn));
+        assert_eq!(board.e5, None);
+        assert_eq!(board.e6, None);
+        assert_eq!(board.e7, Some(Piece::BlackPawn));
+        assert_eq!(board.e8, None);
+        assert_eq!(board.e9, None);
+        assert_eq!(board.e10, Some(Piece::BlackQueen));
+        assert_eq!(board.f1, Some(Piece::WhiteBishop));
+        assert_eq!(board.f2, Some(Piece::WhiteBishop));
+        assert_eq!(board.f3, Some(Piece::WhiteBishop));
+        assert_eq!(board.f4, None);
+        assert_eq!(board.f5, Some(Piece::WhitePawn));
+        assert_eq!(board.f6, None);
+        assert_eq!(board.f7, Some(Piece::BlackPawn));
+        assert_eq!(board.f8, None);
+        assert_eq!(board.f9, Some(Piece::BlackBishop));
+        assert_eq!(board.f10, Some(Piece::BlackBishop));
+        assert_eq!(board.f11, Some(Piece::BlackBishop));
+        assert_eq!(board.g1, Some(Piece::WhiteKing));
+        assert_eq!(board.g2, None);
+        assert_eq!(board.g3, None);
+        assert_eq!(board.g4, Some(Piece::WhitePawn));
+        assert_eq!(board.g5, None);
+        assert_eq!(board.g6, None);
+        assert_eq!(board.g7, Some(Piece::BlackPawn));
+        assert_eq!(board.g8, None);
+        assert_eq!(board.g9, None);
+        assert_eq!(board.g10, Some(Piece::BlackKing));
+        assert_eq!(board.h1, Some(Piece::WhiteKnight));
+        assert_eq!(board.h2, None);
+        assert_eq!(board.h3, Some(Piece::WhitePawn));
+        assert_eq!(board.h4, None);
+        assert_eq!(board.h5, None);
+        assert_eq!(board.h6, None);
+        assert_eq!(board.h7, Some(Piece::BlackPawn));
+        assert_eq!(board.h8, None);
+        assert_eq!(board.h9, Some(Piece::BlackKnight));
+        assert_eq!(board.i1, Some(Piece::WhiteRook));
+        assert_eq!(board.i2, Some(Piece::WhitePawn));
+        assert_eq!(board.i3, None);
+        assert_eq!(board.i4, None);
+        assert_eq!(board.i5, None);
+        assert_eq!(board.i6, None);
+        assert_eq!(board.i7, Some(Piece::BlackPawn));
+        assert_eq!(board.i8, Some(Piece::BlackRook));
+        assert_eq!(board.k1, Some(Piece::WhitePawn));
+        assert_eq!(board.k2, None);
+        assert_eq!(board.k3, None);
+        assert_eq!(board.k4, None);
+        assert_eq!(board.k5, None);
+        assert_eq!(board.k6, None);
+        assert_eq!(board.k7, Some(Piece::BlackPawn));
+        assert_eq!(board.l1, None);
+        assert_eq!(board.l2, None);
+        assert_eq!(board.l3, None);
+        assert_eq!(board.l4, None);
+        assert_eq!(board.l5, None);
+        assert_eq!(board.l6, None);
+    }
+
+    #[test]
+    fn test_get_value_of_board_at_position() {
+        let board = Board::from(INITIAL_BOARD).unwrap();
+
+        assert_eq!(board.get(Position::A1), None);
+        assert_eq!(board.get(Position::E10), Some(Piece::BlackQueen));
     }
 }
