@@ -1,21 +1,21 @@
 use crate::game::board::{Position, get_step};
 use crate::game::hexchess::Hexchess;
 use crate::game::notation::Notation;
-use crate::game::piece::{Color, Piece};
+use crate::game::piece::{Color, Piece, PromotionPiece};
 
 pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Notation> {
-    let mut targets: Vec<Notation> = vec![];
+    let mut raw_targets: Vec<Notation> = vec![];
 
     // advance forward one position
     match advance_one(hexchess, position, color) {
         None => (),
         Some(notation) => {
-            targets.push(notation);
+            raw_targets.push(notation);
 
             // advance forward another position if possible
             if is_starting_position(position, color) {
                 match advance_two(hexchess, position, notation.to, color) {
-                    Some(notation) => targets.push(notation),
+                    Some(notation) => raw_targets.push(notation),
                     None => (),
                 }
             }
@@ -25,20 +25,50 @@ pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Nota
     // capture portside (left facing forward)
     match capture_portside(hexchess, position, color) {
         None => (),
-        Some(notation) => targets.push(notation),
+        Some(notation) => raw_targets.push(notation),
     };
 
     // capture starboard (right facing forward)
     match capture_starboard(hexchess, position, color) {
         None => (),
-        Some(notation) => targets.push(notation),
+        Some(notation) => raw_targets.push(notation),
     };
 
     // capture en_passant
     match capture_en_passant(hexchess, position, color) {
         None => (),
-        Some(notation) => targets.push(notation),
+        Some(notation) => raw_targets.push(notation),
     };
+
+    // expand promotion moves
+    let mut targets: Vec<Notation> = vec![];
+
+    for notation in raw_targets {
+        if is_promotion_position(color, notation.to) {
+            targets.push(Notation {
+                from: notation.from,
+                to: notation.to,
+                promotion: Some(PromotionPiece::Queen),
+            });
+            targets.push(Notation {
+                from: notation.from,
+                to: notation.to,
+                promotion: Some(PromotionPiece::Knight),
+            });
+            targets.push(Notation {
+                from: notation.from,
+                to: notation.to,
+                promotion: Some(PromotionPiece::Rook),
+            });
+            targets.push(Notation {
+                from: notation.from,
+                to: notation.to,
+                promotion: Some(PromotionPiece::Bishop),
+            });
+        } else {
+            targets.push(notation);
+        }
+    }
 
     targets
 }
@@ -196,8 +226,7 @@ fn capture_portside(hexchess: &Hexchess, position: Position, color: Color) -> Op
     }
 }
 
-/// test if a pawn position is eligible for promotion
-pub fn is_promotion_position(color: Color, position: Position) -> bool {
+fn is_promotion_position(color: Color, position: Position) -> bool {
     match color {
         Color::White => match position {
             Position::A6 |
@@ -214,17 +243,17 @@ pub fn is_promotion_position(color: Color, position: Position) -> bool {
             _ => false,
         },
         Color::Black => match position {
-            Position::A1
-            | Position::B1
-            | Position::C1
-            | Position::D1
-            | Position::E1
-            | Position::F1
-            | Position::G1
-            | Position::H1
-            | Position::I1
-            | Position::K1
-            | Position::L1 => true,
+            Position::A1 |
+            Position::B1 |
+            Position::C1 |
+            Position::D1 |
+            Position::E1 |
+            Position::F1 |
+            Position::G1 |
+            Position::H1 |
+            Position::I1 |
+            Position::K1 |
+            Position::L1 => true,
             _ => false,
         },
     }
@@ -233,11 +262,27 @@ pub fn is_promotion_position(color: Color, position: Position) -> bool {
 fn is_starting_position(position: Position, color: Color) -> bool {
     match color {
         Color::Black => match position {
-            Position::B7 | Position::C7 | Position::D7 | Position::E7 | Position::F7 | Position::G7 | Position::H7 | Position::I7 | Position::K7 => true,
+            Position::B7 |
+            Position::C7 |
+            Position::D7 |
+            Position::E7 |
+            Position::F7 |
+            Position::G7 |
+            Position::H7 |
+            Position::I7 |
+            Position::K7 => true,
             _ => false,
         },
         Color::White => match position {
-            Position::B1 | Position::C2 | Position::D3 | Position::E4 | Position::F5 | Position::G4 | Position::H3 | Position::I2 | Position::K1 => true,
+            Position::B1 |
+            Position::C2 |
+            Position::D3 |
+            Position::E4 |
+            Position::F5 |
+            Position::G4 |
+            Position::H3 |
+            Position::I2 |
+            Position::K1 => true,
             _ => false,
         },
     }
@@ -466,71 +511,19 @@ mod tests {
         assert_eq!(false, is_promotion_position(Color::White, Position::A1));
     }
 
-    // it('promote to queen', () => {
-    //   const game = new Hexchess
+    #[test]
+    fn test_pawn_promotion() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::F10, Some(Piece::WhitePawn));
 
-    //   game.board.f10 = Pieces.WhitePawn
+        let targets = hexchess.targets(Position::F10);
 
-    //   expect(game.getTargets('f10').map(String)).toContainEqual('f10f11q')
+        assert_eq!(targets.len(), 4);
+        assert_eq!(targets[0].to_string(), "f10f11q");
+        assert_eq!(targets[1].to_string(), "f10f11n");
+        assert_eq!(targets[2].to_string(), "f10f11r");
+        assert_eq!(targets[3].to_string(), "f10f11b");
 
-    //   game.applyNotation(['f10f11q'])
-
-    //   expect(game.board.f11).toBe(Pieces.WhiteQueen)
-    // })
-
-    // it('promote to knight', () => {
-    //   const game = new Hexchess
-
-    //   game.board.f10 = Pieces.WhitePawn
-
-    //   expect(game.getTargets('f10').map(String)).toContainEqual('f10f11n')
-
-    //   game.applyNotation(['f10f11n'])
-
-    //   expect(game.board.f11).toBe(Pieces.WhiteKnight)
-    // })
-
-    // it('promote to rook', () => {
-    //   const game = new Hexchess
-
-    //   game.board.f10 = Pieces.WhitePawn
-
-    //   expect(game.getTargets('f10').map(String)).toContainEqual('f10f11r')
-
-    //   game.applyNotation(['f10f11r'])
-
-    //   expect(game.board.f11).toBe(Pieces.WhiteRook)
-    // })
-    
-    // it('promote to bishop', () => {
-    //   const game = new Hexchess
-
-    //   game.board.f10 = Pieces.WhitePawn
-
-    //   expect(game.getTargets('f10').map(String)).toContainEqual('f10f11b')
-
-    //   game.applyNotation(['f10f11b'])
-
-    //   expect(game.board.f11).toBe(Pieces.WhiteBishop)
-    // })
-
-    // it('promote pawn fails', () => {
-    //   const game = new Hexchess
-
-    //   game.board.f10 = Pieces.WhitePawn
-
-    //   expect(game.getTargets('f10').map(String)).not.toContainEqual('f10f11p')
-
-    //   expect(() => game.applyNotation(['f10f11p'])).toThrow()
-    // })
-
-    // it('promote king fails', () => {
-    //   const game = new Hexchess
-
-    //   game.board.f10 = Pieces.WhitePawn
-
-    //   expect(game.getTargets('f10').map(String)).not.toContainEqual('f10f11k')
-
-    //   expect(() => game.applyNotation(['f10f11k'])).toThrow()
-    // })
+        // @todo: test piece change on move
+    }
 }
