@@ -22,20 +22,24 @@ pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Nota
         },
     };
 
-    // capture portside (left facing forward)
-    match capture_portside(hexchess, position, color) {
+    // capture portside and starboard
+    let (portside_direction, starboard_direction) = match color {
+        Color::Black => (4, 8),
+        Color::White => (10, 2),
+    };
+
+    match capture(hexchess, position, color, portside_direction) {
         None => (),
         Some(notation) => raw_targets.push(notation),
     };
 
-    // capture starboard (right facing forward)
-    match capture_starboard(hexchess, position, color) {
+    match capture(hexchess, position, color, starboard_direction) {
         None => (),
         Some(notation) => raw_targets.push(notation),
     };
 
     // capture en_passant
-    match capture_en_passant(hexchess, position, color) {
+    match capture_en_passant(hexchess, position, color, portside_direction, starboard_direction) {
         None => (),
         Some(notation) => raw_targets.push(notation),
     };
@@ -115,7 +119,26 @@ fn advance_two(hexchess: &Hexchess, original_position: Position, to_position: Po
     }
 }
 
-fn capture_en_passant(hexchess: &Hexchess, position: Position, color: Color) -> Option<Notation> {
+fn capture(hexchess: &Hexchess, position: Position, color: Color, direction: u8) -> Option<Notation> {
+    let starboard_position = match get_step(position, direction) {
+        Some(position) => position,
+        None => return None,
+    };
+
+    match hexchess.board.get(starboard_position) {
+        Some(piece) => match piece.color() == color {
+            true => None,
+            false => Some(Notation {
+                from: position,
+                to: starboard_position,
+                promotion: None,
+            }),
+        },
+        None => None,
+    }
+}
+
+fn capture_en_passant(hexchess: &Hexchess, position: Position, color: Color, portside_direction: u8, starboard_direction: u8) -> Option<Notation> {
     let en_passant_position = match hexchess.en_passant {
         Some(en_passant) => en_passant,
         None => return None,
@@ -138,16 +161,6 @@ fn capture_en_passant(hexchess: &Hexchess, position: Position, color: Color) -> 
     if en_passant_piece != enemy_pawn {
         return None
     }
-
-    let portside_direction = match color {
-        Color::Black => 4,
-        Color::White => 10,
-    };
-
-    let starboard_direction = match color {
-        Color::Black => 8,
-        Color::White => 2,
-    };
 
     match get_step(position, starboard_direction) {
         Some(starboard_position) => {
@@ -176,54 +189,6 @@ fn capture_en_passant(hexchess: &Hexchess, position: Position, color: Color) -> 
     };
 
     None
-}
-
-fn capture_starboard(hexchess: &Hexchess, position: Position, color: Color) -> Option<Notation> {
-    let starboard_direction = match color {
-        Color::Black => 8,
-        Color::White => 2,
-    };
-
-    let starboard_position = match get_step(position, starboard_direction) {
-        Some(position) => position,
-        None => return None,
-    };
-
-    match hexchess.board.get(starboard_position) {
-        Some(piece) => match piece.color() == color {
-            true => None,
-            false => Some(Notation {
-                from: position,
-                to: starboard_position,
-                promotion: None,
-            }),
-        },
-        None => None,
-    }
-}
-
-fn capture_portside(hexchess: &Hexchess, position: Position, color: Color) -> Option<Notation> {
-    let portside_direction = match color {
-        Color::Black => 4,
-        Color::White => 10,
-    };
-
-    let portside_position = match get_step(position, portside_direction) {
-        Some(position) => position,
-        None => return None,
-    };
-
-    match hexchess.board.get(portside_position) {
-        Some(piece) => match piece.color() == color {
-            true => None,
-            false => Some(Notation {
-                from: position,
-                to: portside_position,
-                promotion: None,
-            }),
-        },
-        None => None,
-    }
 }
 
 fn is_promotion_position(color: Color, position: Position) -> bool {
