@@ -2336,40 +2336,6 @@ pub fn get_step(position: Position, direction: u8) -> Option<Position> {
     }
 }
 
-/// test if a pawn position is eligible for promotion
-pub fn is_promotion_position(color: Color, position: Position) -> bool {
-    match color {
-        Color::White => match position {
-            Position::A6 |
-            Position::B7 |
-            Position::C8 |
-            Position::D9 |
-            Position::E10 |
-            Position::F11 |
-            Position::G10 |
-            Position::H9 |
-            Position::I8 |
-            Position::K7 |
-            Position::L6 => true,
-            _ => false,
-        },
-        Color::Black => match position {
-            Position::A1
-            | Position::B1
-            | Position::C1
-            | Position::D1
-            | Position::E1
-            | Position::F1
-            | Position::G1
-            | Position::H1
-            | Position::I1
-            | Position::K1
-            | Position::L1 => true,
-            _ => false,
-        },
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -2388,15 +2354,6 @@ mod tests {
         assert_eq!(Some(Position::D5), get_step(Position::F6, 9));
         assert_eq!(Some(Position::E6), get_step(Position::F6, 10));
         assert_eq!(Some(Position::E7), get_step(Position::F6, 11));
-    }
-
-    #[test]
-    fn test_is_promotion_position() {
-        assert_eq!(true, is_promotion_position(Color::White, Position::B7));
-        assert_eq!(false, is_promotion_position(Color::Black, Position::B7));
-
-        assert_eq!(true, is_promotion_position(Color::Black, Position::A1));
-        assert_eq!(false, is_promotion_position(Color::White, Position::A1));
     }
 
     #[test]

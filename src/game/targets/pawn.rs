@@ -196,6 +196,40 @@ fn capture_portside(hexchess: &Hexchess, position: Position, color: Color) -> Op
     }
 }
 
+/// test if a pawn position is eligible for promotion
+pub fn is_promotion_position(color: Color, position: Position) -> bool {
+    match color {
+        Color::White => match position {
+            Position::A6 |
+            Position::B7 |
+            Position::C8 |
+            Position::D9 |
+            Position::E10 |
+            Position::F11 |
+            Position::G10 |
+            Position::H9 |
+            Position::I8 |
+            Position::K7 |
+            Position::L6 => true,
+            _ => false,
+        },
+        Color::Black => match position {
+            Position::A1
+            | Position::B1
+            | Position::C1
+            | Position::D1
+            | Position::E1
+            | Position::F1
+            | Position::G1
+            | Position::H1
+            | Position::I1
+            | Position::K1
+            | Position::L1 => true,
+            _ => false,
+        },
+    }
+}
+
 fn is_starting_position(position: Position, color: Color) -> bool {
     match color {
         Color::Black => match position {
@@ -208,6 +242,7 @@ fn is_starting_position(position: Position, color: Color) -> bool {
         },
     }
 }
+
 #[cfg(test)]
 mod tests {
     use core::panic;
@@ -420,6 +455,15 @@ mod tests {
 
           assert_eq!(targets.len(), 1);
           assert_eq!(targets[0].to_string(), "f6f7");
+    }
+
+    #[test]
+    fn test_is_promotion_position() {
+        assert_eq!(true, is_promotion_position(Color::White, Position::B7));
+        assert_eq!(false, is_promotion_position(Color::Black, Position::B7));
+
+        assert_eq!(true, is_promotion_position(Color::Black, Position::A1));
+        assert_eq!(false, is_promotion_position(Color::White, Position::A1));
     }
 
     // it('promote to queen', () => {
