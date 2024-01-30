@@ -406,15 +406,21 @@ mod tests {
           // assert_e1!(None, hexchess.board.get(Position::G6));
     }
 
-    // it('en passant cannot capture friendly pieces', () => {
-    //   const game = Hexchess.init()
+    #[test]
+    fn test_pawn_en_passant_does_not_capture_friendly_pieces() {
+          let mut hexchess = Hexchess::new();
 
-    //   game.applyNotation('g4g6')
+          // @todo: setup en passant by applying "g4g6"
+          hexchess.board.set(Position::F6, Some(Piece::WhitePawn));
+          hexchess.board.set(Position::G6, Some(Piece::WhitePawn));
+          hexchess.turn = Color::White;
+          hexchess.en_passant = Some(Position::E6);
 
-    //   const targets = game.getTargets('f5')
-    
-    //   expect(targets.some(n => n.to === game.enPassant)).toBe(false)
-    // })
+          let targets = hexchess.targets(Position::F6);
+
+          assert_eq!(targets.len(), 1);
+          assert_eq!(targets[0].to_string(), "f6f7");
+    }
 
     // it('promote to queen', () => {
     //   const game = new Hexchess
