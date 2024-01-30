@@ -6,10 +6,12 @@ use crate::game::piece::Color;
 pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Notation> {
     let mut targets: Vec<Notation> = vec![];
 
+    // advance forward one position
     match advance_one(hexchess, position, color) {
         Some(notation) => {
             targets.push(notation);
 
+            // advance forward another position if possible
             if is_starting_position(position, color) {
                 match advance_two(hexchess, position, notation.to, color) {
                     Some(notation) => targets.push(notation),
@@ -17,6 +19,18 @@ pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Nota
                 }
             }
         },
+        None => (),
+    }
+
+    // capture portside (left facing forward)
+    match capture_portside(hexchess, position, color) {
+        Some(notation) => targets.push(notation),
+        None => (),
+    }
+
+    // capture starboard (right facing forward)
+    match capture_starboard(hexchess, position, color) {
+        Some(notation) => targets.push(notation),
         None => (),
     }
 
@@ -44,7 +58,7 @@ fn advance_one(hexchess: &Hexchess, position: Position, color: Color) -> Option<
     }
 }
 
-fn advance_two(hexchess: &Hexchess, from_position: Position, to_position: Position, color: Color) -> Option<Notation> {
+fn advance_two(hexchess: &Hexchess, original_position: Position, to_position: Position, color: Color) -> Option<Notation> {
     let forward_direction = match color {
         Color::White => 0,
         Color::Black => 6,
@@ -58,10 +72,58 @@ fn advance_two(hexchess: &Hexchess, from_position: Position, to_position: Positi
     match hexchess.board.get(forward_position) {
         Some(_) => None,
         None => return Some(Notation {
-            from: from_position,
+            from: original_position,
             to: forward_position,
             promotion: None,
         }),
+    }
+}
+
+fn capture_starboard(hexchess: &Hexchess, position: Position, color: Color) -> Option<Notation> {
+    let starboard_direction = match color {
+        Color::Black => 8,
+        Color::White => 2,
+    };
+
+    let starboard_position = match get_step(position, starboard_direction) {
+        Some(position) => position,
+        None => return None,
+    };
+
+    match hexchess.board.get(starboard_position) {
+        Some(piece) => match piece.color() == color {
+            true => None,
+            false => Some(Notation {
+                from: position,
+                to: starboard_position,
+                promotion: None,
+            }),
+        },
+        None => None,
+    }
+}
+
+fn capture_portside(hexchess: &Hexchess, position: Position, color: Color) -> Option<Notation> {
+    let portside_direction = match color {
+        Color::Black => 4,
+        Color::White => 10,
+    };
+
+    let portside_position = match get_step(position, portside_direction) {
+        Some(position) => position,
+        None => return None,
+    };
+
+    match hexchess.board.get(portside_position) {
+        Some(piece) => match piece.color() == color {
+            true => None,
+            false => Some(Notation {
+                from: position,
+                to: portside_position,
+                promotion: None,
+            }),
+        },
+        None => None,
     }
 }
 
@@ -79,6 +141,8 @@ fn is_starting_position(position: Position, color: Color) -> bool {
 }
 #[cfg(test)]
 mod tests {
+    use core::panic;
+
     use super::*;
     use crate::game::piece::Piece;
 
@@ -145,29 +209,34 @@ mod tests {
 
         assert_eq!(targets.len(), 1);
     }
-    // it('no double-move off non-starting position', () => {
-    //   const game = new Hexchess
 
-    //   game.board.f6 = Pieces.WhitePawn
-    
-    //   const targets = game.getTargets('f6')
-    
-    //   expect(targets.length).toBe(1)
-    //   expect(targets[0].toString()).toBe('f6f7')
-    // })
+    #[test]
+    fn test_black_pawn_capture_portside() {
+        let mut hexchess = Hexchess::new();
 
-    // it('black capture portside', () => {
-    //   const game = new Hexchess
-    //   game.turn = Colors.Black
-    //   game.board.f6 = Pieces.BlackPawn
-    //   game.board.g5 = Pieces.WhitePawn
+        hexchess.board.set(Position::F6, Some(Piece::BlackPawn));
+        hexchess.board.set(Position::G5, Some(Piece::WhitePawn));
 
-    //   const targets = game.getTargets('f6')
-    
-    //   expect(targets.length).toBe(2)
-    //   expect(targets[1].toString()).toBe('f6g5')
-    // })
+        let targets = hexchess.targets(Position::F6);
 
+        assert_eq!(targets.len(), 2);
+
+        assert_eq!(targets[1].to_string(), "f6g5");
+    }
+
+    #[test]
+    fn test_black_pawn_capture_starboard() {
+        let mut hexchess = Hexchess::new();
+
+        hexchess.board.set(Position::F6, Some(Piece::BlackPawn));
+        hexchess.board.set(Position::E5, Some(Piece::WhitePawn));
+
+        let targets = hexchess.targets(Position::F6);
+
+        assert_eq!(targets.len(), 2);
+
+        assert_eq!(targets[1].to_string(), "f6e5");
+    }
     // it('black capture starboard', () => {
     //   const game = new Hexchess
     //   game.turn = Colors.Black
