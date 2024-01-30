@@ -26,7 +26,7 @@ mod tests {
 
     let targets = hexchess.targets(Position::F6);
     
-    // assert_eq!(targets.len(), 42);
+    assert_eq!(targets.len(), 42);
     assert_eq!(targets[0].to_string(), "f6f7");
     assert_eq!(targets[1].to_string(), "f6f8");
     assert_eq!(targets[2].to_string(), "f6f9");
