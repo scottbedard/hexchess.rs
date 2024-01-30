@@ -1,13 +1,22 @@
-# hexchess.rs
+<p align="center">
+  <h1 align="center">hexchess.rs</h1>
+</p>
 
-[![Build](https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml/badge.svg)](https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml)
-[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE)
+<p align="center">
+  <a href="https://hexchess.club"><img src="https://github.com/scottbedard/hexchess.rs/assets/7980426/356488eb-a780-41f3-8a41-a5f2c7df6534" width="300" /></a>
+</p>
 
-This repo is a work in progress, proceed with caution.
+<p align="center">
+  <a href="https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml"><img src="https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml/badge.svg" /></a>
+  <a href="https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" /></a>
+</p>
 
-## CLI
+<p align="center">
+  This repository holds the game-logic for <a href="https://hexchess.club">hexchess.club</a>.<br>
+  It is still very much a work in progress, more documentation to come.
+</p>
 
-The following commands are available via the command line interface.
+## Command line interface
 
 ```
 Usage: hexchess <COMMAND>
