@@ -255,8 +255,6 @@ fn is_starting_position(position: Position, color: Color) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use core::panic;
-
     use super::*;
     use crate::game::piece::Piece;
 
