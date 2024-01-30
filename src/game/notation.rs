@@ -8,11 +8,11 @@ use tsify::Tsify;
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
 pub struct Notation {
-    from: Position,
+    pub from: Position,
 
-    promotion: Option<PromotionPiece>,
+    pub promotion: Option<PromotionPiece>,
 
-    to: Position,
+    pub to: Position,
 }
 
 impl Notation {
