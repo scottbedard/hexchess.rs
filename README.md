@@ -1,8 +1,4 @@
 <p align="center">
-  <h1 align="center">hexchess.rs</h1>
-</p>
-
-<p align="center">
   <a href="https://hexchess.club"><img src="https://github.com/scottbedard/hexchess.rs/assets/7980426/356488eb-a780-41f3-8a41-a5f2c7df6534" width="300" /></a>
 </p>
 
