@@ -16,12 +16,12 @@ pub fn target(hexchess: &Hexchess, from: Position, color: Color) -> Vec<Notation
     targets
 }
 
-    #[cfg(test)]
-    mod tests {
-        use super::*;
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-        #[test]
-        fn test_bishop_targets() {
+    #[test]
+    fn test_bishop_targets() {
         let hexchess = Hexchess::from("1/3/5/7/9/5B5/11/11/11/11/11").unwrap();
 
         let targets = hexchess.targets(Position::F6);
