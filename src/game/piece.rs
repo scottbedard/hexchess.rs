@@ -1,4 +1,3 @@
-use crate::constants;
 use crate::game::failure::Failure::{InvalidColor, InvalidPiece, InvalidPromotion};
 use serde::{Deserialize, Serialize};
 use std::fmt;

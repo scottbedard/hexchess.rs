@@ -1,9 +1,12 @@
 use crate::game::board::{Board, Position};
 use crate::game::failure::Failure;
 use crate::game::piece::{Color, Piece};
+use crate::game::targets::{bishop, king, knight, pawn, queen, rook};
 use serde_json::json;
 use serde::{Deserialize, Serialize};
 use tsify::Tsify;
+
+use super::notation::Notation;
 
 /// Hexchess game state
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
@@ -100,6 +103,28 @@ impl Hexchess {
         }
     }
 
+    pub fn targets(&self, position: Position) -> Vec<Notation> {
+        let piece = match self.board.get(position) {
+            Some(val) => val,
+            None => return vec![],
+        };
+
+        match piece {
+            Piece::BlackBishop => bishop::target(&self, position, Color::Black),
+            Piece::BlackKing => king::target(&self, position, Color::Black),
+            Piece::BlackKnight => knight::target(&self, position, Color::Black),
+            Piece::BlackPawn => pawn::target(&self, position, Color::Black),
+            Piece::BlackQueen => queen::target(&self, position, Color::Black),
+            Piece::BlackRook => rook::target(&self, position, Color::Black),
+            Piece::WhiteBishop => bishop::target(&self, position, Color::White),
+            Piece::WhiteKing => king::target(&self, position, Color::White),
+            Piece::WhiteKnight => knight::target(&self, position, Color::White),
+            Piece::WhitePawn => pawn::target(&self, position, Color::White),
+            Piece::WhiteQueen => queen::target(&self, position, Color::White),
+            Piece::WhiteRook => rook::target(&self, position, Color::White),
+        }
+    }
+
     pub fn to_json(&self) -> String {
         json!(self).to_string()
     }
@@ -175,5 +200,12 @@ mod tests {
         let expected = "{\"board\":{\"a1\":null,\"a2\":null,\"a3\":null,\"a4\":null,\"a5\":null,\"a6\":null,\"b1\":null,\"b2\":null,\"b3\":null,\"b4\":null,\"b5\":null,\"b6\":null,\"b7\":null,\"c1\":null,\"c2\":null,\"c3\":null,\"c4\":null,\"c5\":null,\"c6\":null,\"c7\":null,\"c8\":null,\"d1\":null,\"d2\":null,\"d3\":null,\"d4\":null,\"d5\":null,\"d6\":null,\"d7\":null,\"d8\":null,\"d9\":null,\"e1\":null,\"e10\":null,\"e2\":null,\"e3\":null,\"e4\":null,\"e5\":null,\"e6\":null,\"e7\":null,\"e8\":null,\"e9\":null,\"f1\":null,\"f10\":null,\"f11\":null,\"f2\":null,\"f3\":null,\"f4\":null,\"f5\":null,\"f6\":null,\"f7\":null,\"f8\":null,\"f9\":null,\"g1\":null,\"g10\":null,\"g2\":null,\"g3\":null,\"g4\":null,\"g5\":null,\"g6\":null,\"g7\":null,\"g8\":null,\"g9\":null,\"h1\":null,\"h2\":null,\"h3\":null,\"h4\":null,\"h5\":null,\"h6\":null,\"h7\":null,\"h8\":null,\"h9\":null,\"i1\":null,\"i2\":null,\"i3\":null,\"i4\":null,\"i5\":null,\"i6\":null,\"i7\":null,\"i8\":null,\"k1\":null,\"k2\":null,\"k3\":null,\"k4\":null,\"k5\":null,\"k6\":null,\"k7\":null,\"l1\":null,\"l2\":null,\"l3\":null,\"l4\":null,\"l5\":null,\"l6\":null},\"en_passant\":null,\"fullmove\":1,\"halfmove\":0,\"turn\":\"w\"}";
 
         assert_eq!(hexchess.to_json(), expected);
+    }
+
+    #[test]
+    fn test_no_targets_returned_for_empty_position() {
+        let hexchess = Hexchess::new();
+
+        assert_eq!(hexchess.targets(Position::A1), vec![]);
     }
 }
