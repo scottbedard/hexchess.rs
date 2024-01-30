@@ -578,6 +578,7 @@ pub struct Board {
 }
 
 impl Board {
+    /// create empty board
     pub fn new() -> Self {
         Self {
             a1: None,
@@ -674,6 +675,7 @@ impl Board {
         }
     }
 
+    /// create board from string
     pub fn from(value: &str) -> Result<Self, Failure> {
         let mut board = Self::new();
 
@@ -809,6 +811,7 @@ impl Board {
 
     }
 
+    /// get piece value at position
     pub fn get(&self, position: Position) -> Option<Piece> {
         match position {
             Position::A1 => self.a1,
@@ -905,8 +908,139 @@ impl Board {
         }
     }
 
+    /// create board in new game state
     pub fn initial() -> Self {
         Self::from(INITIAL_BOARD).unwrap()
+    }
+
+    /// set piece value at position
+    pub fn set(&mut self, position: Position, value: Option<Piece>) {
+        match position {
+            Position::A1 => self.a1 = value,
+            Position::A2 => self.a2 = value,
+            Position::A3 => self.a3 = value,
+            Position::A4 => self.a4 = value,
+            Position::A5 => self.a5 = value,
+            Position::A6 => self.a6 = value,
+            Position::B1 => self.b1 = value,
+            Position::B2 => self.b2 = value,
+            Position::B3 => self.b3 = value,
+            Position::B4 => self.b4 = value,
+            Position::B5 => self.b5 = value,
+            Position::B6 => self.b6 = value,
+            Position::B7 => self.b7 = value,
+            Position::C1 => self.c1 = value,
+            Position::C2 => self.c2 = value,
+            Position::C3 => self.c3 = value,
+            Position::C4 => self.c4 = value,
+            Position::C5 => self.c5 = value,
+            Position::C6 => self.c6 = value,
+            Position::C7 => self.c7 = value,
+            Position::C8 => self.c8 = value,
+            Position::D1 => self.d1 = value,
+            Position::D2 => self.d2 = value,
+            Position::D3 => self.d3 = value,
+            Position::D4 => self.d4 = value,
+            Position::D5 => self.d5 = value,
+            Position::D6 => self.d6 = value,
+            Position::D7 => self.d7 = value,
+            Position::D8 => self.d8 = value,
+            Position::D9 => self.d9 = value,
+            Position::E1 => self.e1 = value,
+            Position::E2 => self.e2 = value,
+            Position::E3 => self.e3 = value,
+            Position::E4 => self.e4 = value,
+            Position::E5 => self.e5 = value,
+            Position::E6 => self.e6 = value,
+            Position::E7 => self.e7 = value,
+            Position::E8 => self.e8 = value,
+            Position::E9 => self.e9 = value,
+            Position::E10 => self.e10 = value,
+            Position::F1 => self.f1 = value,
+            Position::F2 => self.f2 = value,
+            Position::F3 => self.f3 = value,
+            Position::F4 => self.f4 = value,
+            Position::F5 => self.f5 = value,
+            Position::F6 => self.f6 = value,
+            Position::F7 => self.f7 = value,
+            Position::F8 => self.f8 = value,
+            Position::F9 => self.f9 = value,
+            Position::F10 => self.f10 = value,
+            Position::F11 => self.f11 = value,
+            Position::G1 => self.g1 = value,
+            Position::G2 => self.g2 = value,
+            Position::G3 => self.g3 = value,
+            Position::G4 => self.g4 = value,
+            Position::G5 => self.g5 = value,
+            Position::G6 => self.g6 = value,
+            Position::G7 => self.g7 = value,
+            Position::G8 => self.g8 = value,
+            Position::G9 => self.g9 = value,
+            Position::G10 => self.g10 = value,
+            Position::H1 => self.h1 = value,
+            Position::H2 => self.h2 = value,
+            Position::H3 => self.h3 = value,
+            Position::H4 => self.h4 = value,
+            Position::H5 => self.h5 = value,
+            Position::H6 => self.h6 = value,
+            Position::H7 => self.h7 = value,
+            Position::H8 => self.h8 = value,
+            Position::H9 => self.h9 = value,
+            Position::I1 => self.i1 = value,
+            Position::I2 => self.i2 = value,
+            Position::I3 => self.i3 = value,
+            Position::I4 => self.i4 = value,
+            Position::I5 => self.i5 = value,
+            Position::I6 => self.i6 = value,
+            Position::I7 => self.i7 = value,
+            Position::I8 => self.i8 = value,
+            Position::K1 => self.k1 = value,
+            Position::K2 => self.k2 = value,
+            Position::K3 => self.k3 = value,
+            Position::K4 => self.k4 = value,
+            Position::K5 => self.k5 = value,
+            Position::K6 => self.k6 = value,
+            Position::K7 => self.k7 = value,
+            Position::L1 => self.l1 = value,
+            Position::L2 => self.l2 = value,
+            Position::L3 => self.l3 = value,
+            Position::L4 => self.l4 = value,
+            Position::L5 => self.l5 = value,
+            Position::L6 => self.l6 = value,
+        }
+    }
+
+    /// walk as color in a given sibling direction
+    /// stop _before_ friendly pieces, and stop _on_ enemy piece
+    pub fn walk(&self, start: Position, color: Color, direction: u8) -> Vec<Position> {
+        let mut cursor = start;
+        let mut path = vec![];
+        
+        loop {
+            let step = match get_step(cursor, direction) {
+                Some(p) => p,
+                None => break, // <- no step, we've reached the edge of the board
+            };
+
+            let value = self.get(step);
+
+            match value {
+                Some(piece) => {
+                    if piece.color() == color {
+                        break; // <- friendly piece, stop
+                    } else {
+                        path.push(step);
+                        break; // <- enemy piece, stop
+                    }
+                },
+                None => {
+                    path.push(step);
+                    cursor = step; // <- unnoccupied, keep walking                    
+                }
+            }
+        }
+    
+        path
     }
 }
 
@@ -2374,5 +2508,50 @@ mod tests {
 
         assert_eq!(board.get(Position::A1), None);
         assert_eq!(board.get(Position::E10), Some(Piece::BlackQueen));
+    }
+
+    #[test]
+    fn test_setting_board_value_as_position() {
+        let mut board = Board::from(INITIAL_BOARD).unwrap();
+
+        assert_eq!(None, board.get(Position::A1));
+
+        board.set(Position::A1, Some(Piece::WhitePawn));
+
+        assert_eq!(Some(Piece::WhitePawn), board.get(Position::A1));
+    }
+
+    #[test]
+    fn test_walk_until_edge_of_board() {
+        let board = Board::new();
+
+        assert_eq!(
+            vec![Position::F7, Position::F8, Position::F9, Position::F10, Position::F11], 
+            board.walk(Position::F6, Color::White, 0)
+        );
+    }
+
+    #[test]
+    fn test_walk_until_friendly_piece() {
+        let mut board = Board::new();
+
+        board.set(Position::F8, Some(Piece::WhitePawn));
+
+        assert_eq!(
+            vec![Position::F6, Position::F7], 
+            board.walk(Position::F5, Color::White, 0)
+        );
+    }
+
+    #[test]
+    fn test_walk_until_enemy_piece() {
+        let mut board = Board::new();
+
+        board.set(Position::F8, Some(Piece::BlackPawn));
+
+        assert_eq!(
+            vec![Position::F6, Position::F7, Position::F8], 
+            board.walk(Position::F5, Color::White, 0)
+        );
     }
 }
