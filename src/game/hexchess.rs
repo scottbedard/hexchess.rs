@@ -316,4 +316,43 @@ mod tests {
 
         assert_eq!(Err(Failure::IllegalMove), result);
     }
+
+    #[test]
+    fn test_apply_sets_white_en_passant_positions() {
+        let mut b = Hexchess::from("1/3/5/7/9/11/11/11/11/11/1P9 w - 0 1").unwrap();
+        let _ = b.apply(Notation::from("b1b3").unwrap());
+        assert_eq!(Some(Position::B2), b.en_passant);
+
+        let mut c = Hexchess::from("1/3/5/7/9/11/11/11/11/2P8/11 w - 0 1").unwrap();
+        let _ = c.apply(Notation::from("c2c4").unwrap());
+        assert_eq!(Some(Position::C3), c.en_passant);
+
+        let mut d = Hexchess::from("1/3/5/7/9/11/11/11/3P7/11/11 w - 0 1").unwrap();
+        let _ = d.apply(Notation::from("d3d5").unwrap());
+        assert_eq!(Some(Position::D4), d.en_passant);
+
+        let mut e = Hexchess::from("1/3/5/7/9/11/11/4P6/11/11/11 w - 0 1").unwrap();
+        let _ = e.apply(Notation::from("e4e6").unwrap());
+        assert_eq!(Some(Position::E5), e.en_passant);
+
+        let mut f = Hexchess::from("1/3/5/7/9/11/5P5/11/11/11/11 w - 0 1").unwrap();
+        let _ = f.apply(Notation::from("f5f7").unwrap());
+        assert_eq!(Some(Position::F6), f.en_passant);
+
+        let mut g = Hexchess::from("1/3/5/7/9/11/11/6P4/11/11/11 w - 0 1").unwrap();
+        let _ = g.apply(Notation::from("g4g6").unwrap());
+        assert_eq!(Some(Position::G5), g.en_passant);
+
+        let mut h = Hexchess::from("1/3/5/7/9/11/11/11/7P3/11/11 w - 0 1").unwrap();
+        let _ = h.apply(Notation::from("h3h5").unwrap());
+        assert_eq!(Some(Position::H4), h.en_passant);
+
+        let mut i = Hexchess::from("1/3/5/7/9/11/11/11/11/8P2/11 w - 0 1").unwrap();
+        let _ = i.apply(Notation::from("i2i4").unwrap());
+        assert_eq!(Some(Position::I3), i.en_passant);
+
+        let mut k = Hexchess::from("1/3/5/7/9/11/11/11/11/11/9P1 w - 0 1").unwrap();
+        let _ = k.apply(Notation::from("k1k3").unwrap());
+        assert_eq!(Some(Position::K2), k.en_passant);
+    }
 }
