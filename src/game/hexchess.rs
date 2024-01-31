@@ -394,4 +394,60 @@ mod tests {
         let _ = k.apply(Notation::from("k1k3").unwrap());
         assert_eq!(Some(Position::K2), k.en_passant);
     }
+
+    #[test]
+    fn test_white_promote_pawn_to_queen() {
+        let mut hexchess = Hexchess::from("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::from("f10f11q").unwrap());
+        assert_eq!(Some(Piece::WhiteQueen), hexchess.board.get(Position::F11));
+    }
+
+    #[test]
+    fn test_white_promote_pawn_to_bishop() {
+        let mut hexchess = Hexchess::from("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::from("f10f11b").unwrap());
+        assert_eq!(Some(Piece::WhiteBishop), hexchess.board.get(Position::F11));
+    }
+
+    #[test]
+    fn test_white_promote_pawn_to_rook() {
+        let mut hexchess = Hexchess::from("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::from("f10f11r").unwrap());
+        assert_eq!(Some(Piece::WhiteRook), hexchess.board.get(Position::F11));
+    }
+
+    #[test]
+    fn test_white_promote_pawn_to_knight() {
+        let mut hexchess = Hexchess::from("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::from("f10f11n").unwrap());
+        assert_eq!(Some(Piece::WhiteKnight), hexchess.board.get(Position::F11));
+    }
+
+    #[test]
+    fn test_black_promote_pawn_to_queen() {
+        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::from("f2f1q").unwrap());
+        assert_eq!(Some(Piece::BlackQueen), hexchess.board.get(Position::F1));
+    }
+
+    #[test]
+    fn test_black_promote_pawn_to_bishop() {
+        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::from("f2f1b").unwrap());
+        assert_eq!(Some(Piece::BlackBishop), hexchess.board.get(Position::F1));
+    }
+
+    #[test]
+    fn test_black_promote_pawn_to_rook() {
+        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::from("f2f1r").unwrap());
+        assert_eq!(Some(Piece::BlackRook), hexchess.board.get(Position::F1));
+    }
+
+    #[test]
+    fn test_black_promote_pawn_to_knight() {
+        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::from("f2f1n").unwrap());
+        assert_eq!(Some(Piece::BlackKnight), hexchess.board.get(Position::F1));
+    }
 }
