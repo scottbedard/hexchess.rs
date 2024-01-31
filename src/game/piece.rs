@@ -164,6 +164,23 @@ impl PromotionPiece {
             _ => Err(InvalidPromotion),
         }
     }
+
+    pub fn to_piece(&self, color: Color) -> Piece {
+        match color {
+            Color::Black => match self {
+                PromotionPiece::Bishop => Piece::BlackBishop,
+                PromotionPiece::Knight => Piece::BlackKnight,
+                PromotionPiece::Queen => Piece::BlackQueen,
+                PromotionPiece::Rook => Piece::BlackRook,
+            },
+            Color::White => match self {
+                PromotionPiece::Bishop => Piece::WhiteBishop,
+                PromotionPiece::Knight => Piece::WhiteKnight,
+                PromotionPiece::Queen => Piece::WhiteQueen,
+                PromotionPiece::Rook => Piece::WhiteRook,
+            },
+        }
+    }
 }
 
 impl fmt::Display for PromotionPiece {
@@ -247,5 +264,17 @@ mod tests {
         assert_eq!(Ok(PromotionPiece::Rook), PromotionPiece::from("r"));
         assert_eq!(Ok(PromotionPiece::Queen), PromotionPiece::from("q"));
         assert_eq!(Err(InvalidPromotion), PromotionPiece::from("whoops"));
+    }
+
+    #[test]
+    fn test_convert_promotion_piece_to_string() {
+        assert_eq!(Piece::BlackBishop, PromotionPiece::Bishop.to_piece(Color::Black));
+        assert_eq!(Piece::BlackKnight, PromotionPiece::Knight.to_piece(Color::Black));
+        assert_eq!(Piece::BlackQueen, PromotionPiece::Queen.to_piece(Color::Black));
+        assert_eq!(Piece::BlackRook, PromotionPiece::Rook.to_piece(Color::Black));
+        assert_eq!(Piece::WhiteBishop, PromotionPiece::Bishop.to_piece(Color::White));
+        assert_eq!(Piece::WhiteKnight, PromotionPiece::Knight.to_piece(Color::White));
+        assert_eq!(Piece::WhiteQueen, PromotionPiece::Queen.to_piece(Color::White));
+        assert_eq!(Piece::WhiteRook, PromotionPiece::Rook.to_piece(Color::White));
     }
 }
