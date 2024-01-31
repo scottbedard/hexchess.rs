@@ -318,7 +318,46 @@ mod tests {
     }
 
     #[test]
-    fn test_apply_sets_white_en_passant_positions() {
+    fn test_apply_sets_black_en_passant() {
+        let mut b = Hexchess::from("1/3/5/7/p8/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = b.apply(Notation::from("b7b5").unwrap());
+        assert_eq!(Some(Position::B6), b.en_passant);
+
+        let mut c = Hexchess::from("1/3/5/7/1p7/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = c.apply(Notation::from("c7c5").unwrap());
+        assert_eq!(Some(Position::C6), c.en_passant);
+        
+        let mut d = Hexchess::from("1/3/5/7/2p6/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = d.apply(Notation::from("d7d5").unwrap());
+        assert_eq!(Some(Position::D6), d.en_passant);
+
+        let mut e = Hexchess::from("1/3/5/7/3p5/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = e.apply(Notation::from("e7e5").unwrap());
+        assert_eq!(Some(Position::E6), e.en_passant);
+
+        let mut f = Hexchess::from("1/3/5/7/4p4/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = f.apply(Notation::from("f7f5").unwrap());
+        assert_eq!(Some(Position::F6), f.en_passant);
+
+        let mut g = Hexchess::from("1/3/5/7/5p3/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = g.apply(Notation::from("g7g5").unwrap());
+        assert_eq!(Some(Position::G6), g.en_passant);
+
+        let mut h = Hexchess::from("1/3/5/7/6p2/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = h.apply(Notation::from("h7h5").unwrap());
+        assert_eq!(Some(Position::H6), h.en_passant);
+
+        let mut i = Hexchess::from("1/3/5/7/7p1/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = i.apply(Notation::from("i7i5").unwrap());
+        assert_eq!(Some(Position::I6), i.en_passant);
+
+        let mut k = Hexchess::from("1/3/5/7/8p/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = k.apply(Notation::from("k7k5").unwrap());
+        assert_eq!(Some(Position::K6), k.en_passant);
+    }
+
+    #[test]
+    fn test_apply_sets_white_en_passant() {
         let mut b = Hexchess::from("1/3/5/7/9/11/11/11/11/11/1P9 w - 0 1").unwrap();
         let _ = b.apply(Notation::from("b1b3").unwrap());
         assert_eq!(Some(Position::B2), b.en_passant);

@@ -373,7 +373,6 @@ mod tests {
     fn test_black_pawn_capture_en_passant_portside() {
           let mut hexchess = Hexchess::new();
 
-          // @todo: setup en passant by applying "g4g6"
           hexchess.board.set(Position::F6, Some(Piece::BlackPawn));
           hexchess.board.set(Position::G6, Some(Piece::WhitePawn));
           hexchess.turn = Color::Black;
@@ -383,17 +382,12 @@ mod tests {
 
           assert_eq!(targets.len(), 2);
           assert_eq!(targets[1].to_string(), "f6g5");
-
-          // @todo: clear en_passant by applying "f6g5"
-          // assert_eq!(None, hexchess.en_passant);
-          // assert_e1!(None, hexchess.board.get(Position::G6));
     }
 
     #[test]
     fn test_black_pawn_capture_en_passant_starboard() {
           let mut hexchess = Hexchess::new();
 
-          // @todo: setup en passant by applying "g4g6"
           hexchess.board.set(Position::F6, Some(Piece::BlackPawn));
           hexchess.board.set(Position::E6, Some(Piece::WhitePawn));
           hexchess.turn = Color::Black;
@@ -403,17 +397,12 @@ mod tests {
 
           assert_eq!(targets.len(), 2);
           assert_eq!(targets[1].to_string(), "f6e5");
-
-          // @todo: clear en_passant by applying "f6e5"
-          // assert_eq!(None, hexchess.en_passant);
-          // assert_e1!(None, hexchess.board.get(Position::E6));
     }
 
     #[test]
     fn test_white_pawn_capture_en_passant_portside() {
           let mut hexchess = Hexchess::new();
 
-          // @todo: setup en passant by applying "g4g6"
           hexchess.board.set(Position::F6, Some(Piece::WhitePawn));
           hexchess.board.set(Position::E6, Some(Piece::BlackPawn));
           hexchess.turn = Color::White;
@@ -423,17 +412,12 @@ mod tests {
 
           assert_eq!(targets.len(), 2);
           assert_eq!(targets[1].to_string(), "f6e6");
-
-          // @todo: clear en_passant by applying "f6g5"
-          // assert_eq!(None, hexchess.en_passant);
-          // assert_e1!(None, hexchess.board.get(Position::E6));
     }
 
     #[test]
     fn test_white_pawn_capture_en_passant_starboard() {
           let mut hexchess = Hexchess::new();
 
-          // @todo: setup en passant by applying "g4g6"
           hexchess.board.set(Position::F6, Some(Piece::WhitePawn));
           hexchess.board.set(Position::G6, Some(Piece::BlackPawn));
           hexchess.turn = Color::White;
@@ -443,17 +427,12 @@ mod tests {
 
           assert_eq!(targets.len(), 2);
           assert_eq!(targets[1].to_string(), "f6g6");
-
-          // @todo: clear en_passant by applying "f6g5"
-          // assert_eq!(None, hexchess.en_passant);
-          // assert_e1!(None, hexchess.board.get(Position::G6));
     }
 
     #[test]
     fn test_pawn_en_passant_does_not_capture_friendly_pieces() {
           let mut hexchess = Hexchess::new();
 
-          // @todo: setup en passant by applying "g4g6"
           hexchess.board.set(Position::F6, Some(Piece::WhitePawn));
           hexchess.board.set(Position::G6, Some(Piece::WhitePawn));
           hexchess.turn = Color::White;
@@ -486,7 +465,5 @@ mod tests {
         assert_eq!(targets[1].to_string(), "f10f11n");
         assert_eq!(targets[2].to_string(), "f10f11r");
         assert_eq!(targets[3].to_string(), "f10f11b");
-
-        // @todo: test piece change on move
     }
 }
