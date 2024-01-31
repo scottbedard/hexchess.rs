@@ -32,17 +32,61 @@ impl Hexchess {
             None => return Err(Failure::IllegalMove),
         };
 
-        // @todo: update halfmove
+        // update halfmove
+        if piece == Piece::WhitePawn || piece == Piece::BlackPawn || self.board.get(notation.to).is_some() {
+            self.halfmove = 0;
+        } else {
+            self.halfmove += 1;
+        }
 
-        // @todo: update fullmove
+        // update fullmove and turn color
+        if piece.color() == Color::Black {
+            self.fullmove += 1;
+            self.turn = Color::White;
+        } else {
+            self.turn = Color::Black;
+        }
 
-        // @todo: update turn color
+        // set to and from positions
+        self.board.set(notation.from, None);
 
-        // @todo: set to and from positions
+        self.board.set(notation.to, match notation.promotion {
+            None => Some(piece),
+            Some(promo) => match piece {
+                Piece::BlackPawn => Some(promo.to_piece(Color::Black)),
+                Piece::WhitePawn => Some(promo.to_piece(Color::White)),
+                _ => return Err(Failure::IllegalMove),
+            },
+        });
 
-        // @todo: remove en passant capture
-
-        // @todo: set en passant position
+        // set en passant
+        self.en_passant = match piece {
+            Piece::BlackPawn => match (notation.from, notation.to) {
+                (Position::B7, Position::B5) => Some(Position::B6),
+                (Position::C7, Position::C5) => Some(Position::C6),
+                (Position::D7, Position::D5) => Some(Position::D6),
+                (Position::E7, Position::E5) => Some(Position::E6),
+                (Position::F7, Position::F5) => Some(Position::F6),
+                (Position::G7, Position::G5) => Some(Position::G6),
+                (Position::H7, Position::H5) => Some(Position::H6),
+                (Position::I7, Position::I5) => Some(Position::I6),
+                (Position::K7, Position::K5) => Some(Position::K6),
+                _ => None,
+            },
+            Piece::WhitePawn => match (notation.from, notation.to) {
+                (Position::B1, Position::B3) => Some(Position::B2),
+                (Position::C2, Position::C4) => Some(Position::C3),
+                (Position::D3, Position::D5) => Some(Position::D4),
+                (Position::E4, Position::E6) => Some(Position::E5),
+                (Position::F5, Position::F7) => Some(Position::F6),
+                (Position::G4, Position::G6) => Some(Position::G5),
+                (Position::H3, Position::H5) => Some(Position::H4),
+                (Position::I2, Position::I4) => Some(Position::I3),
+                (Position::K1, Position::K3) => Some(Position::K2),
+                _ => None,
+            },
+            _ => None,
+        };
 
         Ok(())
     }
@@ -232,7 +276,40 @@ mod tests {
     }
 
     #[test]
-    fn test_apply_from_position_with_no_piece() {
+    fn test_apply_updates_game_state() {
+        let mut hexchess = Hexchess::initial();
+        assert_eq!(Color::White, hexchess.turn);
+        assert_eq!(None, hexchess.en_passant);
+        assert_eq!(0, hexchess.halfmove);
+        assert_eq!(1, hexchess.fullmove);
+
+        let _ = hexchess.apply(Notation::from("g4g5").unwrap());
+        assert_eq!(Color::Black, hexchess.turn);
+        assert_eq!(None, hexchess.en_passant);
+        assert_eq!(0, hexchess.halfmove);
+        assert_eq!(1, hexchess.fullmove);
+        assert_eq!(Some(Piece::WhitePawn), hexchess.board.get(Position::G5));
+        assert_eq!(None, hexchess.board.get(Position::G4));
+
+        let _ = hexchess.apply(Notation::from("e7e6").unwrap());
+        assert_eq!(Color::White, hexchess.turn);
+        assert_eq!(None, hexchess.en_passant);
+        assert_eq!(0, hexchess.halfmove);
+        assert_eq!(2, hexchess.fullmove);
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board.get(Position::E6));
+        assert_eq!(None, hexchess.board.get(Position::E5));
+
+        let _ = hexchess.apply(Notation::from("f3i6").unwrap()); // <- white bishop move, no capture
+        assert_eq!(1, hexchess.halfmove);
+        assert_eq!(2, hexchess.fullmove);
+
+        let _ = hexchess.apply(Notation::from("h7i6").unwrap()); // <- black pawn captures bishop
+        assert_eq!(0, hexchess.halfmove);
+        assert_eq!(3, hexchess.fullmove);
+    }
+
+    #[test]
+    fn test_apply_from_empty_position() {
         let mut hexchess = Hexchess::new();
 
         let result = hexchess.apply(Notation::from("f5f6").unwrap());
