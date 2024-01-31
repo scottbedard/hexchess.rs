@@ -1,7 +1,7 @@
 use crate::game::board::{Position, get_step};
 use crate::game::hexchess::Hexchess;
 use crate::game::notation::Notation;
-use crate::game::piece::{Color, Piece};
+use crate::game::piece::Color;
 
 pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Notation> {
     let mut targets: Vec<Notation> = vec![];
@@ -49,6 +49,7 @@ pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Nota
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::game::piece::Piece;
 
     #[test]
     fn test_knight_targets() {
