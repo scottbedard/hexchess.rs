@@ -1,12 +1,13 @@
 use crate::game::board::{Board, Position};
 use crate::game::failure::Failure;
+use crate::game::notation::Notation;
 use crate::game::piece::{Color, Piece};
 use crate::game::targets::{bishop, king, knight, pawn, queen, rook};
 use serde_json::json;
 use serde::{Deserialize, Serialize};
 use tsify::Tsify;
 
-use super::notation::Notation;
+use super::piece;
 
 /// Hexchess game state
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
@@ -25,6 +26,27 @@ pub struct Hexchess {
 
 /// Create hexchess from fen
 impl Hexchess {
+    pub fn apply(&mut self, notation: Notation) -> Result<(), Failure> {
+        let piece = match self.board.get(notation.from) {
+            Some(val) => val,
+            None => return Err(Failure::IllegalMove),
+        };
+
+        // @todo: update halfmove
+
+        // @todo: update fullmove
+
+        // @todo: update turn color
+
+        // @todo: set to and from positions
+
+        // @todo: remove en passant capture
+
+        // @todo: set en passant position
+
+        Ok(())
+    }
+    
     pub fn from(value: &str) -> Result<Self, Failure> {
         let mut parts = value.split_whitespace();
 
@@ -207,5 +229,14 @@ mod tests {
         let hexchess = Hexchess::new();
 
         assert_eq!(hexchess.targets(Position::A1), vec![]);
+    }
+
+    #[test]
+    fn test_apply_from_position_with_no_piece() {
+        let mut hexchess = Hexchess::new();
+
+        let result = hexchess.apply(Notation::from("f5f6").unwrap());
+
+        assert_eq!(Err(Failure::IllegalMove), result);
     }
 }

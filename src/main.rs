@@ -38,7 +38,16 @@ enum Command {
     Parse {
         /// Game start to parse
         fen: String,
-    }
+    },
+
+    /// Get targets of a position
+    Targets {
+        /// Game state
+        fen: String,
+
+        /// Position to get targets of
+        position: String,
+    },
 }
 
 fn main() {
@@ -48,6 +57,7 @@ fn main() {
         Command::Apply { fen, notation } => commands::apply::execute(fen, notation),
         Command::Get { fen, position } => commands::get::execute(fen, position),
         Command::Parse { fen } => commands::parse::execute(fen),
+        Command::Targets { fen, position } => commands::targets::execute(fen, position),
     };
 
     match result {
