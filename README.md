@@ -6,7 +6,9 @@
 A Rust library for [Gliński's hexagonal chess](https://en.wikipedia.org/wiki/Hexagonal_chess#Gli%C5%84ski's_hexagonal_chess), and the brain of [hexchess.club](https://hexchess.club)
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/scottbedard/hexchess.rs/main/assets/hexchess.svg?token=GHSAT0AAAAAAB6TCUTIQHQJZMH4MAEY7QWIZN3BRFA" width="500" />
+  <a href="https://hexchess.club">
+    <img src="https://raw.githubusercontent.com/scottbedard/hexchess.rs/main/assets/hexchess.svg?token=GHSAT0AAAAAAB6TCUTIQHQJZMH4MAEY7QWIZN3BRFA" width="500" />
+  </a>
 </p>
 
 ## Basic usage
