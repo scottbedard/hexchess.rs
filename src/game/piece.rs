@@ -24,6 +24,15 @@ impl Color {
     }
 }
 
+impl fmt::Display for Color {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Color::Black => write!(f, "b"),
+            Color::White => write!(f, "w"),
+        }
+    }
+}
+
 /// Colored piece types
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
 pub enum Piece {
@@ -276,5 +285,11 @@ mod tests {
         assert_eq!(Piece::WhiteKnight, PromotionPiece::Knight.to_piece(Color::White));
         assert_eq!(Piece::WhiteQueen, PromotionPiece::Queen.to_piece(Color::White));
         assert_eq!(Piece::WhiteRook, PromotionPiece::Rook.to_piece(Color::White));
+    }
+
+    #[test]
+    fn test_stringify_color() {
+        assert_eq!("w", Color::White.to_string());
+        assert_eq!("b", Color::Black.to_string());
     }
 }
