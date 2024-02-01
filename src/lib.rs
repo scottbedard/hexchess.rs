@@ -4,7 +4,6 @@ pub mod game;
 
 use crate::game::board::Position;
 use crate::game::hexchess::Hexchess;
-use crate::game::notation::Notation;
 use tsify::JsValueSerdeExt;
 use wasm_bindgen::prelude::*;
 
@@ -30,7 +29,6 @@ pub fn targets(hexchess: Hexchess, position: Position) -> JsValue {
 
     JsValue::from_serde(&targets).unwrap()
 }
-
 
 #[wasm_bindgen]
 pub fn parse(fen: String) -> Hexchess {
