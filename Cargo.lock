@@ -159,6 +159,7 @@ dependencies = [
  "clap",
  "console_error_panic_hook",
  "exitcode",
+ "js-sys",
  "regex",
  "serde",
  "serde-wasm-bindgen",

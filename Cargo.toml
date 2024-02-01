@@ -19,6 +19,7 @@ serde_json = "1.0.112"
 serde-wasm-bindgen = "0.6.0"
 tsify = "0.4.5"
 wasm-bindgen = "0.2.87"
+js-sys = "0.3.67"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.34"

@@ -2,7 +2,10 @@ pub mod commands;
 pub mod constants;
 pub mod game;
 
+use crate::game::board::Position;
 use crate::game::hexchess::Hexchess;
+use crate::game::notation::Notation;
+use tsify::JsValueSerdeExt;
 use wasm_bindgen::prelude::*;
 
 pub fn set_panic_hook() {
@@ -20,6 +23,14 @@ pub fn set_panic_hook() {
 extern "C" {
     fn alert(s: &str);
 }
+
+#[wasm_bindgen]
+pub fn targets(hexchess: Hexchess, position: Position) -> JsValue {
+    let targets = hexchess.targets(position);
+
+    JsValue::from_serde(&targets).unwrap()
+}
+
 
 #[wasm_bindgen]
 pub fn parse(fen: String) -> Hexchess {
