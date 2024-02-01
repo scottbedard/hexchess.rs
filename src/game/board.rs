@@ -1044,6 +1044,43 @@ impl Board {
     }
 }
 
+impl fmt::Display for Board {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut index: u8 = 0;
+
+        let output = SORTED_POSITIONS
+            .into_iter()
+            .map(|x| {
+                let output = match self.get(x) {
+                    Some(piece) => piece.to_string(),
+                    None => "_".to_string(),
+                };
+
+                index += 1;
+
+                match index {
+                    1 | 4 | 9 | 16 | 25 | 36 | 47 | 58 | 69 | 80 => output + "/",
+                    _ => output,
+                }
+            })
+            .collect::<Vec<String>>()
+            .join("")
+            .replace("___________", "11")
+            .replace("__________", "10")
+            .replace("_________", "9")
+            .replace("________", "8")
+            .replace("_______", "7")
+            .replace("______", "6")
+            .replace("_____", "5")
+            .replace("____", "4")
+            .replace("___", "3")
+            .replace("__", "2")
+            .replace("_", "1");
+
+        write!(f, "{}", output)
+    }
+}
+
 /// Get the siblings of a position.
 /// 
 /// These describe the relationship of positions relative to one another. Think
@@ -2510,5 +2547,12 @@ mod tests {
             vec![Position::F6, Position::F7, Position::F8], 
             board.walk(Position::F5, Color::White, 0)
         );
+    }
+
+    #[test]
+    fn test_stringify_board() {
+        let board = Board::initial();
+
+        assert_eq!(INITIAL_BOARD, board.to_string());
     }
 }
