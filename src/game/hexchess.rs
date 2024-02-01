@@ -5,9 +5,8 @@ use crate::game::piece::{Color, Piece};
 use crate::game::targets::{bishop, king, knight, pawn, queen, rook};
 use serde_json::json;
 use serde::{Deserialize, Serialize};
+use std::fmt;
 use tsify::Tsify;
-
-use super::piece;
 
 /// Hexchess game state
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
@@ -202,9 +201,21 @@ impl Hexchess {
     }
 }
 
+impl fmt::Display for Hexchess {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let en_passant = match self.en_passant {
+            Some(value) => value.to_string(),
+            None => "-".to_string(),
+        };
+
+        write!(f, "{} {} {} {} {}", self.board, self.turn, en_passant, self.halfmove, self.fullmove)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::constants::{EMPTY_HEXCHESS, INITIAL_HEXCHESS};
 
     #[test]
     fn test_create_hexchess_from_initial_board_fen() {
@@ -235,32 +246,28 @@ mod tests {
     }
     
     #[test]
-    fn test_invalid_turn_color_results_in_error()
-    {
+    fn test_invalid_turn_color_results_in_error() {
         let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 ? - 0 1");
 
         assert_eq!(Err(Failure::InvalidColor), hexchess);
     }
 
     #[test]
-    fn test_invalid_en_passant_results_in_error()
-    {
+    fn test_invalid_en_passant_results_in_error() {
         let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w ? 0 1");
 
         assert_eq!(Err(Failure::InvalidPosition), hexchess);
     }
 
     #[test]
-    fn test_invalid_halfmove_results_in_error()
-    {
+    fn test_invalid_halfmove_results_in_error() {
         assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - ? 1"));
         assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0.5 1"));
         assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - -6 1"));
     }
 
     #[test]
-    fn test_invalid_fullmove_results_in_error()
-    {
+    fn test_invalid_fullmove_results_in_error() {
         assert_eq!(Err(Failure::InvalidFullmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 ?"));
         assert_eq!(Err(Failure::InvalidFullmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1.5"));
         assert_eq!(Err(Failure::InvalidFullmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 0")); // <- less than 1
@@ -469,5 +476,19 @@ mod tests {
         let mut hexchess = Hexchess::from("1/3/5/7/p8/Q10/11/11/11/11/11 b - 0 1").unwrap();
         let result = hexchess.apply(Notation::from("b7a6q").unwrap());
         assert_eq!(Err(Failure::IllegalMove), result);
+    }
+
+    #[test]
+    fn test_stringify_hexchess_empty() {
+        let hexchess = Hexchess::new();
+
+        assert_eq!(EMPTY_HEXCHESS, hexchess.to_string());
+    }
+
+    #[test]
+    fn test_stringify_hexchess_initial() {
+        let hexchess = Hexchess::initial();
+
+        assert_eq!(INITIAL_HEXCHESS, hexchess.to_string());
     }
 }

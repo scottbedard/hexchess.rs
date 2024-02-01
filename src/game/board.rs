@@ -2376,6 +2376,7 @@ pub fn get_step(position: Position, direction: u8) -> Option<Position> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::constants::EMPTY_BOARD;
 
     #[test]
     fn test_get_step() {
@@ -2550,7 +2551,14 @@ mod tests {
     }
 
     #[test]
-    fn test_stringify_board() {
+    fn test_stringify_board_empty() {
+        let board = Board::new();
+
+        assert_eq!(EMPTY_BOARD, board.to_string());
+    }
+
+    #[test]
+    fn test_stringify_board_initial() {
         let board = Board::initial();
 
         assert_eq!(INITIAL_BOARD, board.to_string());
