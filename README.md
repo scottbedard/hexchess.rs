@@ -37,9 +37,19 @@ A web assembly module can be accessed via `@bedard/hexchess`
 ```ts
 import { parse } from '@bedard/hexchess'
 
-const game = parse('b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1')
+parse('b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1')
 
 // { board: { ... }, en_passant, turn, fullmove, halfmove }
+```
+
+Find legal moves from a position using `targets`
+
+```ts
+import { targets } from '@bedard/hexchess'
+
+targets(hexchess, 'g4')
+
+// [{ from, to, promotion }, ...]
 ```
 
 ## License
