@@ -52,9 +52,15 @@ impl Hexchess {
 
         self.board.set(notation.to, match notation.promotion {
             None => Some(piece),
-            Some(promo) => match piece {
-                Piece::BlackPawn => Some(promo.to_piece(Color::Black)),
-                Piece::WhitePawn => Some(promo.to_piece(Color::White)),
+            Some(promotion) => match piece {
+                Piece::BlackPawn => match pawn::is_promotion_position(Color::Black, notation.to) {
+                    false => return Err(Failure::IllegalMove),
+                    true => Some(promotion.to_piece(Color::Black)),
+                },
+                Piece::WhitePawn => match pawn::is_promotion_position(Color::White, notation.to) {
+                    false => return Err(Failure::IllegalMove),
+                    true => Some(promotion.to_piece(Color::White)),
+                },
                 _ => return Err(Failure::IllegalMove),
             },
         });
@@ -449,5 +455,19 @@ mod tests {
         let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
         let _ = hexchess.apply(Notation::from("f2f1n").unwrap());
         assert_eq!(Some(Piece::BlackKnight), hexchess.board.get(Position::F1));
+    }
+
+    #[test]
+    fn test_white_cannot_promote_on_black_promotion_position() {
+        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/qP9 w - 0 1").unwrap();
+        let result = hexchess.apply(Notation::from("b1a1q").unwrap());
+        assert_eq!(Err(Failure::IllegalMove), result);
+    }
+
+    #[test]
+    fn test_black_cannot_promote_on_white_promotion_position() {
+        let mut hexchess = Hexchess::from("1/3/5/7/p8/Q10/11/11/11/11/11 b - 0 1").unwrap();
+        let result = hexchess.apply(Notation::from("b7a6q").unwrap());
+        assert_eq!(Err(Failure::IllegalMove), result);
     }
 }

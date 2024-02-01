@@ -191,7 +191,7 @@ fn capture_en_passant(hexchess: &Hexchess, position: Position, color: Color, por
     None
 }
 
-fn is_promotion_position(color: Color, position: Position) -> bool {
+pub fn is_promotion_position(color: Color, position: Position) -> bool {
     match color {
         Color::White => match position {
             Position::A6 |
