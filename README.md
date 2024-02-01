@@ -1,18 +1,17 @@
-<p align="center">
-  <a href="https://hexchess.club"><img src="https://github.com/scottbedard/hexchess.rs/assets/7980426/356488eb-a780-41f3-8a41-a5f2c7df6534" width="300" /></a>
-</p>
+# `hexchess.rs`
+
+<a href="https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml"><img src="https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml/badge.svg" /></a>
+<a href="https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" /></a>
+
+A Rust library for [Gliński's hexagonal chess](https://en.wikipedia.org/wiki/Hexagonal_chess#Gli%C5%84ski's_hexagonal_chess), and the brain of [hexchess.club](https://hexchess.club)
 
 <p align="center">
-  <a href="https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml"><img src="https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml/badge.svg" /></a>
-  <a href="https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" /></a>
+  <img src="https://raw.githubusercontent.com/scottbedard/hexchess.rs/main/assets/hexchess.svg?token=GHSAT0AAAAAAB6TCUTIQHQJZMH4MAEY7QWIZN3BRFA" width="400" />
 </p>
 
-<p align="center">
-  This repository holds the game-logic for <a href="https://hexchess.club">hexchess.club</a>.<br>
-  It is still very much a work in progress, more documentation to come.
-</p>
+## Basic usage
 
-## Command line interface
+Execute `hexchess` to open the following command line interface
 
 ```
 Usage: hexchess <COMMAND>
