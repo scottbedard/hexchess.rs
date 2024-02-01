@@ -14,9 +14,9 @@ pub struct App {
 
 #[derive(Debug, Subcommand)]
 enum Command {
-    /// Apply notation to game state
+    /// Apply notation to game
     Apply {
-        /// Game state to apply notation to
+        /// Hexchess state
         fen: String,
 
         /// Algebraic hexchess notation
@@ -25,25 +25,25 @@ enum Command {
 
     /// Get piece value at position
     Get {
-        /// Game state
+        /// Hexchess state
         fen: String,
 
-        /// Position to get value of
+        /// Hexchess coordinate
         position: String,
     },
 
-    /// Parse game state to JSON
+    /// Parse hexchess to JSON
     Parse {
-        /// Game start to parse
+        /// Hexchess state
         fen: String,
     },
 
-    /// Get targets of a position
+    /// List target moves from a position
     Targets {
-        /// Game state
+        /// Hexchess state
         fen: String,
 
-        /// Position to get targets of
+        /// Hexchess coordinate
         position: String,
     },
 }
