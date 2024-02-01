@@ -1,3 +1,7 @@
+pub mod constants;
+pub mod game;
+
+use crate::game::hexchess::Hexchess;
 use wasm_bindgen::prelude::*;
 
 pub fn set_panic_hook() {
@@ -17,6 +21,11 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, hello-wasm!");
+pub fn parse(fen: String) -> String {
+    let hexchess = match Hexchess::from(&fen) {
+        Ok(value) => value,
+        Err(e) => return e.to_string(),
+    };
+
+    hexchess.to_string()
 }
