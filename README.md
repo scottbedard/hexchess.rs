@@ -7,7 +7,7 @@ A Rust / TypeScript library for [Gliński's hexagonal chess](https://en.wikipedi
 
 <p align="center">
   <a href="https://hexchess.club">
-    <img src="https://raw.githubusercontent.com/scottbedard/hexchess.rs/main/assets/hexchess.svg?token=GHSAT0AAAAAAB6TCUTJKYS3NBP6TEIW2DKOZN3FTWQ" width="500" />
+    <img src="assets/hexchess.svg" width="500" />
   </a>
 </p>
 
