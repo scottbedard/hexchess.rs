@@ -1,3 +1,4 @@
+pub mod commands;
 pub mod constants;
 pub mod game;
 
@@ -21,11 +22,8 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn parse(fen: String) -> String {
-    let hexchess = match Hexchess::from(&fen) {
-        Ok(value) => value,
-        Err(e) => return e.to_string(),
-    };
+pub fn parse(fen: String) -> Hexchess {
+    let hexchess = Hexchess::from(&fen).unwrap();
 
-    hexchess.to_string()
+    hexchess
 }

@@ -18,3 +18,9 @@ jobs:
 
     - name: Cargo test
       run: cargo test --verbose
+
+    - name: Wasm test
+      run: |
+        pnpm i
+        pnpm build
+        pnpm test
