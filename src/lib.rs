@@ -38,3 +38,8 @@ pub fn parse(fen: String) -> Hexchess {
 
     hexchess
 }
+
+#[wasm_bindgen(typescript_custom_section)]
+const TS_APPEND_CONTENT: &'static str = r#"
+export function targets(hexchess: Hexchess, position: Position): Notation[];
+"#;

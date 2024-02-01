@@ -32,7 +32,7 @@ Options:
 
 ## WASM
 
-A web assembly module can be accessed via `@bedard/hexchess`
+A TypeScript web assembly module is available as `@bedard/hexchess`
 
 ```ts
 import { parse } from '@bedard/hexchess'
