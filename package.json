@@ -10,13 +10,15 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "wasm-pack": "^0.12.1"
+  },
   "devDependencies": {
     "@bedard/hexchess": "link:pkg",
     "typescript": "^5.2.2",
+    "vite": "^5.0.8",
     "vite-plugin-top-level-await": "^1.4.1",
     "vite-plugin-wasm": "^3.3.0",
-    "vite": "^5.0.8",
     "vitest": "^1.2.2"
   }
 }
