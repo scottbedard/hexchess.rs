@@ -5,8 +5,6 @@ mod commands;
 mod constants;
 mod game;
 
-// https://github.com/scottbedard/hexchess/tree/f98a8e6e18fcd67f32c38adf086ba22094fcf6ef
-
 #[derive(Debug, Parser)]
 #[clap(name = "hexchess", version)]
 pub struct App {
