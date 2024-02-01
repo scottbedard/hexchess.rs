@@ -7,13 +7,13 @@ A Rust library for [Gliński's hexagonal chess](https://en.wikipedia.org/wiki/He
 
 <p align="center">
   <a href="https://hexchess.club">
-    <img src="https://raw.githubusercontent.com/scottbedard/hexchess.rs/main/assets/hexchess.svg?token=GHSAT0AAAAAAB6TCUTIQHQJZMH4MAEY7QWIZN3BRFA" width="500" />
+    <img src="https://raw.githubusercontent.com/scottbedard/hexchess.rs/main/assets/hexchess.svg?token=GHSAT0AAAAAAB6TCUTJKYS3NBP6TEIW2DKOZN3FTWQ" width="500" />
   </a>
 </p>
 
 ## Basic usage
 
-Execute `hexchess` to open the following command line interface
+Execute `hexchess` to open the following command line interface. More documentation to come.
 
 ```
 Usage: hexchess <COMMAND>
@@ -32,7 +32,15 @@ Options:
 
 ## WASM
 
-No documentation, check back later.
+A web assembly module can be accessed via `@bedard/hexchess`
+
+```ts
+import { parse } from '@bedard/hexchess'
+
+const game = parse('b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'')
+
+// { board: { ... }, en_passant, turn, fullmove, halfmove }
+```
 
 ## License
 
