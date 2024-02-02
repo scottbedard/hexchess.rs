@@ -1,7 +1,7 @@
 # `hexchess.rs`
 
 <a href="https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml"><img src="https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml/badge.svg" /></a>
-<a href="https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" /></a>
+<a href="https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-TBD-blue" /></a>
 
 A Rust / TypeScript library for [Gliński's hexagonal chess](https://en.wikipedia.org/wiki/Hexagonal_chess#Gli%C5%84ski's_hexagonal_chess), and the brain of [hexchess.club](https://hexchess.club)
 
