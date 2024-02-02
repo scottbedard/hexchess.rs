@@ -54,6 +54,6 @@ targets(hexchess, 'g4')
 
 ## License
 
-[MIT](https://github.com/scottbedard/hexchess.rs/tree/main?tab=MIT-1-ov-file#readme)
+TBD
 
 Copyright (c) 2024-present, Scott Bedard
