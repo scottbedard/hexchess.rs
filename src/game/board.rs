@@ -2565,6 +2565,101 @@ mod tests {
     }
 
     #[test]
+    fn test_stringify_board_positions() {
+        assert_eq!(Position::A1.to_string(), "a1");
+        assert_eq!(Position::A2.to_string(), "a2");
+        assert_eq!(Position::A3.to_string(), "a3");
+        assert_eq!(Position::A4.to_string(), "a4");
+        assert_eq!(Position::A5.to_string(), "a5");
+        assert_eq!(Position::A6.to_string(), "a6");
+        assert_eq!(Position::B1.to_string(), "b1");
+        assert_eq!(Position::B2.to_string(), "b2");
+        assert_eq!(Position::B3.to_string(), "b3");
+        assert_eq!(Position::B4.to_string(), "b4");
+        assert_eq!(Position::B5.to_string(), "b5");
+        assert_eq!(Position::B6.to_string(), "b6");
+        assert_eq!(Position::B7.to_string(), "b7");
+        assert_eq!(Position::C1.to_string(), "c1");
+        assert_eq!(Position::C2.to_string(), "c2");
+        assert_eq!(Position::C3.to_string(), "c3");
+        assert_eq!(Position::C4.to_string(), "c4");
+        assert_eq!(Position::C5.to_string(), "c5");
+        assert_eq!(Position::C6.to_string(), "c6");
+        assert_eq!(Position::C7.to_string(), "c7");
+        assert_eq!(Position::C8.to_string(), "c8");
+        assert_eq!(Position::D1.to_string(), "d1");
+        assert_eq!(Position::D2.to_string(), "d2");
+        assert_eq!(Position::D3.to_string(), "d3");
+        assert_eq!(Position::D4.to_string(), "d4");
+        assert_eq!(Position::D5.to_string(), "d5");
+        assert_eq!(Position::D6.to_string(), "d6");
+        assert_eq!(Position::D7.to_string(), "d7");
+        assert_eq!(Position::D8.to_string(), "d8");
+        assert_eq!(Position::D9.to_string(), "d9");
+        assert_eq!(Position::E1.to_string(), "e1");
+        assert_eq!(Position::E2.to_string(), "e2");
+        assert_eq!(Position::E3.to_string(), "e3");
+        assert_eq!(Position::E4.to_string(), "e4");
+        assert_eq!(Position::E5.to_string(), "e5");
+        assert_eq!(Position::E6.to_string(), "e6");
+        assert_eq!(Position::E7.to_string(), "e7");
+        assert_eq!(Position::E8.to_string(), "e8");
+        assert_eq!(Position::E9.to_string(), "e9");
+        assert_eq!(Position::E10.to_string(), "e10");
+        assert_eq!(Position::F1.to_string(), "f1");
+        assert_eq!(Position::F2.to_string(), "f2");
+        assert_eq!(Position::F3.to_string(), "f3");
+        assert_eq!(Position::F4.to_string(), "f4");
+        assert_eq!(Position::F5.to_string(), "f5");
+        assert_eq!(Position::F6.to_string(), "f6");
+        assert_eq!(Position::F7.to_string(), "f7");
+        assert_eq!(Position::F8.to_string(), "f8");
+        assert_eq!(Position::F9.to_string(), "f9");
+        assert_eq!(Position::F10.to_string(), "f10");
+        assert_eq!(Position::F11.to_string(), "f11");
+        assert_eq!(Position::G1.to_string(), "g1");
+        assert_eq!(Position::G2.to_string(), "g2");
+        assert_eq!(Position::G3.to_string(), "g3");
+        assert_eq!(Position::G4.to_string(), "g4");
+        assert_eq!(Position::G5.to_string(), "g5");
+        assert_eq!(Position::G6.to_string(), "g6");
+        assert_eq!(Position::G7.to_string(), "g7");
+        assert_eq!(Position::G8.to_string(), "g8");
+        assert_eq!(Position::G9.to_string(), "g9");
+        assert_eq!(Position::G10.to_string(), "g10");
+        assert_eq!(Position::H1.to_string(), "h1");
+        assert_eq!(Position::H2.to_string(), "h2");
+        assert_eq!(Position::H3.to_string(), "h3");
+        assert_eq!(Position::H4.to_string(), "h4");
+        assert_eq!(Position::H5.to_string(), "h5");
+        assert_eq!(Position::H6.to_string(), "h6");
+        assert_eq!(Position::H7.to_string(), "h7");
+        assert_eq!(Position::H8.to_string(), "h8");
+        assert_eq!(Position::H9.to_string(), "h9");
+        assert_eq!(Position::I1.to_string(), "i1");
+        assert_eq!(Position::I2.to_string(), "i2");
+        assert_eq!(Position::I3.to_string(), "i3");
+        assert_eq!(Position::I4.to_string(), "i4");
+        assert_eq!(Position::I5.to_string(), "i5");
+        assert_eq!(Position::I6.to_string(), "i6");
+        assert_eq!(Position::I7.to_string(), "i7");
+        assert_eq!(Position::I8.to_string(), "i8");
+        assert_eq!(Position::K1.to_string(), "k1");
+        assert_eq!(Position::K2.to_string(), "k2");
+        assert_eq!(Position::K3.to_string(), "k3");
+        assert_eq!(Position::K4.to_string(), "k4");
+        assert_eq!(Position::K5.to_string(), "k5");
+        assert_eq!(Position::K6.to_string(), "k6");
+        assert_eq!(Position::K7.to_string(), "k7");
+        assert_eq!(Position::L1.to_string(), "l1");
+        assert_eq!(Position::L2.to_string(), "l2");
+        assert_eq!(Position::L3.to_string(), "l3");
+        assert_eq!(Position::L4.to_string(), "l4");
+        assert_eq!(Position::L5.to_string(), "l5");
+        assert_eq!(Position::L6.to_string(), "l6");
+    }
+
+    #[test]
     fn test_no_position_has_redundant_siblings() {
         for position in SORTED_POSITIONS {
             let mut unique: Vec<Position> = vec![];
