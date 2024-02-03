@@ -2506,14 +2506,16 @@ mod tests {
     }
 
     #[test]
-    fn test_setting_board_value_as_position() {
-        let mut board = Board::from(INITIAL_BOARD).unwrap();
+    fn test_setting_board_value_at_all_positions() {
+        let mut board = Board::new();
 
-        assert_eq!(None, board.get(Position::A1));
+        for position in SORTED_POSITIONS {
+            assert_eq!(None, board.get(position));
 
-        board.set(Position::A1, Some(Piece::WhitePawn));
+            board.set(position, Some(Piece::WhitePawn));
 
-        assert_eq!(Some(Piece::WhitePawn), board.get(Position::A1));
+            assert_eq!(Some(Piece::WhitePawn), board.get(position));
+        }
     }
 
     #[test]
