@@ -26,10 +26,7 @@ impl Notation {
             None => return Err(Failure::InvalidNotation),
         };
 
-        if captures.name("from").is_none() || captures.name("to").is_none() {
-            return Err(Failure::InvalidNotation);
-        }
-
+        // it's safe to unwrap because the regex guarantees that these values are valid
         let from = Position::from(captures.name("from").unwrap().as_str()).unwrap();
 
         let to = Position::from(captures.name("to").unwrap().as_str()).unwrap();
