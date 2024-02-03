@@ -160,6 +160,7 @@ dependencies = [
  "console_error_panic_hook",
  "exitcode",
  "js-sys",
+ "once_cell",
  "regex",
  "serde",
  "serde-wasm-bindgen",

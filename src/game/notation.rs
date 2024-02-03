@@ -1,6 +1,7 @@
 use crate::game::board::Position;
 use crate::game::failure::Failure;
 use crate::game::piece::PromotionPiece;
+use once_cell::sync::Lazy;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -18,38 +19,27 @@ pub struct Notation {
 
 impl Notation {
     pub fn from(value: &str) -> Result<Self, Failure> {
-        let re = Regex::new(r"^(?<from>a1|a2|a3|a4|a5|a6|b1|b2|b3|b4|b5|b6|b7|c1|c2|c3|c4|c5|c6|c7|c8|d1|d2|d3|d4|d5|d6|d7|d8|d9|e1|e2|e3|e4|e5|e6|e7|e8|e9|e10|f1|f2|f3|f4|f5|f6|f7|f8|f9|f10|f11|g1|g2|g3|g4|g5|g6|g7|g8|g9|g10|h1|h2|h3|h4|h5|h6|h7|h8|h9|i1|i2|i3|i4|i5|i6|i7|i8|k1|k2|k3|k4|k5|k6|k7|l1|l2|l3|l4|l5|l6)(?<to>a1|a2|a3|a4|a5|a6|b1|b2|b3|b4|b5|b6|b7|c1|c2|c3|c4|c5|c6|c7|c8|d1|d2|d3|d4|d5|d6|d7|d8|d9|e1|e2|e3|e4|e5|e6|e7|e8|e9|e10|f1|f2|f3|f4|f5|f6|f7|f8|f9|f10|f11|g1|g2|g3|g4|g5|g6|g7|g8|g9|g10|h1|h2|h3|h4|h5|h6|h7|h8|h9|i1|i2|i3|i4|i5|i6|i7|i8|k1|k2|k3|k4|k5|k6|k7|l1|l2|l3|l4|l5|l6)(?<promotion>b|n|q|r)?$").unwrap();
+        static RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"^(?<from>a1|a2|a3|a4|a5|a6|b1|b2|b3|b4|b5|b6|b7|c1|c2|c3|c4|c5|c6|c7|c8|d1|d2|d3|d4|d5|d6|d7|d8|d9|e1|e2|e3|e4|e5|e6|e7|e8|e9|e10|f1|f2|f3|f4|f5|f6|f7|f8|f9|f10|f11|g1|g2|g3|g4|g5|g6|g7|g8|g9|g10|h1|h2|h3|h4|h5|h6|h7|h8|h9|i1|i2|i3|i4|i5|i6|i7|i8|k1|k2|k3|k4|k5|k6|k7|l1|l2|l3|l4|l5|l6)(?<to>a1|a2|a3|a4|a5|a6|b1|b2|b3|b4|b5|b6|b7|c1|c2|c3|c4|c5|c6|c7|c8|d1|d2|d3|d4|d5|d6|d7|d8|d9|e1|e2|e3|e4|e5|e6|e7|e8|e9|e10|f1|f2|f3|f4|f5|f6|f7|f8|f9|f10|f11|g1|g2|g3|g4|g5|g6|g7|g8|g9|g10|h1|h2|h3|h4|h5|h6|h7|h8|h9|i1|i2|i3|i4|i5|i6|i7|i8|k1|k2|k3|k4|k5|k6|k7|l1|l2|l3|l4|l5|l6)(?<promotion>b|n|q|r)?$").unwrap());
 
-        let captures = match re.captures(value) {
+        let captures = match RE.captures(value) {
             Some(value) => value,
             None => return Err(Failure::InvalidNotation),
         };
 
-        let from = match captures.name("from") {
-            Some(value) => match Position::from(value.as_str()) {
-                Ok(p) => p,
-                Err(_) => return Err(Failure::InvalidNotation),
-            }
-            None => return Err(Failure::InvalidNotation),
-        };
+        if captures.name("from").is_none() || captures.name("to").is_none() {
+            return Err(Failure::InvalidNotation);
+        }
 
-        let to = match captures.name("to") {
-            Some(value) => match Position::from(value.as_str()) {
-                Ok(p) => p,
-                Err(_) => return Err(Failure::InvalidNotation),
-            }
-            None => return Err(Failure::InvalidNotation),
-        };
+        let from = Position::from(captures.name("from").unwrap().as_str()).unwrap();
+
+        let to = Position::from(captures.name("to").unwrap().as_str()).unwrap();
 
         if from == to {
             return Err(Failure::InvalidNotation);
         }
 
         let promotion = match captures.name("promotion") {
-            Some(value) => match PromotionPiece::from(value.as_str()) {
-                Ok(p) => Some(p),
-                Err(_) => return Err(Failure::InvalidNotation),
-            }
+            Some(value) => Some(PromotionPiece::from(value.as_str()).unwrap()),
             None => None,
         };
 
