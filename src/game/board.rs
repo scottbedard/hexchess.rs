@@ -2517,6 +2517,110 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_board_at_all_positions() {
+        let board = Board::from("p/ppp/ppppp/ppppppp/ppppppppp/ppppppppppp/ppppppppppp/ppppppppppp/ppppppppppp/ppppppppppp/ppppppppppp").unwrap();
+    
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::A1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::A2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::A3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::A4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::A5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::A6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::B1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::B2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::B3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::B4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::B5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::B6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::B7));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::C1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::C2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::C3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::C4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::C5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::C6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::C7));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::C8));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::D1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::D2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::D3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::D4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::D5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::D6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::D7));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::D8));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::D9));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E7));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E8));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E9));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::E10));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F7));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F8));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F9));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F10));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::F11));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G7));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G8));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G9));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::G10));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::H1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::H2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::H3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::H4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::H5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::H6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::H7));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::H8));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::H9));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::I1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::I2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::I3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::I4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::I5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::I6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::I7));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::I8));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::K1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::K2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::K3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::K4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::K5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::K6));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::K7));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::L1));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::L2));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::L3));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::L4));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::L5));
+        assert_eq!(Some(Piece::BlackPawn), board.get(Position::L6));
+    }
+
+    #[test]
+    fn test_parse_board_with_invalid_character() {
+        let board = Board::from("x/3/5/7/9/11/11/11/11/11/11");
+
+        assert_eq!(Err(Failure::InvalidBoard), board);
+    }
+
+    #[test]
     fn test_walk_until_edge_of_board() {
         let board = Board::new();
 
