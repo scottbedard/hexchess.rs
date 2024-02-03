@@ -2563,4 +2563,22 @@ mod tests {
 
         assert_eq!(INITIAL_BOARD, board.to_string());
     }
+
+    #[test]
+    fn test_no_position_has_redundant_siblings() {
+        for position in SORTED_POSITIONS {
+            let mut unique: Vec<Position> = vec![];
+            let siblings = get_siblings(position);
+
+            for sibling in siblings {
+                if sibling.is_none() {
+                    continue;
+                }
+
+                assert_eq!(false, unique.contains(&sibling.unwrap()));
+
+                unique.push(sibling.unwrap());
+            }
+        }
+    }
 }
