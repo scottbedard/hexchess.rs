@@ -317,6 +317,18 @@ mod tests {
     }
 
     #[test]
+    fn test_pawn_does_not_capture_friendly_piece() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::F6, Some(Piece::WhitePawn));
+        hexchess.board.set(Position::G6, Some(Piece::WhitePawn));
+
+        let targets = hexchess.targets(Position::F6);
+
+        assert_eq!(targets.len(), 1);
+        assert_eq!(targets[0].to_string(), "f6f7");
+    }
+
+    #[test]
     fn test_black_pawn_capture_portside() {
         let mut hexchess = Hexchess::new();
         hexchess.board.set(Position::F6, Some(Piece::BlackPawn));
