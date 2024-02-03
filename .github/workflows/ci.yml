@@ -50,8 +50,8 @@ jobs:
     - name: Install dependencies
       run: pnpm install
 
-    - name: Vitest
-      run: |
-        pnpm i
-        pnpm build
-        pnpm test
+    - name: Build wasm package
+      run: pnpm build
+    
+    - name: TypeScript tests
+      run: pnpm test
