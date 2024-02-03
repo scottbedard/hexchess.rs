@@ -78,6 +78,7 @@ mod tests {
         let mut hexchess = Hexchess::new();
         hexchess.board.set(Position::F6, Some(Piece::WhiteKnight));
         hexchess.board.set(Position::I5, Some(Piece::BlackPawn));
+        hexchess.board.set(Position::I4, Some(Piece::BlackPawn));
         hexchess.board.set(Position::C5, Some(Piece::WhitePawn));
     
         let targets = hexchess.targets(Position::F6);
@@ -86,7 +87,7 @@ mod tests {
         assert_eq!(targets[0].to_string(), "f6g8");
         assert_eq!(targets[1].to_string(), "f6h7");
         assert_eq!(targets[2].to_string(), "f6i5"); // <- enemy piece at i5
-        assert_eq!(targets[3].to_string(), "f6i4");
+        assert_eq!(targets[3].to_string(), "f6i4"); // <- enemy piece at i4
         assert_eq!(targets[4].to_string(), "f6h3");
         assert_eq!(targets[5].to_string(), "f6g3");
         assert_eq!(targets[6].to_string(), "f6e3");
