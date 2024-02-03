@@ -525,4 +525,11 @@ mod tests {
 
         assert_eq!(Err(Failure::IllegalMove), result);
     }
+
+    #[test]
+    fn test_creating_hexchess_with_invalid_board_returns_failure() {
+        let hexchess = Hexchess::from("whoops");
+
+        assert_eq!(Err(Failure::InvalidBoard), hexchess);
+    }
 }
