@@ -82,10 +82,8 @@ pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Nota
 }
 
 fn advance(hexchess: &Hexchess, original_position: Position, from_position: Position, advance_direction: u8) -> Option<Notation> {
-    let forward_position = match get_step(from_position, advance_direction) {
-        Some(position) => position,
-        None => return None,
-    };
+    // safe to unwrap because pawns are never on the farthest rank, they would have been promoted
+    let forward_position = get_step(from_position, advance_direction).unwrap();
     
     match hexchess.board.get(forward_position) {
         Some(_) => None,
@@ -283,6 +281,28 @@ mod tests {
 
         assert_eq!(targets.len(), 1);
         assert_eq!(targets[0].to_string(), "f5f6");
+    }
+
+    #[test]
+    fn test_pawn_advance_with_no_portside_capture_position() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::A1, Some(Piece::WhitePawn));
+
+        let targets = hexchess.targets(Position::A1);
+
+        assert_eq!(targets.len(), 1);
+        assert_eq!(targets[0].to_string(), "a1a2");
+    }
+
+    #[test]
+    fn test_pawn_advance_with_no_starboard_capture_position() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::L1, Some(Piece::WhitePawn));
+
+        let targets = hexchess.targets(Position::L1);
+
+        assert_eq!(targets.len(), 1);
+        assert_eq!(targets[0].to_string(), "l1l2");
     }
 
     #[test]
