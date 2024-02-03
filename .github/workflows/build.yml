@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: ["main"]
+    branches: ["codecov"]
   pull_request:
     branches: ["main"]
 
