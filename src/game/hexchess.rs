@@ -498,6 +498,15 @@ mod tests {
     }
 
     #[test]
+    fn test_stringify_with_en_passant() {
+        let mut hexchess = Hexchess::new();
+
+        hexchess.en_passant = Some(Position::F6);
+
+        assert_eq!("1/3/5/7/9/11/11/11/11/11/11 w f6 0 1", hexchess.to_string());
+    }
+
+    #[test]
     fn test_only_correct_color_can_apply_notation() {
         let mut hexchess = Hexchess::initial();
         
