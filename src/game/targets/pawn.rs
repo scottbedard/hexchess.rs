@@ -6,15 +6,24 @@ use crate::game::piece::{Color, Piece, PromotionPiece};
 pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Notation> {
     let mut raw_targets: Vec<Notation> = vec![];
 
+    let (
+        advance_direction,
+        portside_direction,
+        starboard_direction
+    ): (u8, u8, u8) = match color {
+        Color::Black => (6, 4, 8),
+        Color::White => (0, 10, 2),
+    };
+
     // advance forward one position
-    match advance_one(hexchess, position, color) {
+    match advance(hexchess, position, position, advance_direction) {
         None => (),
         Some(notation) => {
             raw_targets.push(notation);
 
             // advance forward another position if possible
             if is_starting_position(position, color) {
-                match advance_two(hexchess, position, notation.to, color) {
+                match advance(hexchess, position, notation.to, advance_direction) {
                     Some(notation) => raw_targets.push(notation),
                     None => (),
                 }
@@ -23,11 +32,6 @@ pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Nota
     };
 
     // capture portside and starboard
-    let (portside_direction, starboard_direction) = match color {
-        Color::Black => (4, 8),
-        Color::White => (10, 2),
-    };
-
     match capture(hexchess, position, color, portside_direction) {
         None => (),
         Some(notation) => raw_targets.push(notation),
@@ -77,34 +81,8 @@ pub fn target(hexchess: &Hexchess, position: Position, color: Color) -> Vec<Nota
     targets
 }
 
-fn advance_one(hexchess: &Hexchess, position: Position, color: Color) -> Option<Notation> {
-    let forward_direction = match color {
-        Color::White => 0,
-        Color::Black => 6,
-    };
-
-    let forward_position = match get_step(position, forward_direction) {
-        Some(position) => position,
-        None => return None,
-    };
-    
-    match hexchess.board.get(forward_position) {
-        Some(_) => None,
-        None => return Some(Notation {
-            from: position,
-            to: forward_position,
-            promotion: None,
-        }),
-    }
-}
-
-fn advance_two(hexchess: &Hexchess, original_position: Position, to_position: Position, color: Color) -> Option<Notation> {
-    let forward_direction = match color {
-        Color::White => 0,
-        Color::Black => 6,
-    };
-
-    let forward_position = match get_step(to_position, forward_direction) {
+fn advance(hexchess: &Hexchess, original_position: Position, from_position: Position, advance_direction: u8) -> Option<Notation> {
+    let forward_position = match get_step(from_position, advance_direction) {
         Some(position) => position,
         None => return None,
     };
@@ -120,17 +98,17 @@ fn advance_two(hexchess: &Hexchess, original_position: Position, to_position: Po
 }
 
 fn capture(hexchess: &Hexchess, position: Position, color: Color, direction: u8) -> Option<Notation> {
-    let starboard_position = match get_step(position, direction) {
+    let capture_position = match get_step(position, direction) {
         Some(position) => position,
         None => return None,
     };
 
-    match hexchess.board.get(starboard_position) {
+    match hexchess.board.get(capture_position) {
         Some(piece) => match piece.color() == color {
             true => None,
             false => Some(Notation {
                 from: position,
-                to: starboard_position,
+                to: capture_position,
                 promotion: None,
             }),
         },
