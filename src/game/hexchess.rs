@@ -31,6 +31,11 @@ impl Hexchess {
             None => return Err(Failure::IllegalMove),
         };
 
+        // verify it is the correct piece's turn
+        if piece.color() != self.turn {
+            return Err(Failure::OutOfTurn);
+        }
+
         // update halfmove
         if piece == Piece::WhitePawn || piece == Piece::BlackPawn || self.board.get(notation.to).is_some() {
             self.halfmove = 0;
@@ -95,7 +100,7 @@ impl Hexchess {
 
         Ok(())
     }
-    
+
     pub fn from(value: &str) -> Result<Self, Failure> {
         let mut parts = value.split_whitespace();
 
@@ -490,5 +495,14 @@ mod tests {
         let hexchess = Hexchess::initial();
 
         assert_eq!(INITIAL_HEXCHESS, hexchess.to_string());
+    }
+
+    #[test]
+    fn test_only_correct_color_can_apply_notation() {
+        let mut hexchess = Hexchess::initial();
+        
+        let result = hexchess.apply(Notation::from("g7g6").unwrap());
+
+        assert_eq!(Err(Failure::OutOfTurn), result);
     }
 }

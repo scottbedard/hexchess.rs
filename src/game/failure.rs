@@ -12,6 +12,7 @@ pub enum Failure {
     InvalidPiece,
     InvalidPosition,
     InvalidPromotion,
+    OutOfTurn,
 }
 
 impl Display for Failure {
@@ -26,6 +27,7 @@ impl Display for Failure {
             Failure::InvalidPiece => write!(f, "invalid_piece"),
             Failure::InvalidPosition => write!(f, "invalid_position"),
             Failure::InvalidPromotion => write!(f, "invalid_promotion"),
+            Failure::OutOfTurn => write!(f, "out_of_turn"),
         }
     }
 }
