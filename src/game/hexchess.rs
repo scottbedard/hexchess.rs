@@ -109,7 +109,7 @@ impl Hexchess {
                 Ok(result) => result,
                 Err(failure) => return Err(failure)
             },
-            None => Board::new(),
+            None => return Err(Failure::InvalidBoard),
         };
 
         let turn = match parts.next() {
@@ -529,6 +529,13 @@ mod tests {
     #[test]
     fn test_creating_hexchess_with_invalid_board_returns_failure() {
         let hexchess = Hexchess::from("whoops");
+
+        assert_eq!(Err(Failure::InvalidBoard), hexchess);
+    }
+
+    #[test]
+    fn test_creating_hexchess_with_empty_string_returns_failure() {
+        let hexchess = Hexchess::from("");
 
         assert_eq!(Err(Failure::InvalidBoard), hexchess);
     }
