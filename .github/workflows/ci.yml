@@ -1,8 +1,8 @@
-name: build
+name: ci
 
 on:
   push:
-    branches: ["codecov"]
+    branches: ["*"]
   pull_request:
     branches: ["main"]
 
@@ -10,34 +10,9 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  rust:
+    name: Rust
 
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Cargo build
-      run: cargo build --verbose
-
-    - name: Cargo test
-      run: cargo test --verbose
-
-    - uses: pnpm/action-setup@v2
-      name: Install pnpm
-      with:
-        version: 8
-        run_install: false
-
-    - name: Install dependencies
-      run: pnpm install
-
-    - name: Vitest
-      run: |
-        pnpm i
-        pnpm build
-        pnpm test
-
-  coverage:
     runs-on: ubuntu-latest
 
     container:
@@ -57,3 +32,26 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
+
+  wasm:
+    name: WASM
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: pnpm/action-setup@v2
+      name: Install pnpm
+      with:
+        version: 8
+        run_install: false
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Vitest
+      run: |
+        pnpm i
+        pnpm build
+        pnpm test
