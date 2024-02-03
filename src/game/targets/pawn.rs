@@ -124,6 +124,7 @@ fn capture_en_passant(hexchess: &Hexchess, position: Position, color: Color, por
         Color::Black => (0, Piece::WhitePawn),
         Color::White => (6, Piece::BlackPawn),
     };
+
     let en_passant_sibling = match get_step(en_passant_position, enemy_direction) {
         Some(position) => position,
         None => return None,
@@ -431,15 +432,16 @@ mod tests {
     fn test_pawn_en_passant_does_not_capture_friendly_pieces() {
           let mut hexchess = Hexchess::new();
 
-          hexchess.board.set(Position::F6, Some(Piece::WhitePawn));
+          hexchess.board.set(Position::F5, Some(Piece::WhitePawn));
           hexchess.board.set(Position::G6, Some(Piece::WhitePawn));
           hexchess.turn = Color::White;
-          hexchess.en_passant = Some(Position::E6);
+          hexchess.en_passant = Some(Position::G5);
 
-          let targets = hexchess.targets(Position::F6);
+          let targets = hexchess.targets(Position::F5);
 
-          assert_eq!(targets.len(), 1);
-          assert_eq!(targets[0].to_string(), "f6f7");
+          assert_eq!(targets.len(), 2);
+          assert_eq!(targets[0].to_string(), "f5f6");
+          assert_eq!(targets[1].to_string(), "f5f7");
     }
 
     #[test]
