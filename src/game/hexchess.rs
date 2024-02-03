@@ -514,4 +514,15 @@ mod tests {
 
         assert_eq!(Err(Failure::OutOfTurn), result);
     }
+
+    #[test]
+    fn test_only_pawns_can_be_promoted() {
+        let mut hexchess = Hexchess::new();
+
+        hexchess.board.set(Position::F10, Some(Piece::WhiteRook));
+        
+        let result = hexchess.apply(Notation::from("f10f11q").unwrap());
+
+        assert_eq!(Err(Failure::IllegalMove), result);
+    }
 }
