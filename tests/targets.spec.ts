@@ -1,7 +1,5 @@
-import { parse, targets } from '@bedard/hexchess'
 import { describe, expect, it } from 'vitest'
-
-// https://github.com/scottbedard/hexchess/tree/f98a8e6e18fcd67f32c38adf086ba22094fcf6ef
+import { parse, targets } from '@bedard/hexchess'
 
 describe('targets', () => {
   it('targets', () => {

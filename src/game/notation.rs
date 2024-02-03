@@ -7,6 +7,7 @@ use std::fmt;
 use tsify::Tsify;
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub struct Notation {
     pub from: Position,
 

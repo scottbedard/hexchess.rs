@@ -1,11 +1,13 @@
 use crate::game::failure::Failure::{InvalidColor, InvalidPiece, InvalidPromotion};
 use serde::{Deserialize, Serialize};
 use std::fmt;
+use tsify::Tsify;
 
 use super::failure::Failure;
 
 /// Piece color
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub enum Color {
     #[serde(rename(deserialize = "w", serialize = "w"))]
     White,
@@ -34,7 +36,8 @@ impl fmt::Display for Color {
 }
 
 /// Colored piece types
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub enum Piece {
     #[serde(rename(deserialize = "P", serialize = "P"))]
     WhitePawn,
@@ -148,7 +151,8 @@ impl fmt::Display for Piece {
 }
 
 /// Generic piece type
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub enum PromotionPiece {
     #[serde(rename(deserialize = "n", serialize = "n"))]
     Knight,
