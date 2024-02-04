@@ -1,5 +1,4 @@
 /debug
 /node_modules
-/pkg
 /target
 tsconfig.vitest-temp.json

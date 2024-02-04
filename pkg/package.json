@@ -1,0 +1,17 @@
+{
+  "name": "hexchess",
+  "version": "0.1.0",
+  "files": [
+    "hexchess_bg.wasm",
+    "hexchess.js",
+    "hexchess_bg.js",
+    "hexchess.d.ts"
+  ],
+  "module": "hexchess.js",
+  "types": "hexchess.d.ts",
+  "sideEffects": [
+    "./hexchess.js",
+    "./snippets/*"
+  ],
+  "main": "hexchess.js"
+}
