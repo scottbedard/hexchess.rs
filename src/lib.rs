@@ -24,55 +24,58 @@ extern "C" {
     fn alert(s: &str);
 }
 
-/// Execute hexchess notation
-#[wasm_bindgen]
-pub fn apply(hexchess: Hexchess, notation: Notation) -> Hexchess {
+/// Execute notation on hexchess object
+#[wasm_bindgen(js_name = applyNotation)]
+pub fn apply_notation(hexchess: Hexchess, notation: Notation) -> Hexchess {
     set_panic_hook();
-
     let mut output = hexchess.clone();
-    
     let _ = output.apply(notation);
-
     output
 }
 
-/// Parse algebraic hexchess notation
-#[wasm_bindgen]
-pub fn notation(str: String) -> Notation {
+/// Create empty hexchess object
+#[wasm_bindgen(js_name = createHexchess)]
+pub fn create_hexchess() -> Hexchess {
     set_panic_hook();
+    Hexchess::new()
+}
 
+/// Create hexchess object with initial position
+#[wasm_bindgen(js_name = createHexchessInitial)]
+pub fn create_hexchess_initial() -> Hexchess {
+    set_panic_hook();
+    Hexchess::initial()
+}
+
+/// Create hexchess object from string
+#[wasm_bindgen(js_name = parseHexchess)]
+pub fn parse_hexchess(fen: String) -> Hexchess {
+    set_panic_hook();
+    Hexchess::from(&fen).unwrap()
+}
+
+/// Create hexchess notation object from string
+#[wasm_bindgen(js_name = parseNotation)]
+pub fn parse_notation(str: String) -> Notation {
+    set_panic_hook();
     Notation::from(&str).unwrap()
 }
 
-/// Parse hexchess FEN string
-#[wasm_bindgen]
-pub fn parse(fen: String) -> Hexchess {
-    set_panic_hook();
-
-    let hexchess = Hexchess::from(&fen).unwrap();
-
-    hexchess
-}
-
 /// Stringify hexchess object
-#[wasm_bindgen]
-pub fn stringify(hexchess: Hexchess) -> String {
+#[wasm_bindgen(js_name = stringifyHexchess)]
+pub fn stringify_hexchess(hexchess: Hexchess) -> String {
     set_panic_hook();
-
     hexchess.to_string()
 }
 
 /// Find target moves from a position, regardless of turn color
-#[wasm_bindgen(skip_typescript)]
-pub fn targets(hexchess: Hexchess, position: Position) -> JsValue {
+#[wasm_bindgen(js_name = getTargets, skip_typescript)]
+pub fn get_targets(hexchess: Hexchess, position: Position) -> JsValue {
     set_panic_hook();
-
-    let targets = hexchess.targets(position);
-
-    JsValue::from_serde(&targets).unwrap()
+    JsValue::from_serde(&hexchess.targets(position)).unwrap()
 }
 
 #[wasm_bindgen(typescript_custom_section)]
 const TS_APPEND_CONTENT: &'static str = r#"
-export function targets(hexchess: Hexchess, position: Position): Notation[];
+export function getTargets(hexchess: Hexchess, position: Position): Notation[];
 "#;

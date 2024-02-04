@@ -1,13 +1,16 @@
-import { assertType, describe, expect, it } from 'vitest'
-import { Hexchess, Notation, notation, parse, stringify } from '@bedard/hexchess'
+import { describe, expect, it } from 'vitest'
+
+import {
+  parseHexchess,
+  parseNotation,
+  stringifyHexchess,
+} from '@bedard/hexchess'
 
 describe('serialization', () => {
   it('parse / stringify hexchess', () => {
     const str = 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
 
-    const hexchess = parse(str)
-
-    assertType<Hexchess>(hexchess)
+    const hexchess = parseHexchess(str)
 
     expect(hexchess).toEqual({
       board: {
@@ -109,15 +112,11 @@ describe('serialization', () => {
       turn: 'w'
     })
 
-    expect(stringify(hexchess)).toBe(str)
+    expect(stringifyHexchess(hexchess)).toBe(str)
   })
 
   it('parse notation', () => {
-    const n = notation('g4g5')
-
-    assertType<Notation>(n)
-
-    expect(notation('g4g5')).toEqual({
+    expect(parseNotation('g4g5')).toEqual({
       from: 'g4',
       promotion: null,
       to: 'g5',
