@@ -123,37 +123,55 @@ function getStringFromWasm0(ptr, len) {
     return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
 }
 /**
-* Execute hexchess notation
+* Execute notation on hexchess object
 * @param {Hexchess} hexchess
 * @param {Notation} notation
 * @returns {Hexchess}
 */
-export function apply(hexchess, notation) {
-    const ret = wasm.apply(addHeapObject(hexchess), addHeapObject(notation));
+export function applyNotation(hexchess, notation) {
+    const ret = wasm.applyNotation(addHeapObject(hexchess), addHeapObject(notation));
     return takeObject(ret);
 }
 
 /**
-* Parse algebraic hexchess notation
-* @param {string} str
-* @returns {Notation}
+* Create empty hexchess object
+* @returns {Hexchess}
 */
-export function notation(str) {
-    const ptr0 = passStringToWasm0(str, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
-    const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.notation(ptr0, len0);
+export function createHexchess() {
+    const ret = wasm.createHexchess();
     return takeObject(ret);
 }
 
 /**
-* Parse hexchess FEN string
+* Create hexchess object with initial position
+* @returns {Hexchess}
+*/
+export function createHexchessInitial() {
+    const ret = wasm.createHexchessInitial();
+    return takeObject(ret);
+}
+
+/**
+* Create hexchess object from string
 * @param {string} fen
 * @returns {Hexchess}
 */
-export function parse(fen) {
+export function parseHexchess(fen) {
     const ptr0 = passStringToWasm0(fen, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len0 = WASM_VECTOR_LEN;
-    const ret = wasm.parse(ptr0, len0);
+    const ret = wasm.parseHexchess(ptr0, len0);
+    return takeObject(ret);
+}
+
+/**
+* Create hexchess notation object from string
+* @param {string} str
+* @returns {Notation}
+*/
+export function parseNotation(str) {
+    const ptr0 = passStringToWasm0(str, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ret = wasm.parseNotation(ptr0, len0);
     return takeObject(ret);
 }
 
@@ -162,12 +180,12 @@ export function parse(fen) {
 * @param {Hexchess} hexchess
 * @returns {string}
 */
-export function stringify(hexchess) {
+export function stringifyHexchess(hexchess) {
     let deferred1_0;
     let deferred1_1;
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        wasm.stringify(retptr, addHeapObject(hexchess));
+        wasm.stringifyHexchess(retptr, addHeapObject(hexchess));
         var r0 = getInt32Memory0()[retptr / 4 + 0];
         var r1 = getInt32Memory0()[retptr / 4 + 1];
         deferred1_0 = r0;
@@ -185,8 +203,8 @@ export function stringify(hexchess) {
 * @param {Position} position
 * @returns {any}
 */
-export function targets(hexchess, position) {
-    const ret = wasm.targets(addHeapObject(hexchess), addHeapObject(position));
+export function getTargets(hexchess, position) {
+    const ret = wasm.getTargets(addHeapObject(hexchess), addHeapObject(position));
     return takeObject(ret);
 }
 

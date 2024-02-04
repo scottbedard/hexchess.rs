@@ -1,30 +1,40 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-* Execute hexchess notation
+* Execute notation on hexchess object
 * @param {Hexchess} hexchess
 * @param {Notation} notation
 * @returns {Hexchess}
 */
-export function apply(hexchess: Hexchess, notation: Notation): Hexchess;
+export function applyNotation(hexchess: Hexchess, notation: Notation): Hexchess;
 /**
-* Parse algebraic hexchess notation
-* @param {string} str
-* @returns {Notation}
+* Create empty hexchess object
+* @returns {Hexchess}
 */
-export function notation(str: string): Notation;
+export function createHexchess(): Hexchess;
 /**
-* Parse hexchess FEN string
+* Create hexchess object with initial position
+* @returns {Hexchess}
+*/
+export function createHexchessInitial(): Hexchess;
+/**
+* Create hexchess object from string
 * @param {string} fen
 * @returns {Hexchess}
 */
-export function parse(fen: string): Hexchess;
+export function parseHexchess(fen: string): Hexchess;
+/**
+* Create hexchess notation object from string
+* @param {string} str
+* @returns {Notation}
+*/
+export function parseNotation(str: string): Notation;
 /**
 * Stringify hexchess object
 * @param {Hexchess} hexchess
 * @returns {string}
 */
-export function stringify(hexchess: Hexchess): string;
+export function stringifyHexchess(hexchess: Hexchess): string;
 export interface Board {
     a1: Piece | null;
     a2: Piece | null;
@@ -142,6 +152,6 @@ export interface Notation {
 }
 
 
-export function targets(hexchess: Hexchess, position: Position): Notation[];
+export function getTargets(hexchess: Hexchess, position: Position): Notation[];
 
 
