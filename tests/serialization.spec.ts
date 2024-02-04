@@ -103,7 +103,7 @@ describe('serialization', () => {
         l5: null,
         l6: null
       },
-      en_passant: null,
+      enPassant: null,
       fullmove: 1,
       halfmove: 0,
       turn: 'w'
