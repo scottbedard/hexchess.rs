@@ -14,6 +14,7 @@ use tsify::Tsify;
 pub struct Hexchess {
     pub board: Board,
 
+    #[serde(rename(deserialize = "enPassant", serialize = "enPassant"))]
     pub en_passant: Option<Position>,
 
     pub fullmove: u16,
