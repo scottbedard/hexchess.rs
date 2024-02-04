@@ -31,58 +31,94 @@ Options:
   -V, --version  Print version
 ```
 
-## WASM
+## TypeScript
 
-A TypeScript web assembly module is available as `@bedard/hexchess`.
+A collection of wasm bindings available via `@bedard/hexchess`, listed below are the available methods.
 
-Most of these functions act on `Hexchess` objects, which are created using `parse`.
+> Note: Depending on the bundler, plugins may be required for [Web Assembly](https://developer.mozilla.org/en-US/docs/WebAssembly) and [top-level await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#top_level_await).
+
+#### `applyNotation`
+
+Create a new `Hexchess` object after applying a piece of `Notation`.
 
 ```ts
-import { parse } from '@bedard/hexchess'
+import { applyNotation } from '@bedard/hexchess'
 
-parse('b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1')
+applyNotation(hexchess, notation)
 
-// { board: { ... }, en_passant, turn, fullmove, halfmove }
+// { board: { ... }, enPassant, turn, fullmove, halfmove }
 ```
 
-Use `stringify` to transform this object back to it's fen representation.
+#### `createHexchess`
+
+Create an empty `Hexchess` object.
 
 ```ts
-import { stringify } from '@bedard/hexchess'
+import { createHexchess } from '@bedard/hexchess'
 
-stringify(hexchess)
+createHexchess()
 
-// 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
+// { board: { ... }, enPassant, turn, fullmove, halfmove }
 ```
 
-Find legal moves from a position using `targets`
+#### `createHexchessInitial`
+
+Create a `Hexchess` object with the initial game state.
 
 ```ts
-import { targets } from '@bedard/hexchess'
+import { createHexchessInitial } from '@bedard/hexchess'
+
+createHexchessInitial()
+
+// { board: { ... }, enPassant, turn, fullmove, halfmove }
+```
+
+#### `getTargets`
+
+Find all legal moves from a position and return the resulting array of `Notation` objects.
+
+```ts
+import { getTargets } from '@bedard/hexchess'
 
 targets(hexchess, 'g4')
 
 // [{ from, to, promotion }, ...]
 ```
 
-To manually create `Notation` objects, use the `notation` function.
+#### `parseHexchess`
+
+Create a `Hexchess` object from it's string representation.
 
 ```ts
-import { notation } from '@bedard/hexchess'
+import { parseHexchess } from '@bedard/hexchess'
 
-notation('e4e5')
+parseHexchess('b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1')
+
+// { board: { ... }, enPassant, turn, fullmove, halfmove }
+```
+
+#### `parseNotation`
+
+Create a `Notation` object from it's string representation.
+
+```ts
+import { parseNotation } from '@bedard/hexchess'
+
+parseNotation('e4e5')
 
 // { from: 'e4', to: 'e5', promotion: null }
 ```
 
-Use `apply` to execute a piece of notation. This function returns a new `Hexchess` object.
+#### `stringifyHexchess`
+
+Convert a `Hexchess` object to it's string representation.
 
 ```ts
-import { apply } from '@bedard/hexchess'
+import { stringifyHexchess } from '@bedard/hexchess'
 
-apply(hexchess, notation)
+stringifyHexchess(hexchess)
 
-// { board: { ... }, en_passant, turn, fullmove, halfmove }
+// 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
 ```
 
 ## License
