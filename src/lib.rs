@@ -19,11 +19,6 @@ pub fn set_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
-#[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-}
-
 /// Execute notation on hexchess object
 #[wasm_bindgen(js_name = applyNotation)]
 pub fn apply_notation(hexchess: Hexchess, notation: Notation) -> Hexchess {
