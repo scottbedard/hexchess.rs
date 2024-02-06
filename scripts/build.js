@@ -6,6 +6,7 @@ function run() {
 
   const pkg = JSON.parse(fs.readFileSync(file, 'utf-8'))
 
+  pkg.name = '@bedard/hexchess'
   pkg.main = 'hexchess.js'
 
   fs.writeFileSync(file, JSON.stringify(pkg, null, 2))

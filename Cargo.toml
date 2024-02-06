@@ -2,6 +2,8 @@
 name = "hexchess"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/scottbedard/hexchess.rs"
+license = "MIT"
 
 [features]
 default = ["console_error_panic_hook"]
