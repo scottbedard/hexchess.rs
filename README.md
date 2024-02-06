@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml/badge.svg)](https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml)
 [![Coverage](https://codecov.io/gh/scottbedard/hexchess.rs/graph/badge.svg?token=uHmFqhQDps)](https://codecov.io/gh/scottbedard/hexchess.rs)
-[![License](https://img.shields.io/badge/license-TBD-blue)](https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE)
 
 A Rust / TypeScript library for [Gliński's hexagonal chess](https://en.wikipedia.org/wiki/Hexagonal_chess#Gli%C5%84ski's_hexagonal_chess), and the brain of [hexchess.club](https://hexchess.club)
 
@@ -123,6 +123,6 @@ stringifyHexchess(hexchess)
 
 ## License
 
-TBD
+[MIT](https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE)
 
 Copyright (c) 2024-present, Scott Bedard
