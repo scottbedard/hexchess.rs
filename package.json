@@ -1,9 +1,9 @@
 {
   "name": "@bedard/hexchess",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "scripts": {
-    "build": "wasm-pack build && node scripts/build.js",
+    "build": "wasm-pack build --release && node scripts/build.mjs",
     "test": "vitest"
   },
   "keywords": [],
@@ -15,6 +15,6 @@
     "vite-plugin-top-level-await": "^1.4.2",
     "vite-plugin-wasm": "^3.3.0",
     "vitest": "^1.6.0",
-    "wasm-pack": "^0.12.1"
+    "wasm-pack": "^0.13.0"
   }
 }
