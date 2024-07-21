@@ -53,9 +53,20 @@ jobs:
     - name: TypeScript tests
       run: pnpm test
 
-    - name: Release
-      run: |
-        cd ./pkg
-        npm publish --access public
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - uses: actions/upload-artifact@master
+      with:
+        name: pkg
+        path: pkg
+
+  release:
+    needs: [rust, wasm]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: |
+          cd ./pkg
+          ls -a
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+# npm publish --access public
