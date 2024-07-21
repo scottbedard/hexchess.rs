@@ -58,7 +58,7 @@ jobs:
         name: pkg
         path: pkg
 
-  release:
+  publish:
     needs: [rust, wasm]
 
     runs-on: ubuntu-latest
