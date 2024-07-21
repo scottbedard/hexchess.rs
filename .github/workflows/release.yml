@@ -81,7 +81,8 @@ jobs:
       - name: Build wasm package
         run: pnpm build
 
-      - run: |
+      - name: Publish
+        run: |
           cd ./pkg
           npm publish --access public
         env:
