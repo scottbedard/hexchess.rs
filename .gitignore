@@ -2,3 +2,4 @@
 /node_modules
 /target
 tsconfig.vitest-temp.json
+.DS_Store
