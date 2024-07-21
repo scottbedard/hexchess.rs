@@ -160,6 +160,13 @@ impl Hexchess {
         })
     }
 
+    pub fn color(&self, position: Position) -> Option<Color> {
+        match self.board.get(position) {
+            None => None,
+            Some(piece) => Some(piece.color()),
+        }
+    }
+
     pub fn initial() -> Self {
         Hexchess {
             board: Board::initial(),
@@ -539,5 +546,26 @@ mod tests {
         let hexchess = Hexchess::from("");
 
         assert_eq!(Err(Failure::InvalidBoard), hexchess);
+    }
+
+    #[test]
+    fn test_color() {
+        let hexchess = Hexchess::initial();
+
+        assert_eq!(None, hexchess.color(Position::A1));
+
+        assert_eq!(Some(Color::White), hexchess.color(Position::B1)); // P
+        assert_eq!(Some(Color::White), hexchess.color(Position::C1)); // R
+        assert_eq!(Some(Color::White), hexchess.color(Position::D1)); // N
+        assert_eq!(Some(Color::White), hexchess.color(Position::E1)); // Q
+        assert_eq!(Some(Color::White), hexchess.color(Position::F1)); // B
+        assert_eq!(Some(Color::White), hexchess.color(Position::G1)); // K
+
+        assert_eq!(Some(Color::Black), hexchess.color(Position::B7)); // p
+        assert_eq!(Some(Color::Black), hexchess.color(Position::C8)); // r
+        assert_eq!(Some(Color::Black), hexchess.color(Position::D9)); // n
+        assert_eq!(Some(Color::Black), hexchess.color(Position::E10)); // q
+        assert_eq!(Some(Color::Black), hexchess.color(Position::F11)); // b
+        assert_eq!(Some(Color::Black), hexchess.color(Position::G10)); // k
     }
 }

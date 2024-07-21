@@ -93,6 +93,7 @@ function passStringToWasm0(arg, malloc, realloc) {
         const ret = encodeString(arg, view);
 
         offset += ret.written;
+        ptr = realloc(ptr, len, offset, 1) >>> 0;
     }
 
     WASM_VECTOR_LEN = offset;
@@ -197,6 +198,32 @@ export function stringifyHexchess(hexchess) {
     }
 }
 
+function _assertChar(c) {
+    if (typeof(c) === 'number' && (c >= 0x110000 || (c >= 0xD800 && c < 0xE000))) throw new Error(`expected a valid Unicode scalar value, found ${c}`);
+}
+/**
+* Get piece color
+* @param {string} val
+* @returns {any}
+*/
+export function getPieceColor(val) {
+    const char0 = val.codePointAt(0);
+    _assertChar(char0);
+    const ret = wasm.getPieceColor(char0);
+    return takeObject(ret);
+}
+
+/**
+* Find piece color at board position
+* @param {Hexchess} hexchess
+* @param {Position} position
+* @returns {any}
+*/
+export function getPositionColor(hexchess, position) {
+    const ret = wasm.getPositionColor(addHeapObject(hexchess), addHeapObject(position));
+    return takeObject(ret);
+}
+
 /**
 * Find target moves from a position, regardless of turn color
 * @param {Hexchess} hexchess
@@ -216,11 +243,6 @@ function handleError(f, args) {
     }
 }
 
-export function __wbindgen_is_undefined(arg0) {
-    const ret = getObject(arg0) === undefined;
-    return ret;
-};
-
 export function __wbindgen_object_clone_ref(arg0) {
     const ret = getObject(arg0);
     return addHeapObject(ret);
@@ -228,6 +250,11 @@ export function __wbindgen_object_clone_ref(arg0) {
 
 export function __wbindgen_object_drop_ref(arg0) {
     takeObject(arg0);
+};
+
+export function __wbindgen_is_undefined(arg0) {
+    const ret = getObject(arg0) === undefined;
+    return ret;
 };
 
 export function __wbg_new_abda76e883ba8a5f() {
@@ -264,12 +291,12 @@ export function __wbindgen_string_get(arg0, arg1) {
     getInt32Memory0()[arg0 / 4 + 0] = ptr1;
 };
 
-export function __wbg_parse_06816e879d29d4df() { return handleError(function (arg0, arg1) {
+export function __wbg_parse_66d1801634e099ac() { return handleError(function (arg0, arg1) {
     const ret = JSON.parse(getStringFromWasm0(arg0, arg1));
     return addHeapObject(ret);
 }, arguments) };
 
-export function __wbg_stringify_daa6661e90c04140() { return handleError(function (arg0) {
+export function __wbg_stringify_8887fe74e1c50d81() { return handleError(function (arg0) {
     const ret = JSON.stringify(getObject(arg0));
     return addHeapObject(ret);
 }, arguments) };

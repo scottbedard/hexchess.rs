@@ -35,6 +35,19 @@ export function parseNotation(str: string): Notation;
 * @returns {string}
 */
 export function stringifyHexchess(hexchess: Hexchess): string;
+/**
+* Get piece color
+* @param {string} val
+* @returns {any}
+*/
+export function getPieceColor(val: string): any;
+/**
+* Find piece color at board position
+* @param {Hexchess} hexchess
+* @param {Position} position
+* @returns {any}
+*/
+export function getPositionColor(hexchess: Hexchess, position: Position): any;
 export interface Board {
     a1: Piece | null;
     a2: Piece | null;
@@ -139,17 +152,17 @@ export interface Hexchess {
     turn: Color;
 }
 
-export type PromotionPiece = "n" | "b" | "r" | "q";
-
-export type Piece = "P" | "N" | "B" | "R" | "Q" | "K" | "p" | "n" | "b" | "r" | "q" | "k";
-
-export type Color = "w" | "b";
-
 export interface Notation {
     from: Position;
     promotion: PromotionPiece | null;
     to: Position;
 }
+
+export type PromotionPiece = "n" | "b" | "r" | "q";
+
+export type Piece = "P" | "N" | "B" | "R" | "Q" | "K" | "p" | "n" | "b" | "r" | "q" | "k";
+
+export type Color = "w" | "b";
 
 
 export function getTargets(hexchess: Hexchess, position: Position): Notation[];

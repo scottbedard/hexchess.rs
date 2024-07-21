@@ -8,6 +8,9 @@ export default defineConfig({
     wasm(),
     topLevelAwait()
   ],
+  resolve: {
+    mainFields: ['module']
+  },
   test: {
     typecheck: {
       enabled: true,

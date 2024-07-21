@@ -5,6 +5,7 @@ pub mod game;
 use crate::game::board::Position;
 use crate::game::hexchess::Hexchess;
 use crate::game::notation::Notation;
+use crate::game::piece::Piece;
 use tsify::JsValueSerdeExt;
 use wasm_bindgen::prelude::*;
 
@@ -61,6 +62,24 @@ pub fn parse_notation(str: String) -> Notation {
 pub fn stringify_hexchess(hexchess: Hexchess) -> String {
     set_panic_hook();
     hexchess.to_string()
+}
+
+/// Get piece color
+#[wasm_bindgen(js_name = getPieceColor)]
+pub fn get_piece_color(val: char) -> JsValue {
+    set_panic_hook();
+
+    match Piece::from_char(val) {
+        Ok(piece) => JsValue::from_serde(&piece.color()).unwrap(),
+        Err(_) => JsValue::NULL,
+    }
+}
+
+/// Find piece color at board position
+#[wasm_bindgen(js_name = getPositionColor)]
+pub fn get_position_color(hexchess: Hexchess, position: Position) -> JsValue {
+    set_panic_hook();
+    JsValue::from_serde(&hexchess.color(position)).unwrap()
 }
 
 /// Find target moves from a position, regardless of turn color

@@ -74,6 +74,30 @@ createHexchessInitial()
 // { board: { ... }, enPassant, turn, fullmove, halfmove }
 ```
 
+#### `getColor`
+
+Get the color of a piece.
+
+```ts
+import { getColor } from '@bedard/hexchess'
+
+getColor('p') // 'b'
+getColor('P') // 'w'
+getColor('?') // null
+```
+
+#### `getPositionColor`
+
+Get color of a piece by board position.
+
+```ts
+import { getPositionColor } from '@bedard/hexchess'
+
+getPositionColor(hexchess, 'f5') // 'w'
+getPositionColor(hexchess, 'f6') // null
+getPositionColor(hexchess, 'f7') // 'b'
+```
+
 #### `getTargets`
 
 Find all legal moves from a position and return the resulting array of `Notation` objects.

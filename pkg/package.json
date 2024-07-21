@@ -1,5 +1,5 @@
 {
-  "name": "@bedard/hexchess",
+  "name": "hexchess",
   "version": "0.1.0",
   "license": "MIT",
   "repository": {
@@ -17,6 +17,5 @@
   "sideEffects": [
     "./hexchess.js",
     "./snippets/*"
-  ],
-  "main": "hexchess.js"
+  ]
 }
