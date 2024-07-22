@@ -1,4 +1,4 @@
-use crate::game::board::{Board, Position};
+use crate::game::board::{Board, Position, get_step};
 use crate::game::failure::Failure;
 use crate::game::notation::Notation;
 use crate::game::piece::{Color, Piece};
@@ -69,6 +69,20 @@ impl Hexchess {
                 _ => return Err(Failure::IllegalMove),
             },
         });
+
+        // clear en passant capture
+        if Some(notation.to) == self.en_passant {
+            let captured = match piece {
+                Piece::BlackPawn => get_step(notation.to, 0),
+                Piece::WhitePawn => get_step(notation.to, 6),
+                _ => None,
+            };
+
+            match captured {
+                Some(pos) => self.board.set(pos, None),
+                None => {},
+            };
+        }
 
         // set en passant
         self.en_passant = match piece {
@@ -419,6 +433,66 @@ mod tests {
         let mut k = Hexchess::from("1/3/5/7/9/11/11/11/11/11/9P1 w - 0 1").unwrap();
         let _ = k.apply(Notation::from("k1k3").unwrap());
         assert_eq!(Some(Position::K2), k.en_passant);
+    }
+
+    #[test]
+    fn test_apply_clears_white_starboard_en_passant() {
+          let mut hexchess = Hexchess::new();
+          hexchess.board.set(Position::F6, Some(Piece::WhitePawn));
+          hexchess.board.set(Position::G5, Some(Piece::BlackPawn));
+          hexchess.turn = Color::White;
+          hexchess.en_passant = Some(Position::G6);
+
+          assert_eq!(Some(Piece::BlackPawn), hexchess.board.get(Position::G5));
+          
+          let _ = hexchess.apply(Notation::from("f6g6").unwrap());
+
+          assert_eq!(None, hexchess.board.get(Position::G5));
+    }
+
+    #[test]
+    fn test_apply_clears_white_portside_en_passant() {
+          let mut hexchess = Hexchess::new();
+          hexchess.board.set(Position::E5, Some(Piece::BlackPawn));
+          hexchess.board.set(Position::F6, Some(Piece::WhitePawn));
+          hexchess.turn = Color::White;
+          hexchess.en_passant = Some(Position::E6);
+
+          assert_eq!(Some(Piece::BlackPawn), hexchess.board.get(Position::E5));
+          
+          let _ = hexchess.apply(Notation::from("f6e6").unwrap());
+
+          assert_eq!(None, hexchess.board.get(Position::E5));
+    }
+
+    #[test]
+    fn test_apply_clears_black_starboard_en_passant() {
+          let mut hexchess = Hexchess::new();
+          hexchess.board.set(Position::F6, Some(Piece::BlackPawn));
+          hexchess.board.set(Position::E6, Some(Piece::WhitePawn));
+          hexchess.turn = Color::Black;
+          hexchess.en_passant = Some(Position::E5);
+
+          assert_eq!(Some(Piece::WhitePawn), hexchess.board.get(Position::E6));
+          
+          let _ = hexchess.apply(Notation::from("f6e5").unwrap());
+
+          assert_eq!(None, hexchess.board.get(Position::E6));
+    }
+
+    #[test]
+    fn test_apply_clears_black_portside_en_passant() {
+          let mut hexchess = Hexchess::new();
+          hexchess.board.set(Position::F6, Some(Piece::BlackPawn));
+          hexchess.board.set(Position::G6, Some(Piece::WhitePawn));
+          hexchess.turn = Color::Black;
+          hexchess.en_passant = Some(Position::G5);
+
+          assert_eq!(Some(Piece::WhitePawn), hexchess.board.get(Position::G6));
+          
+          let _ = hexchess.apply(Notation::from("f6g5").unwrap());
+
+          assert_eq!(None, hexchess.board.get(Position::G6));
     }
 
     #[test]
