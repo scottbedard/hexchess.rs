@@ -213,7 +213,7 @@ impl Hexchess {
                 continue;
             }
             
-            for target in self.targets(*p).iter() {
+            for target in self.targets_unsafe(*p).iter() {
                 if target.to == position {
                     return true;
                 }
@@ -257,9 +257,9 @@ impl Hexchess {
             .filter(|&notation| {
                 let mut hexchess = self.clone();
                 let _ = hexchess.apply(notation);
-
+        
                 match friendly_king_position {
-                    Some(val) => !hexchess.is_threatened(*val),
+                    Some(p) => !hexchess.is_threatened(*p),
                     None => true,
                 }
             })
