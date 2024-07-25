@@ -748,7 +748,7 @@ mod tests {
     }
 
     #[test]
-    fn test_cannot_step_out_of_discovered_attack() {
+    fn test_cannot_step_out_of_a_pin() {
         let mut hexchess = Hexchess::new();
         hexchess.board.set(Position::F7, Some(Piece::WhiteKing));
         hexchess.board.set(Position::F6, Some(Piece::WhiteRook));
