@@ -776,4 +776,15 @@ mod tests {
         assert!(Hexchess::new().targets(Position::A1).is_empty());
         assert!(Hexchess::new().targets_unsafe(Position::A1).is_empty());
     }
+
+    #[test]
+    fn test_move_to_en_passant_position_with_non_pawn_doesnt_remove_enemy_piece()
+    {
+        let mut hexchess = Hexchess::initial();
+        let _ = hexchess.apply(Notation::from("b1b3").unwrap());
+        let _ = hexchess.apply(Notation::from("f10b2").unwrap());
+
+        assert_eq!(Some(Piece::WhitePawn), hexchess.board.get(Position::B3));
+        assert_eq!(Some(Piece::BlackBishop), hexchess.board.get(Position::B2));
+    }
 }
