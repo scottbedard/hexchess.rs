@@ -773,8 +773,7 @@ mod tests {
 
     #[test]
     fn test_targets_of_unoccupied_position() {
-        let hexchess = Hexchess::new();
-
-        assert!(hexchess.targets(Position::A1).is_empty());
+        assert!(Hexchess::new().targets(Position::A1).is_empty());
+        assert!(Hexchess::new().targets_unsafe(Position::A1).is_empty());
     }
 }
