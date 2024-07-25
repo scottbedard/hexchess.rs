@@ -193,7 +193,12 @@ impl Hexchess {
     }
 
     pub fn is_threatened(&self, position: Position) -> bool {
-        let enemy_color = match self.turn {
+        let piece = match self.board.get(position) {
+            Some(val) => val,
+            None => return false,
+        };
+
+        let enemy_color = match piece.color() {
             Color::White => Color::Black,
             Color::Black => Color::White,
         }; 
@@ -682,10 +687,10 @@ mod tests {
     #[test]
     fn test_position_is_not_threatened_by_friendly_piece() {
         let mut hexchess = Hexchess::new();
-        hexchess.board.set(Position::G10, Some(Piece::WhiteKing));
-        hexchess.board.set(Position::G1, Some(Piece::WhiteRook));
+        hexchess.board.set(Position::F6, Some(Piece::WhiteQueen));
+        hexchess.board.set(Position::F7, Some(Piece::WhiteKing));
 
-        assert_eq!(false, hexchess.is_threatened(Position::G10));
+        assert_eq!(false, hexchess.is_threatened(Position::F7));
     }
 
     #[test]
@@ -694,5 +699,18 @@ mod tests {
         hexchess.board.set(Position::G10, Some(Piece::WhiteKing));
 
         assert_eq!(false, hexchess.is_threatened(Position::G10));
+    }
+
+    #[test]
+    fn test_position_is_threatened_while_attacking_or_defending() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::F6, Some(Piece::WhiteKing));
+        hexchess.board.set(Position::F7, Some(Piece::BlackQueen));
+
+        hexchess.turn = Color::Black;
+        assert_eq!(true, hexchess.is_threatened(Position::F6));
+
+        hexchess.turn = Color::White;
+        assert_eq!(true, hexchess.is_threatened(Position::F6));
     }
 }
