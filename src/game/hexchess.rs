@@ -1,3 +1,4 @@
+use crate::constants::{SORTED_POSITIONS};
 use crate::game::board::{Board, Position, get_step};
 use crate::game::failure::Failure;
 use crate::game::notation::Notation;
@@ -189,6 +190,32 @@ impl Hexchess {
             halfmove: 0,
             turn: Color::White,
         }
+    }
+
+    pub fn is_threatened(&self, position: Position) -> bool {
+        let enemy_color = match self.turn {
+            Color::White => Color::Black,
+            Color::Black => Color::White,
+        }; 
+
+        for p in SORTED_POSITIONS.iter() {
+            let piece: Piece = match self.board.get(*p) {
+                Some(val) => val,
+                None => continue,
+            };
+
+            if piece.color() != enemy_color {
+                continue;
+            }
+            
+            for target in self.targets(*p).iter() {
+                if target.to == position {
+                    return true;
+                }
+            }
+        }
+
+        false
     }
 
     pub fn new() -> Self {
@@ -641,5 +668,31 @@ mod tests {
         assert_eq!(Some(Color::Black), hexchess.color(Position::E10)); // q
         assert_eq!(Some(Color::Black), hexchess.color(Position::F11)); // b
         assert_eq!(Some(Color::Black), hexchess.color(Position::G10)); // k
+    }
+
+    #[test]
+    fn test_position_is_threatened_by_enemy_piece() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::G10, Some(Piece::WhiteKing));
+        hexchess.board.set(Position::G1, Some(Piece::BlackRook));
+
+        assert_eq!(true, hexchess.is_threatened(Position::G10));
+    }
+
+    #[test]
+    fn test_position_is_not_threatened_by_friendly_piece() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::G10, Some(Piece::WhiteKing));
+        hexchess.board.set(Position::G1, Some(Piece::WhiteRook));
+
+        assert_eq!(false, hexchess.is_threatened(Position::G10));
+    }
+
+    #[test]
+    fn test_unattacked_position_is_not_threatened() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::G10, Some(Piece::WhiteKing));
+
+        assert_eq!(false, hexchess.is_threatened(Position::G10));
     }
 }

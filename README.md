@@ -110,6 +110,16 @@ targets(hexchess, 'g4')
 // [{ from, to, promotion }, ...]
 ```
 
+#### `isThreatened`
+
+Test if a position is threatened
+
+```ts
+import { isThreatened } from '@bedard/hexchess'
+
+isThreatened(hexchess, 'g10') // false
+```
+
 #### `parseHexchess`
 
 Create a `Hexchess` object from it's string representation.

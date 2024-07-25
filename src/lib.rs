@@ -43,6 +43,27 @@ pub fn create_hexchess_initial() -> Hexchess {
     Hexchess::initial()
 }
 
+/// Find piece color at board position
+#[wasm_bindgen(js_name = getPositionColor)]
+pub fn get_position_color(hexchess: Hexchess, position: Position) -> JsValue {
+    set_panic_hook();
+    JsValue::from_serde(&hexchess.color(position)).unwrap()
+}
+
+/// Find target moves from a position, regardless of turn color
+#[wasm_bindgen(js_name = getTargets, skip_typescript)]
+pub fn get_targets(hexchess: Hexchess, position: Position) -> JsValue {
+    set_panic_hook();
+    JsValue::from_serde(&hexchess.targets(position)).unwrap()
+}
+
+/// Test if a position is threatened
+#[wasm_bindgen(js_name = isThreatened)]
+pub fn is_threatened(hexchess: Hexchess, position: Position) -> bool {
+    set_panic_hook();
+    hexchess.is_threatened(position)
+}
+
 /// Create hexchess object from string
 #[wasm_bindgen(js_name = parseHexchess)]
 pub fn parse_hexchess(fen: String) -> Hexchess {
@@ -73,20 +94,6 @@ pub fn get_piece_color(val: char) -> JsValue {
         Ok(piece) => JsValue::from_serde(&piece.color()).unwrap(),
         Err(_) => JsValue::NULL,
     }
-}
-
-/// Find piece color at board position
-#[wasm_bindgen(js_name = getPositionColor)]
-pub fn get_position_color(hexchess: Hexchess, position: Position) -> JsValue {
-    set_panic_hook();
-    JsValue::from_serde(&hexchess.color(position)).unwrap()
-}
-
-/// Find target moves from a position, regardless of turn color
-#[wasm_bindgen(js_name = getTargets, skip_typescript)]
-pub fn get_targets(hexchess: Hexchess, position: Position) -> JsValue {
-    set_panic_hook();
-    JsValue::from_serde(&hexchess.targets(position)).unwrap()
 }
 
 #[wasm_bindgen(typescript_custom_section)]
