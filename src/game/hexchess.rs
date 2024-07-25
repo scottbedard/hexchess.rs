@@ -234,6 +234,39 @@ impl Hexchess {
     }
 
     pub fn targets(&self, position: Position) -> Vec<Notation> {
+        let color = match self.color(position) {
+            Some(val) => val,
+            None => return vec![],
+        };
+
+        let friendly_king = match color {
+            Color::White => Piece::WhiteKing,
+            Color::Black => Piece::BlackKing,
+        };
+
+        let friendly_king_position = SORTED_POSITIONS.iter().find(|&p| {
+            match self.board.get(*p) {
+                Some(val) => val == friendly_king,
+                None => false,
+            }
+        });
+
+        self
+            .targets_unsafe(position)
+            .into_iter()
+            .filter(|&notation| {
+                let mut hexchess = self.clone();
+                let _ = hexchess.apply(notation);
+
+                match friendly_king_position {
+                    Some(val) => !hexchess.is_threatened(*val),
+                    None => true,
+                }
+            })
+            .collect()
+    }
+
+    pub fn targets_unsafe(&self, position: Position) -> Vec<Notation> {
         let piece = match self.board.get(position) {
             Some(val) => val,
             None => return vec![],
@@ -712,5 +745,29 @@ mod tests {
 
         hexchess.turn = Color::White;
         assert_eq!(true, hexchess.is_threatened(Position::F6));
+    }
+
+    #[test]
+    fn test_cannot_step_out_of_discovered_attack() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::F7, Some(Piece::WhiteKing));
+        hexchess.board.set(Position::F6, Some(Piece::WhiteRook));
+        hexchess.board.set(Position::F5, Some(Piece::BlackQueen));
+
+        let targets = hexchess.targets(Position::F6);
+
+        assert_eq!(1, targets.len());
+        assert_eq!(Position::F5, targets[0].to);
+    }
+
+    #[test]
+    fn test_king_cannot_step_into_check() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::F11, Some(Piece::WhiteKing));
+        hexchess.board.set(Position::F9, Some(Piece::BlackQueen));
+
+        let targets = hexchess.targets(Position::F7);
+
+        assert!(targets.is_empty());
     }
 }
