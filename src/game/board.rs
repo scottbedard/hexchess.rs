@@ -2367,10 +2367,8 @@ pub fn get_siblings(position: Position) -> [Option<Position>; 12] {
 
 /// Step from one position to a sibling position
 pub fn get_step(position: Position, direction: u8) -> Option<Position> {
-    match direction {
-        0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 => get_siblings(position)[direction as usize],
-        _ => panic!("[hexchess] invalid step direction ({})", direction)
-    }
+    let valid_direction = direction % 12;
+    get_siblings(position)[valid_direction as usize]
 }
 
 #[cfg(test)]
