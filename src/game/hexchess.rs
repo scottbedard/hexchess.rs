@@ -38,6 +38,15 @@ impl Hexchess {
             return Err(Failure::OutOfTurn);
         }
 
+        self.apply_unsafe(notation)
+    }
+
+    pub fn apply_unsafe(&mut self, notation: Notation) -> Result<(), Failure> {
+        let piece = match self.board.get(notation.from) {
+            Some(val) => val,
+            None => return Err(Failure::IllegalMove),
+        };
+
         // update halfmove
         if piece == Piece::WhitePawn || piece == Piece::BlackPawn || self.board.get(notation.to).is_some() {
             self.halfmove = 0;
@@ -249,15 +258,12 @@ impl Hexchess {
             .into_iter()
             .filter(|&notation| {
                 let mut hexchess = self.clone();
-                let _ = hexchess.apply(notation);
+                let _ = hexchess.apply_unsafe(notation);
 
-                let friendly_king_position = SORTED_POSITIONS.iter().find(|&p| {
-                    match hexchess.board.get(*p) {
-                        Some(val) => val == friendly_king,
-                        None => false,
-                    }
-                });
-        
+                let friendly_king_position = SORTED_POSITIONS
+                    .iter()
+                    .find(|&p| Some(friendly_king) == hexchess.board.get(*p));
+
                 match friendly_king_position {
                     Some(p) => !hexchess.is_threatened(*p),
                     None => true,
@@ -753,6 +759,20 @@ mod tests {
         hexchess.board.set(Position::F7, Some(Piece::WhiteKing));
         hexchess.board.set(Position::F6, Some(Piece::WhiteRook));
         hexchess.board.set(Position::F5, Some(Piece::BlackQueen));
+
+        let targets = hexchess.targets(Position::F6);
+
+        assert_eq!(1, targets.len());
+        assert_eq!(Position::F5, targets[0].to);
+    }
+
+    #[test]
+    fn test_cannot_self_check_on_opponents_turn() {
+        let mut hexchess = Hexchess::new();
+        hexchess.board.set(Position::F7, Some(Piece::WhiteKing));
+        hexchess.board.set(Position::F6, Some(Piece::WhiteRook));
+        hexchess.board.set(Position::F5, Some(Piece::BlackQueen));
+        hexchess.turn = Color::Black;
 
         let targets = hexchess.targets(Position::F6);
 
