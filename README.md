@@ -74,16 +74,6 @@ createHexchessInitial()
 // { board: { ... }, enPassant, turn, fullmove, halfmove }
 ```
 
-#### `isCheckmate`
-
-Test if the board is in checkmate
-
-```ts
-import { isCheckmate } from '@bedard/hexchess'
-
-isCheckmate(hexchess) // true / false
-```
-
 #### `findKing`
 
 Find a player's king
@@ -128,6 +118,16 @@ import { getTargets } from '@bedard/hexchess'
 targets(hexchess, 'g4')
 
 // [{ from, to, promotion }, ...]
+```
+
+#### `isCheckmate`
+
+Test if the board is in checkmate
+
+```ts
+import { isCheckmate } from '@bedard/hexchess'
+
+isCheckmate(hexchess) // true / false
 ```
 
 #### `isThreatened`
