@@ -1,8 +1,6 @@
 use crate::game::board::Position;
 use crate::game::failure::Failure;
 use crate::game::piece::PromotionPiece;
-use once_cell::sync::Lazy;
-use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use tsify::Tsify;
@@ -19,59 +17,60 @@ pub struct Notation {
 
 impl Notation {
     pub fn from(value: &str) -> Result<Self, Failure> {
-        static RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"^(?<from>a1|a2|a3|a4|a5|a6|b1|b2|b3|b4|b5|b6|b7|c1|c2|c3|c4|c5|c6|c7|c8|d1|d2|d3|d4|d5|d6|d7|d8|d9|e1|e2|e3|e4|e5|e6|e7|e8|e9|e10|f1|f2|f3|f4|f5|f6|f7|f8|f9|f10|f11|g1|g2|g3|g4|g5|g6|g7|g8|g9|g10|h1|h2|h3|h4|h5|h6|h7|h8|h9|i1|i2|i3|i4|i5|i6|i7|i8|k1|k2|k3|k4|k5|k6|k7|l1|l2|l3|l4|l5|l6)(?<to>a1|a2|a3|a4|a5|a6|b1|b2|b3|b4|b5|b6|b7|c1|c2|c3|c4|c5|c6|c7|c8|d1|d2|d3|d4|d5|d6|d7|d8|d9|e1|e2|e3|e4|e5|e6|e7|e8|e9|e10|f1|f2|f3|f4|f5|f6|f7|f8|f9|f10|f11|g1|g2|g3|g4|g5|g6|g7|g8|g9|g10|h1|h2|h3|h4|h5|h6|h7|h8|h9|i1|i2|i3|i4|i5|i6|i7|i8|k1|k2|k3|k4|k5|k6|k7|l1|l2|l3|l4|l5|l6)(?<promotion>b|n|q|r)?$").unwrap());
+        let mut from = String::from("");
+        let mut parsing_from = false;
+        let mut to = String::from("");
+        let mut parsing_to = false;
+        let mut promotion = None;
 
-        let captures = match RE.captures(value) {
-            Some(value) => value,
-            None => return Err(Failure::InvalidNotation),
-        };
-
-        // it's safe to unwrap because the regex guarantees that these values are valid
-        let from = Position::from(captures.name("from").unwrap().as_str()).unwrap();
-
-        let to = Position::from(captures.name("to").unwrap().as_str()).unwrap();
+        for c in value.chars() {
+            match c {
+                'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'k' | 'l' | 'q' | 'r' | 'n' => {
+                    if !parsing_from {
+                        parsing_from = true;
+                        from.push(c);
+                    } else if !parsing_to {
+                        parsing_to = true;
+                        to.push(c);
+                    } else {
+                        promotion = match c {
+                            'b' => Some(PromotionPiece::Bishop),
+                            'n' => Some(PromotionPiece::Knight),
+                            'q' => Some(PromotionPiece::Queen),
+                            'r' => Some(PromotionPiece::Rook),
+                            _ => None
+                        }
+                    }
+                },
+                '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
+                    if !parsing_to {
+                        from.push(c);
+                    } else {
+                        to.push(c);
+                    }
+                },
+                _ => return Err(Failure::InvalidNotation),
+            };
+        }
 
         if from == to {
             return Err(Failure::InvalidNotation);
         }
 
-        let promotion = match captures.name("promotion") {
-            Some(value) => Some(PromotionPiece::from(value.as_str()).unwrap()),
-            None => None,
-        };
+        let to_str = to.as_str();
 
         if promotion.is_some() {
-            match to {
-                Position::A6 |
-                Position::B7 |
-                Position::C8 |
-                Position::D9 |
-                Position::E10 |
-                Position::F11 |
-                Position::G10 |
-                Position::H9 |
-                Position::I8 |
-                Position::K7 |
-                Position::L6 |
-                Position::A1 |
-                Position::B1 |
-                Position::C1 |
-                Position::D1 |
-                Position::E1 |
-                Position::F1 |
-                Position::G1 |
-                Position::H1 |
-                Position::I1 |
-                Position::K1 |
-                Position::L1 => (),
+            match to_str {
+                "a6" | "b7" | "c8"| "d9" | "e10" | "f11" | "g10" | "h9" | "i8" | "k7" | "l6" |
+                "a1" | "b1" | "c1" | "d1" | "e1" | "f1" | "g1" | "h1" | "i1" | "k1" | "l1" => {},
                 _ => return Err(Failure::InvalidNotation),
-            }
+            };
         }
 
         Ok(Self {
-            from,
+            from: Position::from(from.as_str()).unwrap(),
             promotion,
-            to,
+            to: Position::from(to_str).unwrap(),
         })
     }
 }
@@ -94,8 +93,8 @@ mod tests {
         assert_eq!(Ok(Notation {
             from: Position::A1,
             promotion: None,
-            to: Position::A2,
-        }), Notation::from("a1a2"));
+            to: Position::B2,
+        }), Notation::from("a1b2"));
     }
 
     #[test]
