@@ -5,7 +5,7 @@ pub mod game;
 use crate::game::board::Position;
 use crate::game::hexchess::Hexchess;
 use crate::game::notation::Notation;
-use crate::game::piece::Piece;
+use crate::game::piece::{Color, Piece};
 use tsify::JsValueSerdeExt;
 use wasm_bindgen::prelude::*;
 
@@ -43,8 +43,15 @@ pub fn create_hexchess_initial() -> Hexchess {
     Hexchess::initial()
 }
 
+/// Test if board is in checkmate
+#[wasm_bindgen(js_name = findKing, skip_typescript)]
+pub fn find_king(hexchess: Hexchess, color: Color) -> JsValue {
+    set_panic_hook();
+    JsValue::from_serde(&hexchess.find_king(color)).unwrap()
+}
+
 /// Find piece color at board position
-#[wasm_bindgen(js_name = getPositionColor)]
+#[wasm_bindgen(js_name = getPositionColor, skip_typescript)]
 pub fn get_position_color(hexchess: Hexchess, position: Position) -> JsValue {
     set_panic_hook();
     JsValue::from_serde(&hexchess.color(position)).unwrap()
@@ -55,6 +62,13 @@ pub fn get_position_color(hexchess: Hexchess, position: Position) -> JsValue {
 pub fn get_targets(hexchess: Hexchess, position: Position) -> JsValue {
     set_panic_hook();
     JsValue::from_serde(&hexchess.targets(position)).unwrap()
+}
+
+/// Test if board is in checkmate
+#[wasm_bindgen(js_name = isCheckmate)]
+pub fn is_checkmate(hexchess: Hexchess) -> bool {
+    set_panic_hook();
+    hexchess.is_checkmate()
 }
 
 /// Test if a position is threatened
@@ -98,5 +112,27 @@ pub fn get_piece_color(val: char) -> JsValue {
 
 #[wasm_bindgen(typescript_custom_section)]
 const TS_APPEND_CONTENT: &'static str = r#"
+/**
+* Test if board is in checkmate
+* @param {Hexchess} hexchess
+* @param {Color} color
+* @returns {Position | null}
+*/
+export function findKing(hexchess: Hexchess, color: Color): Position | null;
+
+/**
+* Find piece color at board position
+* @param {Hexchess} hexchess
+* @param {Position} position
+* @returns {Color | null}
+*/
+export function getPositionColor(hexchess: Hexchess, position: Position): Color | null;
+
+/**
+ * Find the legal moves from a position
+* @param {Hexchess} hexchess
+* @param {Position} position
+* @returns {Notation[]}
+*/
 export function getTargets(hexchess: Hexchess, position: Position): Notation[];
 "#;

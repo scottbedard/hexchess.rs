@@ -1,4 +1,4 @@
-use crate::constants::{SORTED_POSITIONS};
+use crate::constants::SORTED_POSITIONS;
 use crate::game::board::{Board, Position, get_step};
 use crate::game::failure::Failure;
 use crate::game::notation::Notation;
@@ -191,6 +191,21 @@ impl Hexchess {
         }
     }
 
+    pub fn find_king(&self, color: Color) -> Option<Position> {
+        let king = match color {
+            Color::White => Some(Piece::WhiteKing),
+            Color::Black => Some(Piece::BlackKing),
+        };
+
+        for p in SORTED_POSITIONS.iter() {
+            if self.board.get(*p) == king {
+                return Some(*p);
+            }
+        }
+
+        return None
+    }
+
     pub fn initial() -> Self {
         Hexchess {
             board: Board::initial(),
@@ -199,6 +214,34 @@ impl Hexchess {
             halfmove: 0,
             turn: Color::White,
         }
+    }
+
+    pub fn is_checkmate(&self) -> bool {
+        let king_position = match self.find_king(self.turn) {
+            Some(p) => p,
+            None => return false,
+        };
+
+        if self.is_threatened(king_position) {
+            for p in SORTED_POSITIONS.iter() {
+                let piece_color = match self.color(*p) {
+                    Some(c) => c,
+                    None => continue,
+                };
+
+                if piece_color != self.turn {
+                    continue;
+                }
+
+                if self.targets(*p).len() > 0 {
+                    return false
+                }
+            }
+
+            return true
+        }
+
+        false
     }
 
     pub fn is_threatened(&self, position: Position) -> bool {
@@ -248,11 +291,6 @@ impl Hexchess {
             None => return vec![],
         };
 
-        let friendly_king = match color {
-            Color::White => Piece::WhiteKing,
-            Color::Black => Piece::BlackKing,
-        };
-
         self
             .targets_unsafe(position)
             .into_iter()
@@ -260,12 +298,8 @@ impl Hexchess {
                 let mut hexchess = self.clone();
                 let _ = hexchess.apply_unsafe(notation);
 
-                let friendly_king_position = SORTED_POSITIONS
-                    .iter()
-                    .find(|&p| Some(friendly_king) == hexchess.board.get(*p));
-
-                match friendly_king_position {
-                    Some(p) => !hexchess.is_threatened(*p),
+                match hexchess.find_king(color) {
+                    Some(p) => !hexchess.is_threatened(p),
                     None => true,
                 }
             })
@@ -806,5 +840,35 @@ mod tests {
 
         assert_eq!(Some(Piece::WhitePawn), hexchess.board.get(Position::B3));
         assert_eq!(Some(Piece::BlackBishop), hexchess.board.get(Position::B2));
+    }
+
+    #[test]
+    fn test_is_checkmate() {
+        let mut hexchess = Hexchess::from("K/3/2q2/1q5/9/11/11/11/11/11/11 b - 0 1").unwrap();
+        
+        assert_eq!(false, hexchess.is_checkmate());
+
+        let _ = hexchess.apply(Notation::from("d8f10").unwrap());
+
+        assert_eq!(true, hexchess.is_checkmate());
+    }
+
+    #[test]
+    fn test_not_checkmate() {
+        let mut hexchess = Hexchess::from("b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1").unwrap();
+        hexchess.turn = Color::Black;
+
+        assert_eq!(false, hexchess.is_checkmate());
+    }
+
+    #[test]
+    fn test_find_king() {
+        let hexchess = Hexchess::initial();
+        let blank = Hexchess::new();
+
+        assert_eq!(Some(Position::G1), hexchess.find_king(Color::White));
+        assert_eq!(Some(Position::G10), hexchess.find_king(Color::Black));
+        assert_eq!(None, blank.find_king(Color::White));
+        assert_eq!(None, blank.find_king(Color::Black));
     }
 }
