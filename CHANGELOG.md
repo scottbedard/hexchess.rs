@@ -2,7 +2,7 @@
 
 ## 0.3.1
 
-- Fix self-check logic when king moved piece
+- Fix self-check logic when king is moved piece
 
 ## 0.3.0
 
