@@ -92,7 +92,7 @@ mod tests {
 
         let targets = hexchess.targets(Position::F6);
 
-        assert_eq!(targets.len(), 11);
+        assert_eq!(targets.len(), 10);
         assert_eq!(targets[0].to_string(), "f6f7");
         assert_eq!(targets[1].to_string(), "f6g7");
         assert_eq!(targets[2].to_string(), "f6g6");
@@ -102,7 +102,7 @@ mod tests {
         assert_eq!(targets[6].to_string(), "f6f5");
         assert_eq!(targets[7].to_string(), "f6e4");
         assert_eq!(targets[8].to_string(), "f6e5");
-        assert_eq!(targets[9].to_string(), "f6d5");
-        assert_eq!(targets[10].to_string(), "f6e6");
+        // cannot hit d5, self check
+        assert_eq!(targets[9].to_string(), "f6e6");
     }
 }

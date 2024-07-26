@@ -244,19 +244,19 @@ impl Hexchess {
             Color::Black => Piece::BlackKing,
         };
 
-        let friendly_king_position = SORTED_POSITIONS.iter().find(|&p| {
-            match self.board.get(*p) {
-                Some(val) => val == friendly_king,
-                None => false,
-            }
-        });
-
         self
             .targets_unsafe(position)
             .into_iter()
             .filter(|&notation| {
                 let mut hexchess = self.clone();
                 let _ = hexchess.apply(notation);
+
+                let friendly_king_position = SORTED_POSITIONS.iter().find(|&p| {
+                    match hexchess.board.get(*p) {
+                        Some(val) => val == friendly_king,
+                        None => false,
+                    }
+                });
         
                 match friendly_king_position {
                     Some(p) => !hexchess.is_threatened(*p),
@@ -766,7 +766,7 @@ mod tests {
         hexchess.board.set(Position::F11, Some(Piece::WhiteKing));
         hexchess.board.set(Position::F9, Some(Piece::BlackQueen));
 
-        let targets = hexchess.targets(Position::F7);
+        let targets = hexchess.targets(Position::F11);
 
         assert!(targets.is_empty());
     }
