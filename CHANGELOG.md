@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2
+
+- Fix self-check logic on opponent's turn
+
 ## 0.3.1
 
 - Fix self-check logic when king is moved piece
