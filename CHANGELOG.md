@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+- Add `findKing` method
+- Add `isCheckmate` method
+- Improved typescript definitions
+
 ## 0.3.2
 
 - Fix self-check logic on opponent's turn

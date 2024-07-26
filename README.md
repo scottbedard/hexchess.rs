@@ -74,6 +74,26 @@ createHexchessInitial()
 // { board: { ... }, enPassant, turn, fullmove, halfmove }
 ```
 
+#### `isCheckmate`
+
+Test if the board is in checkmate
+
+```ts
+import { isCheckmate } from '@bedard/hexchess'
+
+isCheckmate(hexchess) // true / false
+```
+
+#### `findKing`
+
+Find a player's king
+
+```ts
+import { findKing } from '@bedard/hexchess'
+
+findKing(hexchess, 'b')
+```
+
 #### `getColor`
 
 Get the color of a piece.
