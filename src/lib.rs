@@ -80,16 +80,22 @@ pub fn is_threatened(hexchess: Hexchess, position: Position) -> bool {
 
 /// Create hexchess object from string
 #[wasm_bindgen(js_name = parseHexchess)]
-pub fn parse_hexchess(fen: String) -> Hexchess {
+pub fn parse_hexchess(fen: String) -> Option<Hexchess> {
     set_panic_hook();
-    Hexchess::from(&fen).unwrap()
+    match Hexchess::from(&fen) {
+        Ok(hexchess) => Some(hexchess),
+        Err(_) => None
+    }
 }
 
 /// Create hexchess notation object from string
 #[wasm_bindgen(js_name = parseNotation)]
-pub fn parse_notation(str: String) -> Notation {
+pub fn parse_notation(str: String) -> Option<Notation> {
     set_panic_hook();
-    Notation::from(&str).unwrap()
+    match Notation::from(&str) {
+        Ok(notation) => Some(notation),
+        Err(_) => None
+    }
 }
 
 /// Stringify hexchess object

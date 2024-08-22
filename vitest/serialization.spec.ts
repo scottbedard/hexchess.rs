@@ -112,7 +112,7 @@ describe('serialization', () => {
       turn: 'w'
     })
 
-    expect(stringifyHexchess(hexchess)).toBe(str)
+    expect(stringifyHexchess(hexchess!)).toBe(str)
   })
 
   it('parse notation', () => {
