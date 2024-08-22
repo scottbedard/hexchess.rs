@@ -142,7 +142,7 @@ isThreatened(hexchess, 'g10') // false
 
 #### `parseHexchess`
 
-Create a `Hexchess` object from it's string representation.
+Create a `Hexchess` object from it's string representation. If hexchess is invalid, `undefined` will be returned.
 
 ```ts
 import { parseHexchess } from '@bedard/hexchess'
@@ -154,7 +154,7 @@ parseHexchess('b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP
 
 #### `parseNotation`
 
-Create a `Notation` object from it's string representation.
+Create a `Notation` object from it's string representation. If notation is invalid, `undefined` will be returned.
 
 ```ts
 import { parseNotation } from '@bedard/hexchess'
