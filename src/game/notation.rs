@@ -137,6 +137,11 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_notation_with_invalid_second_file() {
+        assert_eq!(Err(Failure::InvalidNotation), Notation::from("a1abc2"));
+    }
+
+    #[test]
     fn test_stringify_notation() {
         assert_eq!("a1a2", Notation::from("a1a2").unwrap().to_string());
         assert_eq!("f10f11b", Notation::from("f10f11b").unwrap().to_string());
