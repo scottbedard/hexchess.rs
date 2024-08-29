@@ -226,8 +226,15 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_invalid_second_character() {
+        assert_eq!(Err("invalid_second_character"), Notation::from("ax"));
+    }
+
+    #[test]
     fn test_parse_invalid_to_file() {
         assert_eq!(Err("invalid_to_file"), Notation::from("a1x"));
+        assert_eq!(Err("invalid_to_file"), Notation::from("a10x"));
+        assert_eq!(Err("invalid_to_file"), Notation::from("a10x"));
     }
 
     #[test]
@@ -236,12 +243,17 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_missing_to_file() {
+        assert_eq!(Err("missing_to_file"), Notation::from("a10"));
+    }
+
+    #[test]
     fn test_parse_invalid_to_rank() {
         assert_eq!(Err("invalid_to_rank"), Notation::from("a1f12"));
     }
 
     #[test]
-    fn test_parse_missing_to_file() {
+    fn test_parse_invalid_to_second_character() {
         assert_eq!(Err("invalid_to_second_char"), Notation::from("a1abc2"));
     }
 
@@ -280,6 +292,11 @@ mod tests {
     #[test]
     fn test_parse_post_promotion_character() {
         assert_eq!(Err("post_promotion_character"), Notation::from("f10f11qq"));
+    }
+
+    #[test]
+    fn test_parse_invalid_promotion_position() {
+        assert_eq!(Err("invalid_promotion_position"), Notation::from("f10f6q"));
     }
 
     #[test]
