@@ -2,7 +2,7 @@ use crate::game::board::Position;
 use crate::game::hexchess::Hexchess;
 
 pub fn execute(fen: String, position: String) -> Result<String, String> {
-    let hexchess = match Hexchess::from(fen.as_str()) {
+    let hexchess = match Hexchess::parse(fen.as_str()) {
         Ok(result) => result,
         Err(failure) => return Err(failure.to_string()),
     };

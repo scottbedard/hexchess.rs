@@ -22,7 +22,7 @@ mod tests {
 
     #[test]
     fn test_white_bishop_targets() {
-        let hexchess = Hexchess::from("1/3/5/7/9/5B5/11/11/11/11/11").unwrap();
+        let hexchess = Hexchess::parse("1/3/5/7/9/5B5/11/11/11/11/11").unwrap();
 
         let targets = hexchess.targets(Position::F6);
 
@@ -49,7 +49,7 @@ mod tests {
 
     #[test]
     fn test_black_bishop_targets() {
-        let hexchess = Hexchess::from("1/3/5/7/9/5b5/11/11/11/11/11").unwrap();
+        let hexchess = Hexchess::parse("1/3/5/7/9/5b5/11/11/11/11/11").unwrap();
 
         let targets = hexchess.targets(Position::F6);
 

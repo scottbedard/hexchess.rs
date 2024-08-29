@@ -16,7 +16,7 @@ pub struct Notation {
 }
 
 impl Notation {
-    pub fn from(value: &str) -> Result<Self, Failure> {
+    pub fn parse(value: &str) -> Result<Self, Failure> {
         let mut from = String::from("");
         let mut parsing_from = false;
         let mut to = String::from("");
@@ -94,7 +94,7 @@ mod tests {
             from: Position::A1,
             promotion: None,
             to: Position::B2,
-        }), Notation::from("a1b2"));
+        }), Notation::parse("a1b2"));
     }
 
     #[test]
@@ -103,42 +103,42 @@ mod tests {
             from: Position::F10,
             promotion: Some(PromotionPiece::Bishop),
             to: Position::F11,
-        }), Notation::from("f10f11b"));
+        }), Notation::parse("f10f11b"));
     }
 
     #[test]
     fn test_parse_promotion_on_non_promotion_position() {
-        assert_eq!(Err(Failure::InvalidNotation), Notation::from("a1a2b"));
+        assert_eq!(Err(Failure::InvalidNotation), Notation::parse("a1a2b"));
     }
 
     #[test]
     fn test_parse_notation_with_invalid_promotion() {
-        assert_eq!(Err(Failure::InvalidNotation), Notation::from("f10f11x"));
+        assert_eq!(Err(Failure::InvalidNotation), Notation::parse("f10f11x"));
     }
 
     #[test]
     fn test_parse_notation_with_invalid_from() {
-        assert_eq!(Err(Failure::InvalidNotation), Notation::from("x1a2"));
+        assert_eq!(Err(Failure::InvalidNotation), Notation::parse("x1a2"));
     }
 
     #[test]
     fn test_parse_notation_with_invalid_to() {
-        assert_eq!(Err(Failure::InvalidNotation), Notation::from("a1x2"));
+        assert_eq!(Err(Failure::InvalidNotation), Notation::parse("a1x2"));
     }
 
     #[test]
     fn test_parse_notation_with_invalid_from_and_to() {
-        assert_eq!(Err(Failure::InvalidNotation), Notation::from("x1x2"));
+        assert_eq!(Err(Failure::InvalidNotation), Notation::parse("x1x2"));
     }
 
     #[test]
     fn test_parse_notation_with_identical_from_and_to() {
-        assert_eq!(Err(Failure::InvalidNotation), Notation::from("a1a1"));
+        assert_eq!(Err(Failure::InvalidNotation), Notation::parse("a1a1"));
     }
 
     #[test]
     fn test_stringify_notation() {
-        assert_eq!("a1a2", Notation::from("a1a2").unwrap().to_string());
-        assert_eq!("f10f11b", Notation::from("f10f11b").unwrap().to_string());
+        assert_eq!("a1a2", Notation::parse("a1a2").unwrap().to_string());
+        assert_eq!("f10f11b", Notation::parse("f10f11b").unwrap().to_string());
     }
 }

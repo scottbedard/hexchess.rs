@@ -126,7 +126,7 @@ impl Hexchess {
         Ok(())
     }
 
-    pub fn from(value: &str) -> Result<Self, Failure> {
+    pub fn parse(value: &str) -> Result<Self, Failure> {
         let mut parts = value.split_whitespace();
 
         let board = match parts.next() {
@@ -351,7 +351,7 @@ mod tests {
 
     #[test]
     fn test_create_hexchess_from_initial_board_fen() {
-        let hexchess = match Hexchess::from(crate::constants::INITIAL_BOARD) {
+        let hexchess = match Hexchess::parse(crate::constants::INITIAL_BOARD) {
             Ok(value) => value,
             Err(failure) => panic!("failure: {:?}", failure),
         };
@@ -365,7 +365,7 @@ mod tests {
 
     #[test]
     fn test_create_hexchess_from_complete_fen() {
-        let hexchess = match Hexchess::from("1/qbk/n1b1n/r4r1/ppppp2pp/6p4/3P1PP4/4PR1b3/5B1P3/2P2B2P2/1PRNQBK2P1 b a1 1 8") {
+        let hexchess = match Hexchess::parse("1/qbk/n1b1n/r4r1/ppppp2pp/6p4/3P1PP4/4PR1b3/5B1P3/2P2B2P2/1PRNQBK2P1 b a1 1 8") {
             Ok(value) => value,
             Err(failure) => panic!("failure: {:?}", failure),
         };
@@ -379,30 +379,30 @@ mod tests {
     
     #[test]
     fn test_invalid_turn_color_results_in_error() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 ? - 0 1");
+        let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 ? - 0 1");
 
         assert_eq!(Err(Failure::InvalidColor), hexchess);
     }
 
     #[test]
     fn test_invalid_en_passant_results_in_error() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w ? 0 1");
+        let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w ? 0 1");
 
         assert_eq!(Err(Failure::InvalidPosition), hexchess);
     }
 
     #[test]
     fn test_invalid_halfmove_results_in_error() {
-        assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - ? 1"));
-        assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0.5 1"));
-        assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - -6 1"));
+        assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - ? 1"));
+        assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - 0.5 1"));
+        assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - -6 1"));
     }
 
     #[test]
     fn test_invalid_fullmove_results_in_error() {
-        assert_eq!(Err(Failure::InvalidFullmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 ?"));
-        assert_eq!(Err(Failure::InvalidFullmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1.5"));
-        assert_eq!(Err(Failure::InvalidFullmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 0")); // <- less than 1
+        assert_eq!(Err(Failure::InvalidFullmove), Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - 0 ?"));
+        assert_eq!(Err(Failure::InvalidFullmove), Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - 0 1.5"));
+        assert_eq!(Err(Failure::InvalidFullmove), Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - 0 0")); // <- less than 1
     }
 
     #[test]
@@ -428,7 +428,7 @@ mod tests {
         assert_eq!(0, hexchess.halfmove);
         assert_eq!(1, hexchess.fullmove);
 
-        let _ = hexchess.apply(Notation::from("g4g5").unwrap());
+        let _ = hexchess.apply(Notation::parse("g4g5").unwrap());
         assert_eq!(Color::Black, hexchess.turn);
         assert_eq!(None, hexchess.en_passant);
         assert_eq!(0, hexchess.halfmove);
@@ -436,7 +436,7 @@ mod tests {
         assert_eq!(Some(Piece::WhitePawn), hexchess.board.get(Position::G5));
         assert_eq!(None, hexchess.board.get(Position::G4));
 
-        let _ = hexchess.apply(Notation::from("e7e6").unwrap());
+        let _ = hexchess.apply(Notation::parse("e7e6").unwrap());
         assert_eq!(Color::White, hexchess.turn);
         assert_eq!(None, hexchess.en_passant);
         assert_eq!(0, hexchess.halfmove);
@@ -444,11 +444,11 @@ mod tests {
         assert_eq!(Some(Piece::BlackPawn), hexchess.board.get(Position::E6));
         assert_eq!(None, hexchess.board.get(Position::E5));
 
-        let _ = hexchess.apply(Notation::from("f3i6").unwrap()); // <- white bishop move, no capture
+        let _ = hexchess.apply(Notation::parse("f3i6").unwrap()); // <- white bishop move, no capture
         assert_eq!(1, hexchess.halfmove);
         assert_eq!(2, hexchess.fullmove);
 
-        let _ = hexchess.apply(Notation::from("h7i6").unwrap()); // <- black pawn captures bishop
+        let _ = hexchess.apply(Notation::parse("h7i6").unwrap()); // <- black pawn captures bishop
         assert_eq!(0, hexchess.halfmove);
         assert_eq!(3, hexchess.fullmove);
     }
@@ -457,86 +457,86 @@ mod tests {
     fn test_apply_from_empty_position() {
         let mut hexchess = Hexchess::new();
 
-        let result = hexchess.apply(Notation::from("f5f6").unwrap());
+        let result = hexchess.apply(Notation::parse("f5f6").unwrap());
 
         assert_eq!(Err(Failure::IllegalMove), result);
     }
 
     #[test]
     fn test_apply_sets_black_en_passant() {
-        let mut b = Hexchess::from("1/3/5/7/p8/11/11/11/11/11/11 b - 0 1").unwrap();
-        let _ = b.apply(Notation::from("b7b5").unwrap());
+        let mut b = Hexchess::parse("1/3/5/7/p8/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = b.apply(Notation::parse("b7b5").unwrap());
         assert_eq!(Some(Position::B6), b.en_passant);
 
-        let mut c = Hexchess::from("1/3/5/7/1p7/11/11/11/11/11/11 b - 0 1").unwrap();
-        let _ = c.apply(Notation::from("c7c5").unwrap());
+        let mut c = Hexchess::parse("1/3/5/7/1p7/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = c.apply(Notation::parse("c7c5").unwrap());
         assert_eq!(Some(Position::C6), c.en_passant);
         
-        let mut d = Hexchess::from("1/3/5/7/2p6/11/11/11/11/11/11 b - 0 1").unwrap();
-        let _ = d.apply(Notation::from("d7d5").unwrap());
+        let mut d = Hexchess::parse("1/3/5/7/2p6/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = d.apply(Notation::parse("d7d5").unwrap());
         assert_eq!(Some(Position::D6), d.en_passant);
 
-        let mut e = Hexchess::from("1/3/5/7/3p5/11/11/11/11/11/11 b - 0 1").unwrap();
-        let _ = e.apply(Notation::from("e7e5").unwrap());
+        let mut e = Hexchess::parse("1/3/5/7/3p5/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = e.apply(Notation::parse("e7e5").unwrap());
         assert_eq!(Some(Position::E6), e.en_passant);
 
-        let mut f = Hexchess::from("1/3/5/7/4p4/11/11/11/11/11/11 b - 0 1").unwrap();
-        let _ = f.apply(Notation::from("f7f5").unwrap());
+        let mut f = Hexchess::parse("1/3/5/7/4p4/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = f.apply(Notation::parse("f7f5").unwrap());
         assert_eq!(Some(Position::F6), f.en_passant);
 
-        let mut g = Hexchess::from("1/3/5/7/5p3/11/11/11/11/11/11 b - 0 1").unwrap();
-        let _ = g.apply(Notation::from("g7g5").unwrap());
+        let mut g = Hexchess::parse("1/3/5/7/5p3/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = g.apply(Notation::parse("g7g5").unwrap());
         assert_eq!(Some(Position::G6), g.en_passant);
 
-        let mut h = Hexchess::from("1/3/5/7/6p2/11/11/11/11/11/11 b - 0 1").unwrap();
-        let _ = h.apply(Notation::from("h7h5").unwrap());
+        let mut h = Hexchess::parse("1/3/5/7/6p2/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = h.apply(Notation::parse("h7h5").unwrap());
         assert_eq!(Some(Position::H6), h.en_passant);
 
-        let mut i = Hexchess::from("1/3/5/7/7p1/11/11/11/11/11/11 b - 0 1").unwrap();
-        let _ = i.apply(Notation::from("i7i5").unwrap());
+        let mut i = Hexchess::parse("1/3/5/7/7p1/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = i.apply(Notation::parse("i7i5").unwrap());
         assert_eq!(Some(Position::I6), i.en_passant);
 
-        let mut k = Hexchess::from("1/3/5/7/8p/11/11/11/11/11/11 b - 0 1").unwrap();
-        let _ = k.apply(Notation::from("k7k5").unwrap());
+        let mut k = Hexchess::parse("1/3/5/7/8p/11/11/11/11/11/11 b - 0 1").unwrap();
+        let _ = k.apply(Notation::parse("k7k5").unwrap());
         assert_eq!(Some(Position::K6), k.en_passant);
     }
 
     #[test]
     fn test_apply_sets_white_en_passant() {
-        let mut b = Hexchess::from("1/3/5/7/9/11/11/11/11/11/1P9 w - 0 1").unwrap();
-        let _ = b.apply(Notation::from("b1b3").unwrap());
+        let mut b = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/1P9 w - 0 1").unwrap();
+        let _ = b.apply(Notation::parse("b1b3").unwrap());
         assert_eq!(Some(Position::B2), b.en_passant);
 
-        let mut c = Hexchess::from("1/3/5/7/9/11/11/11/11/2P8/11 w - 0 1").unwrap();
-        let _ = c.apply(Notation::from("c2c4").unwrap());
+        let mut c = Hexchess::parse("1/3/5/7/9/11/11/11/11/2P8/11 w - 0 1").unwrap();
+        let _ = c.apply(Notation::parse("c2c4").unwrap());
         assert_eq!(Some(Position::C3), c.en_passant);
 
-        let mut d = Hexchess::from("1/3/5/7/9/11/11/11/3P7/11/11 w - 0 1").unwrap();
-        let _ = d.apply(Notation::from("d3d5").unwrap());
+        let mut d = Hexchess::parse("1/3/5/7/9/11/11/11/3P7/11/11 w - 0 1").unwrap();
+        let _ = d.apply(Notation::parse("d3d5").unwrap());
         assert_eq!(Some(Position::D4), d.en_passant);
 
-        let mut e = Hexchess::from("1/3/5/7/9/11/11/4P6/11/11/11 w - 0 1").unwrap();
-        let _ = e.apply(Notation::from("e4e6").unwrap());
+        let mut e = Hexchess::parse("1/3/5/7/9/11/11/4P6/11/11/11 w - 0 1").unwrap();
+        let _ = e.apply(Notation::parse("e4e6").unwrap());
         assert_eq!(Some(Position::E5), e.en_passant);
 
-        let mut f = Hexchess::from("1/3/5/7/9/11/5P5/11/11/11/11 w - 0 1").unwrap();
-        let _ = f.apply(Notation::from("f5f7").unwrap());
+        let mut f = Hexchess::parse("1/3/5/7/9/11/5P5/11/11/11/11 w - 0 1").unwrap();
+        let _ = f.apply(Notation::parse("f5f7").unwrap());
         assert_eq!(Some(Position::F6), f.en_passant);
 
-        let mut g = Hexchess::from("1/3/5/7/9/11/11/6P4/11/11/11 w - 0 1").unwrap();
-        let _ = g.apply(Notation::from("g4g6").unwrap());
+        let mut g = Hexchess::parse("1/3/5/7/9/11/11/6P4/11/11/11 w - 0 1").unwrap();
+        let _ = g.apply(Notation::parse("g4g6").unwrap());
         assert_eq!(Some(Position::G5), g.en_passant);
 
-        let mut h = Hexchess::from("1/3/5/7/9/11/11/11/7P3/11/11 w - 0 1").unwrap();
-        let _ = h.apply(Notation::from("h3h5").unwrap());
+        let mut h = Hexchess::parse("1/3/5/7/9/11/11/11/7P3/11/11 w - 0 1").unwrap();
+        let _ = h.apply(Notation::parse("h3h5").unwrap());
         assert_eq!(Some(Position::H4), h.en_passant);
 
-        let mut i = Hexchess::from("1/3/5/7/9/11/11/11/11/8P2/11 w - 0 1").unwrap();
-        let _ = i.apply(Notation::from("i2i4").unwrap());
+        let mut i = Hexchess::parse("1/3/5/7/9/11/11/11/11/8P2/11 w - 0 1").unwrap();
+        let _ = i.apply(Notation::parse("i2i4").unwrap());
         assert_eq!(Some(Position::I3), i.en_passant);
 
-        let mut k = Hexchess::from("1/3/5/7/9/11/11/11/11/11/9P1 w - 0 1").unwrap();
-        let _ = k.apply(Notation::from("k1k3").unwrap());
+        let mut k = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/9P1 w - 0 1").unwrap();
+        let _ = k.apply(Notation::parse("k1k3").unwrap());
         assert_eq!(Some(Position::K2), k.en_passant);
     }
 
@@ -550,7 +550,7 @@ mod tests {
 
           assert_eq!(Some(Piece::BlackPawn), hexchess.board.get(Position::G5));
           
-          let _ = hexchess.apply(Notation::from("f6g6").unwrap());
+          let _ = hexchess.apply(Notation::parse("f6g6").unwrap());
 
           assert_eq!(None, hexchess.board.get(Position::G5));
     }
@@ -565,7 +565,7 @@ mod tests {
 
           assert_eq!(Some(Piece::BlackPawn), hexchess.board.get(Position::E5));
           
-          let _ = hexchess.apply(Notation::from("f6e6").unwrap());
+          let _ = hexchess.apply(Notation::parse("f6e6").unwrap());
 
           assert_eq!(None, hexchess.board.get(Position::E5));
     }
@@ -580,7 +580,7 @@ mod tests {
 
           assert_eq!(Some(Piece::WhitePawn), hexchess.board.get(Position::E6));
           
-          let _ = hexchess.apply(Notation::from("f6e5").unwrap());
+          let _ = hexchess.apply(Notation::parse("f6e5").unwrap());
 
           assert_eq!(None, hexchess.board.get(Position::E6));
     }
@@ -595,78 +595,78 @@ mod tests {
 
           assert_eq!(Some(Piece::WhitePawn), hexchess.board.get(Position::G6));
           
-          let _ = hexchess.apply(Notation::from("f6g5").unwrap());
+          let _ = hexchess.apply(Notation::parse("f6g5").unwrap());
 
           assert_eq!(None, hexchess.board.get(Position::G6));
     }
 
     #[test]
     fn test_white_promote_pawn_to_queen() {
-        let mut hexchess = Hexchess::from("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
-        let _ = hexchess.apply(Notation::from("f10f11q").unwrap());
+        let mut hexchess = Hexchess::parse("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::parse("f10f11q").unwrap());
         assert_eq!(Some(Piece::WhiteQueen), hexchess.board.get(Position::F11));
     }
 
     #[test]
     fn test_white_promote_pawn_to_bishop() {
-        let mut hexchess = Hexchess::from("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
-        let _ = hexchess.apply(Notation::from("f10f11b").unwrap());
+        let mut hexchess = Hexchess::parse("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::parse("f10f11b").unwrap());
         assert_eq!(Some(Piece::WhiteBishop), hexchess.board.get(Position::F11));
     }
 
     #[test]
     fn test_white_promote_pawn_to_rook() {
-        let mut hexchess = Hexchess::from("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
-        let _ = hexchess.apply(Notation::from("f10f11r").unwrap());
+        let mut hexchess = Hexchess::parse("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::parse("f10f11r").unwrap());
         assert_eq!(Some(Piece::WhiteRook), hexchess.board.get(Position::F11));
     }
 
     #[test]
     fn test_white_promote_pawn_to_knight() {
-        let mut hexchess = Hexchess::from("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
-        let _ = hexchess.apply(Notation::from("f10f11n").unwrap());
+        let mut hexchess = Hexchess::parse("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::parse("f10f11n").unwrap());
         assert_eq!(Some(Piece::WhiteKnight), hexchess.board.get(Position::F11));
     }
 
     #[test]
     fn test_black_promote_pawn_to_queen() {
-        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
-        let _ = hexchess.apply(Notation::from("f2f1q").unwrap());
+        let mut hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::parse("f2f1q").unwrap());
         assert_eq!(Some(Piece::BlackQueen), hexchess.board.get(Position::F1));
     }
 
     #[test]
     fn test_black_promote_pawn_to_bishop() {
-        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
-        let _ = hexchess.apply(Notation::from("f2f1b").unwrap());
+        let mut hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::parse("f2f1b").unwrap());
         assert_eq!(Some(Piece::BlackBishop), hexchess.board.get(Position::F1));
     }
 
     #[test]
     fn test_black_promote_pawn_to_rook() {
-        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
-        let _ = hexchess.apply(Notation::from("f2f1r").unwrap());
+        let mut hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::parse("f2f1r").unwrap());
         assert_eq!(Some(Piece::BlackRook), hexchess.board.get(Position::F1));
     }
 
     #[test]
     fn test_black_promote_pawn_to_knight() {
-        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
-        let _ = hexchess.apply(Notation::from("f2f1n").unwrap());
+        let mut hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1").unwrap();
+        let _ = hexchess.apply(Notation::parse("f2f1n").unwrap());
         assert_eq!(Some(Piece::BlackKnight), hexchess.board.get(Position::F1));
     }
 
     #[test]
     fn test_white_cannot_promote_on_black_promotion_position() {
-        let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/qP9 w - 0 1").unwrap();
-        let result = hexchess.apply(Notation::from("b1a1q").unwrap());
+        let mut hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/qP9 w - 0 1").unwrap();
+        let result = hexchess.apply(Notation::parse("b1a1q").unwrap());
         assert_eq!(Err(Failure::IllegalMove), result);
     }
 
     #[test]
     fn test_black_cannot_promote_on_white_promotion_position() {
-        let mut hexchess = Hexchess::from("1/3/5/7/p8/Q10/11/11/11/11/11 b - 0 1").unwrap();
-        let result = hexchess.apply(Notation::from("b7a6q").unwrap());
+        let mut hexchess = Hexchess::parse("1/3/5/7/p8/Q10/11/11/11/11/11 b - 0 1").unwrap();
+        let result = hexchess.apply(Notation::parse("b7a6q").unwrap());
         assert_eq!(Err(Failure::IllegalMove), result);
     }
 
@@ -697,7 +697,7 @@ mod tests {
     fn test_only_correct_color_can_apply_notation() {
         let mut hexchess = Hexchess::initial();
         
-        let result = hexchess.apply(Notation::from("g7g6").unwrap());
+        let result = hexchess.apply(Notation::parse("g7g6").unwrap());
 
         assert_eq!(Err(Failure::OutOfTurn), result);
     }
@@ -708,21 +708,21 @@ mod tests {
 
         hexchess.board.set(Position::F10, Some(Piece::WhiteRook));
         
-        let result = hexchess.apply(Notation::from("f10f11q").unwrap());
+        let result = hexchess.apply(Notation::parse("f10f11q").unwrap());
 
         assert_eq!(Err(Failure::IllegalMove), result);
     }
 
     #[test]
     fn test_creating_hexchess_with_invalid_board_returns_failure() {
-        let hexchess = Hexchess::from("whoops");
+        let hexchess = Hexchess::parse("whoops");
 
         assert_eq!(Err(Failure::InvalidBoard), hexchess);
     }
 
     #[test]
     fn test_creating_hexchess_with_empty_string_returns_failure() {
-        let hexchess = Hexchess::from("");
+        let hexchess = Hexchess::parse("");
 
         assert_eq!(Err(Failure::InvalidBoard), hexchess);
     }
@@ -835,8 +835,8 @@ mod tests {
     fn test_move_to_en_passant_position_with_non_pawn_doesnt_remove_enemy_piece()
     {
         let mut hexchess = Hexchess::initial();
-        let _ = hexchess.apply(Notation::from("b1b3").unwrap());
-        let _ = hexchess.apply(Notation::from("f10b2").unwrap());
+        let _ = hexchess.apply(Notation::parse("b1b3").unwrap());
+        let _ = hexchess.apply(Notation::parse("f10b2").unwrap());
 
         assert_eq!(Some(Piece::WhitePawn), hexchess.board.get(Position::B3));
         assert_eq!(Some(Piece::BlackBishop), hexchess.board.get(Position::B2));
@@ -844,18 +844,18 @@ mod tests {
 
     #[test]
     fn test_is_checkmate() {
-        let mut hexchess = Hexchess::from("K/3/2q2/1q5/9/11/11/11/11/11/11 b - 0 1").unwrap();
+        let mut hexchess = Hexchess::parse("K/3/2q2/1q5/9/11/11/11/11/11/11 b - 0 1").unwrap();
         
         assert_eq!(false, hexchess.is_checkmate());
 
-        let _ = hexchess.apply(Notation::from("d8f10").unwrap());
+        let _ = hexchess.apply(Notation::parse("d8f10").unwrap());
 
         assert_eq!(true, hexchess.is_checkmate());
     }
 
     #[test]
     fn test_not_checkmate() {
-        let mut hexchess = Hexchess::from("b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1").unwrap();
+        let mut hexchess = Hexchess::parse("b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1").unwrap();
         hexchess.turn = Color::Black;
 
         assert_eq!(false, hexchess.is_checkmate());

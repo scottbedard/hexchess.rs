@@ -82,7 +82,7 @@ pub fn is_threatened(hexchess: Hexchess, position: Position) -> bool {
 #[wasm_bindgen(js_name = parseHexchess)]
 pub fn parse_hexchess(fen: String) -> Option<Hexchess> {
     set_panic_hook();
-    match Hexchess::from(&fen) {
+    match Hexchess::parse(&fen) {
         Ok(hexchess) => Some(hexchess),
         Err(_) => None
     }
@@ -92,7 +92,7 @@ pub fn parse_hexchess(fen: String) -> Option<Hexchess> {
 #[wasm_bindgen(js_name = parseNotation)]
 pub fn parse_notation(str: String) -> Option<Notation> {
     set_panic_hook();
-    match Notation::from(&str) {
+    match Notation::parse(&str) {
         Ok(notation) => Some(notation),
         Err(_) => None
     }

@@ -22,7 +22,7 @@ mod tests {
 
     #[test]
     fn test_black_rook_targets() {
-        let hexchess = Hexchess::from("1/3/5/7/9/5r5/11/11/11/11/11").unwrap();
+        let hexchess = Hexchess::parse("1/3/5/7/9/5r5/11/11/11/11/11").unwrap();
 
         let targets = hexchess.targets(Position::F6);
 
@@ -67,7 +67,7 @@ mod tests {
 
     #[test]
     fn test_white_rook_targets() {
-        let hexchess = Hexchess::from("1/3/5/7/9/5R5/11/11/11/11/11").unwrap();
+        let hexchess = Hexchess::parse("1/3/5/7/9/5R5/11/11/11/11/11").unwrap();
 
         let targets = hexchess.targets(Position::F6);
 
