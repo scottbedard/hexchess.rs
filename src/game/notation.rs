@@ -127,6 +127,11 @@ impl Notation {
             return Err("invalid_promotion_position");
         }
 
+        // prohibit post-promotion characters
+        if chars.next().is_some() {
+            return Err("post_promotion_character");
+        }
+
         // successful parsing
         Ok(Self { from, promotion, to })
     }
@@ -270,6 +275,11 @@ mod tests {
     #[test]
     fn test_parse_notation_with_invalid_second_file() {
         assert_eq!(Err("invalid_to_second_char"), Notation::from("a1abc2"));
+    }
+
+    #[test]
+    fn test_parse_post_promotion_character() {
+        assert_eq!(Err("post_promotion_character"), Notation::from("f10f11qq"));
     }
 
     #[test]
