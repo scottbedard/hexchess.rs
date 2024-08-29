@@ -248,6 +248,13 @@ mod tests {
     }
 
     #[test]
+    fn test_parse_missing_to_second_char() {
+        assert_eq!(Err("missing_to_second_char"), Notation::from("f1f"));
+        assert_eq!(Err("missing_to_second_char"), Notation::from("f10f"));
+        assert_eq!(Err("missing_to_second_char"), Notation::from("f11f"));
+    }
+
+    #[test]
     fn test_parse_invalid_to_rank() {
         assert_eq!(Err("invalid_to_rank"), Notation::from("a1f12"));
     }
