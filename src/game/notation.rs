@@ -1,5 +1,6 @@
 use crate::game::board::Position;
 use crate::game::failure::Failure;
+use crate::game::hexchess::Hexchess;
 use crate::game::piece::PromotionPiece;
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -73,6 +74,16 @@ impl Notation {
             to: Position::from(to_str).unwrap(),
         })
     }
+
+    pub fn sequence(hexchess: Hexchess, sequence: &str) -> Result<Vec<Notation>, Failure> {
+        let mut output = Vec::new();
+
+        for part in sequence.split_whitespace() {
+            output.push(Notation::parse(part)?);
+        }
+
+        Ok(output)
+    }
 }
 
 impl fmt::Display for Notation {
@@ -140,5 +151,24 @@ mod tests {
     fn test_stringify_notation() {
         assert_eq!("a1a2", Notation::parse("a1a2").unwrap().to_string());
         assert_eq!("f10f11b", Notation::parse("f10f11b").unwrap().to_string());
+    }
+
+    #[test]
+    fn test_parse_sequence() {
+        let hexchess = Hexchess::initial();
+        let output = Notation::sequence(hexchess, " g4g5   f7f6").unwrap();
+
+        assert_eq!(vec![
+            Notation {
+                from: Position::G4,
+                promotion: None,
+                to: Position::G5,
+            },
+            Notation {
+                from: Position::F7,
+                promotion: None,
+                to: Position::F6,
+            },
+        ], output);
     }
 }
