@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.3
+
+- Error when characters exist after the promotion notation
+
 ## 0.4.2
 
 - Fixed notation parsing edge cases
