@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.2
+
+- Fixed notation parsing edge cases
+
 ## 0.4.1
 
 - `parseNotation` and `parseHexchess` now return `undefined` when input is invalid, rather than erroring
