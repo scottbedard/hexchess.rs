@@ -234,7 +234,7 @@ mod tests {
     fn test_parse_invalid_to_file() {
         assert_eq!(Err("invalid_to_file"), Notation::from("a1x"));
         assert_eq!(Err("invalid_to_file"), Notation::from("a10x"));
-        assert_eq!(Err("invalid_to_file"), Notation::from("a10x"));
+        assert_eq!(Err("invalid_to_file"), Notation::from("a11x"));
     }
 
     #[test]
