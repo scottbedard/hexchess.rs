@@ -1,5 +1,4 @@
 use crate::game::board::Position;
-use crate::game::failure::Failure;
 use crate::game::piece::PromotionPiece;
 use serde::{Deserialize, Serialize};
 use std::fmt;
