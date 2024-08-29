@@ -31,9 +31,9 @@ impl Notation {
         let second_char = match chars.next() {
             Some(c) => match is_rank(c) {
                 true => c,
-                false => return Err("invalid_from_rank"),
+                false => return Err("invalid_second_character"),
             },
-            None => return Err("missing_from_rank"),
+            None => return Err("missing_second_character"),
         };
 
         let third_char = match chars.next() {
@@ -80,9 +80,9 @@ impl Notation {
         let to_rank = match (to_second_char, to_third_char) {
             ('1', Some('0')) => String::from("10"),
             ('1', Some('1')) => String::from("11"),
-            _ => match is_rank(second_char) {
-                true => to_second_char.to_string(),
-                false => return Err("invalid_to_rank"),
+            _ => match (is_rank(second_char), to_third_char) {
+                (true, Some('b' | 'n' | 'r' | 'q') | None) => to_second_char.to_string(),
+                _ => return Err("invalid_to_rank"),
             }
         };
 
@@ -102,30 +102,24 @@ impl Notation {
         }
 
         // parse and validate promotion
-        let promotion_char = match to_third_char {
-            Some(c) => match c {
-                'b' | 'n' | 'r' | 'q' => to_third_char,
-                '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => match chars.next() {
-                    Some(c2) => match c2 {
-                        'b' | 'n' | 'r' | 'q' => Some(c2),
-                        _ => return Err("invalid_promotion_character"),
-                    },
-                    _ => None,
-                }
-                _ => return Err("invalid_promotion_character"),
-            },
-            None => None
-        };
-
-        let promotion = match promotion_char {
+        let promotion = match to_third_char {
             Some(c) => match c {
                 'b' => Some(PromotionPiece::Bishop),
                 'n' => Some(PromotionPiece::Knight),
                 'q' => Some(PromotionPiece::Queen),
                 'r' => Some(PromotionPiece::Rook),
-                _ => return Err("invalid_promotion"),
+                _ => match chars.next() {
+                    Some(c2) => match c2 {
+                        'b' => Some(PromotionPiece::Bishop),
+                        'n' => Some(PromotionPiece::Knight),
+                        'q' => Some(PromotionPiece::Queen),
+                        'r' => Some(PromotionPiece::Rook),
+                        _ => return Err("invalid_promotion_character")
+                    },
+                    _ => None,
+                }
             },
-            None => None,
+            None => None
         };
 
         // validate promotion to is valid
@@ -212,24 +206,56 @@ mod tests {
     }
 
     #[test]
-    fn test_parse_promotion_on_non_promotion_position() {
-        assert_eq!(Err("invalid_promotion_position"), Notation::from("a1a2b"));
+    fn test_parse_empty_string() {
+        assert_eq!(Err("missing_from_file"), Notation::from(""));
     }
 
     #[test]
-    fn test_parse_notation_with_invalid_promotion() {
+    fn test_parse_missing_rank() {
+        assert_eq!(Err("missing_second_character"), Notation::from("a"));
+    }
+
+    #[test]
+    fn test_parse_missing_third_character() {
+        assert_eq!(Err("missing_third_character"), Notation::from("a1"));
+    }
+
+    #[test]
+    fn test_parse_invalid_to_file() {
+        assert_eq!(Err("invalid_to_file"), Notation::from("a1x"));
+    }
+
+    #[test]
+    fn test_parse_invalid_to_second_char() {
+        assert_eq!(Err("invalid_to_second_char"), Notation::from("a1ax"));
+    }
+
+    #[test]
+    fn test_parse_invalid_to_rank() {
+        assert_eq!(Err("invalid_to_rank"), Notation::from("a1f12"));
+    }
+
+    #[test]
+    fn test_parse_missing_to_file() {
+        assert_eq!(Err("invalid_to_second_char"), Notation::from("a1abc2"));
+    }
+
+    #[test]
+    fn test_parse_invalid_from_position() {
+        assert_eq!(Err("invalid_from_position"), Notation::from("a9a1"));
+    }
+
+    #[test]
+    fn test_parse_invalid_to_position() {
+        assert_eq!(Err("invalid_to_position"), Notation::from("a1a9"));
+    }
+
+    #[test]
+    fn test_parse_invalid_promotion_character() {
         assert_eq!(Err("invalid_promotion_character"), Notation::from("f10f11x"));
     }
 
-    #[test]
-    fn test_parse_notation_with_invalid_from() {
-        assert_eq!(Err("invalid_from_file"), Notation::from("x1a2"));
-    }
-
-    #[test]
-    fn test_parse_notation_with_invalid_to() {
-        assert_eq!(Err("invalid_to_file"), Notation::from("a1x2"));
-    }
+    //
 
     #[test]
     fn test_parse_notation_with_invalid_from_and_to() {
