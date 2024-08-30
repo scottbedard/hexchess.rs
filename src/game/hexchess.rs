@@ -27,6 +27,7 @@ pub struct Hexchess {
 
 /// Create hexchess from fen
 impl Hexchess {
+    /// Apply a legal move to the game state
     pub fn apply(&mut self, notation: Notation) -> Result<(), Failure> {
         let piece = match self.board.get(notation.from) {
             Some(val) => val,
@@ -38,9 +39,15 @@ impl Hexchess {
             return Err(Failure::OutOfTurn);
         }
 
+        // verify the piece can move to the target position
+        if !self.targets(notation.from).contains(&notation) {
+            return Err(Failure::IllegalMove);
+        }
+
         self.apply_unsafe(notation)
     }
 
+    /// Apply an arbitrary move to the game state, disregarding turn or legality
     pub fn apply_unsafe(&mut self, notation: Notation) -> Result<(), Failure> {
         let piece = match self.board.get(notation.from) {
             Some(val) => val,
@@ -126,6 +133,36 @@ impl Hexchess {
         Ok(())
     }
 
+    /// Apply a sequence of moves
+    pub fn apply_sequence(&mut self, sequence: &str) -> Result<(), String> {
+        let mut clone = self.clone();
+        let mut i: u16 = 0;
+
+        for part in sequence.split_whitespace() {
+            let notation = match Notation::from(part) {
+                Ok(notation) => notation,
+                Err(_) => {
+                    return Err(format!("Invalid notation at index {}: {}", i, part));
+                },
+            };
+
+            if clone.apply(notation).is_err() {
+                return Err(format!("Illegal move at index {}: {}", i, part));
+            }
+
+            i += 1;
+        }
+
+        self.board = clone.board;
+        self.en_passant = clone.en_passant;
+        self.fullmove = clone.fullmove;
+        self.halfmove = clone.halfmove;
+        self.turn = clone.turn;
+
+        Ok(())
+    }
+
+    /// Create hexchess from string
     pub fn from(value: &str) -> Result<Self, Failure> {
         let mut parts = value.split_whitespace();
 
@@ -184,6 +221,7 @@ impl Hexchess {
         })
     }
 
+    /// Get the color of a position
     pub fn color(&self, position: Position) -> Option<Color> {
         match self.board.get(position) {
             None => None,
@@ -191,6 +229,7 @@ impl Hexchess {
         }
     }
 
+    /// Find the king of a given color
     pub fn find_king(&self, color: Color) -> Option<Position> {
         let king = match color {
             Color::White => Some(Piece::WhiteKing),
@@ -206,6 +245,7 @@ impl Hexchess {
         return None
     }
 
+    /// Create hexchess with initial board state
     pub fn initial() -> Self {
         Hexchess {
             board: Board::initial(),
@@ -216,6 +256,7 @@ impl Hexchess {
         }
     }
 
+    /// Test if the board is currently in checkmate
     pub fn is_checkmate(&self) -> bool {
         let king_position = match self.find_king(self.turn) {
             Some(p) => p,
@@ -244,6 +285,7 @@ impl Hexchess {
         false
     }
 
+    /// Test if a position is threatened by an enemy piece
     pub fn is_threatened(&self, position: Position) -> bool {
         let piece = match self.board.get(position) {
             Some(val) => val,
@@ -275,6 +317,7 @@ impl Hexchess {
         false
     }
 
+    /// Create an empty hexchess
     pub fn new() -> Self {
         Hexchess {
             board: Board::new(),
@@ -285,6 +328,7 @@ impl Hexchess {
         }
     }
 
+    /// Get the legal targets from a position
     pub fn targets(&self, position: Position) -> Vec<Notation> {
         let color = match self.color(position) {
             Some(val) => val,
@@ -306,6 +350,7 @@ impl Hexchess {
             .collect()
     }
 
+    /// Get all targets from a position, including potential self-checks
     pub fn targets_unsafe(&self, position: Position) -> Vec<Notation> {
         let piece = match self.board.get(position) {
             Some(val) => val,
@@ -328,6 +373,7 @@ impl Hexchess {
         }
     }
 
+    /// Stringify a hexchess to JSON
     pub fn to_json(&self) -> String {
         json!(self).to_string()
     }
@@ -458,6 +504,15 @@ mod tests {
         let mut hexchess = Hexchess::new();
 
         let result = hexchess.apply(Notation::from("f5f6").unwrap());
+
+        assert_eq!(Err(Failure::IllegalMove), result);
+    }
+
+    #[test]
+    fn test_apply_illegal_move() {
+        let mut hexchess = Hexchess::new();
+
+        let result = hexchess.apply(Notation::from("f5a1").unwrap());
 
         assert_eq!(Err(Failure::IllegalMove), result);
     }
@@ -870,5 +925,40 @@ mod tests {
         assert_eq!(Some(Position::G10), hexchess.find_king(Color::Black));
         assert_eq!(None, blank.find_king(Color::White));
         assert_eq!(None, blank.find_king(Color::Black));
+    }
+
+    #[test]
+    fn test_applying_a_sequence_of_moves() {
+        let mut hexchess = Hexchess::initial();
+        let _ = hexchess.apply_sequence("g4g6 f7g6 f5f7 g6f6");
+
+        assert_eq!(hexchess.to_string(), "b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3");
+    }
+
+    #[test]
+    fn test_apply_sequence_with_invalid_move() {
+        let mut hexchess = Hexchess::initial();
+        let result = hexchess.apply_sequence("g4g5 whoops");
+
+        assert_eq!(hexchess.to_string(), INITIAL_HEXCHESS); // <- the board has not changed
+        assert_eq!(Err(String::from("Invalid notation at index 1: whoops")), result);
+    }
+
+    #[test]
+    fn test_apply_sequence_with_illegal_move() {
+        let mut hexchess = Hexchess::initial();
+        let result = hexchess.apply_sequence("g4g5 b7a1"); // <- b7 is a black pawn, it cannot move to a1
+
+        assert_eq!(hexchess.to_string(), INITIAL_HEXCHESS); // <- the board has not changed
+        assert_eq!(Err(String::from("Illegal move at index 1: b7a1")), result);
+    }
+
+    #[test]
+    fn test_apply_sequence_that_attempts_a_self_check() {
+        let mut hexchess = Hexchess::initial();
+        let result = hexchess.apply_sequence("f2d4 g10g9");
+
+        assert_eq!(hexchess.to_string(), INITIAL_HEXCHESS);
+        assert_eq!(Err(String::from("Illegal move at index 1: g10g9")), result);
     }
 }
