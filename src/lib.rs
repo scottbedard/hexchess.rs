@@ -29,6 +29,18 @@ pub fn apply_notation(hexchess: Hexchess, notation: Notation) -> Hexchess {
     output
 }
 
+/// Execute a sequence of moves
+#[wasm_bindgen(js_name = applySequence)]
+pub fn apply_sequence(hexchess: Hexchess, sequence: &str) -> JsValue {
+    let mut output = hexchess.clone();
+    let result = output.apply_sequence(sequence);
+
+    match result {
+        Ok(_) => JsValue::from_serde(&output).unwrap(),
+        Err(message) => panic!("{}", message),
+    }
+}
+
 /// Create empty hexchess object
 #[wasm_bindgen(js_name = createHexchess)]
 pub fn create_hexchess() -> Hexchess {

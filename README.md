@@ -15,7 +15,7 @@ A Rust / TypeScript library for [Gliński's hexagonal chess](https://en.wikipedi
 
 ## Basic usage
 
-Execute `hexchess` to open the following command line interface. More documentation to come.
+Execute `hexchess` to open the following command line interface.
 
 ```
 Usage: hexchess <COMMAND>
@@ -40,12 +40,24 @@ A collection of wasm bindings available via `@bedard/hexchess`, listed below are
 
 #### `applyNotation`
 
-Create a new `Hexchess` object after applying a piece of `Notation`.
+Create a new `Hexchess` object and apply a single `Notation`.
 
 ```ts
 import { applyNotation } from '@bedard/hexchess'
 
 applyNotation(hexchess, notation)
+
+// { board: { ... }, enPassant, turn, fullmove, halfmove }
+```
+
+#### `applySequence`
+
+Create a new `Hexchess` object and apply a whitespace-separated sequence of moves. An error is thrown if a piece of notation is not valid or a move is illegal.
+
+```ts
+import { applySequence } from '@bedard/hexchess'
+
+applySequence(hexchess, 'g4g5 e7e6')
 
 // { board: { ... }, enPassant, turn, fullmove, halfmove }
 ```
@@ -76,7 +88,7 @@ createHexchessInitial()
 
 #### `findKing`
 
-Find a player's king
+Find a player's king.
 
 ```ts
 import { findKing } from '@bedard/hexchess'
@@ -98,19 +110,17 @@ getColor('?') // null
 
 #### `getPositionColor`
 
-Get color of a piece by board position.
+Get color of a piece by board position. If no piece is present, `null` will be returned.
 
 ```ts
 import { getPositionColor } from '@bedard/hexchess'
 
 getPositionColor(hexchess, 'f5') // 'w'
-getPositionColor(hexchess, 'f6') // null
-getPositionColor(hexchess, 'f7') // 'b'
 ```
 
 #### `getTargets`
 
-Find all legal moves from a position and return the resulting array of `Notation` objects.
+Find all legal moves from a position and return an array of `Notation` objects.
 
 ```ts
 import { getTargets } from '@bedard/hexchess'
@@ -122,7 +132,7 @@ targets(hexchess, 'g4')
 
 #### `isCheckmate`
 
-Test if the board is in checkmate
+Test if the board is in checkmate.
 
 ```ts
 import { isCheckmate } from '@bedard/hexchess'
@@ -132,7 +142,7 @@ isCheckmate(hexchess) // true / false
 
 #### `isThreatened`
 
-Test if a position is threatened
+Test if a position is threatened.
 
 ```ts
 import { isThreatened } from '@bedard/hexchess'
