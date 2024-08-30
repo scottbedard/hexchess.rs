@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+- Add `applySequence` method
+- Prevent `apply` from being called with a valid but illegal move
+- To simplify type definitions, `findKing`, `getPieceColor` and `getPositionColor` will now return `undefined` instead of `null`
+
 ## 0.4.3
 
 - Error when characters exist after the promotion notation
