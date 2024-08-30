@@ -24,13 +24,14 @@ pub fn set_panic_hook() {
 #[wasm_bindgen(js_name = applyNotation)]
 pub fn apply_notation(hexchess: Hexchess, notation: Notation) -> Hexchess {
     set_panic_hook();
+
     let mut output = hexchess.clone();
     let _ = output.apply(notation);
     output
 }
 
 /// Execute a sequence of moves
-#[wasm_bindgen(js_name = applySequence)]
+#[wasm_bindgen(js_name = applySequence, skip_typescript)]
 pub fn apply_sequence(hexchess: Hexchess, sequence: &str) -> JsValue {
     let mut output = hexchess.clone();
     let result = output.apply_sequence(sequence);
@@ -45,6 +46,7 @@ pub fn apply_sequence(hexchess: Hexchess, sequence: &str) -> JsValue {
 #[wasm_bindgen(js_name = createHexchess)]
 pub fn create_hexchess() -> Hexchess {
     set_panic_hook();
+
     Hexchess::new()
 }
 
@@ -52,27 +54,31 @@ pub fn create_hexchess() -> Hexchess {
 #[wasm_bindgen(js_name = createHexchessInitial)]
 pub fn create_hexchess_initial() -> Hexchess {
     set_panic_hook();
+
     Hexchess::initial()
 }
 
 /// Test if board is in checkmate
-#[wasm_bindgen(js_name = findKing, skip_typescript)]
-pub fn find_king(hexchess: Hexchess, color: Color) -> JsValue {
+#[wasm_bindgen(js_name = findKing)]
+pub fn find_king(hexchess: Hexchess, color: Color) -> Option<Position> {
     set_panic_hook();
-    JsValue::from_serde(&hexchess.find_king(color)).unwrap()
+
+    hexchess.find_king(color)
 }
 
 /// Find piece color at board position
-#[wasm_bindgen(js_name = getPositionColor, skip_typescript)]
-pub fn get_position_color(hexchess: Hexchess, position: Position) -> JsValue {
+#[wasm_bindgen(js_name = getPositionColor)]
+pub fn get_position_color(hexchess: Hexchess, position: Position) -> Option<Color> {
     set_panic_hook();
-    JsValue::from_serde(&hexchess.color(position)).unwrap()
+
+    hexchess.color(position)
 }
 
 /// Find target moves from a position, regardless of turn color
 #[wasm_bindgen(js_name = getTargets, skip_typescript)]
 pub fn get_targets(hexchess: Hexchess, position: Position) -> JsValue {
     set_panic_hook();
+
     JsValue::from_serde(&hexchess.targets(position)).unwrap()
 }
 
@@ -80,6 +86,7 @@ pub fn get_targets(hexchess: Hexchess, position: Position) -> JsValue {
 #[wasm_bindgen(js_name = isCheckmate)]
 pub fn is_checkmate(hexchess: Hexchess) -> bool {
     set_panic_hook();
+
     hexchess.is_checkmate()
 }
 
@@ -87,6 +94,7 @@ pub fn is_checkmate(hexchess: Hexchess) -> bool {
 #[wasm_bindgen(js_name = isThreatened)]
 pub fn is_threatened(hexchess: Hexchess, position: Position) -> bool {
     set_panic_hook();
+
     hexchess.is_threatened(position)
 }
 
@@ -94,6 +102,7 @@ pub fn is_threatened(hexchess: Hexchess, position: Position) -> bool {
 #[wasm_bindgen(js_name = parseHexchess)]
 pub fn parse_hexchess(fen: String) -> Option<Hexchess> {
     set_panic_hook();
+
     match Hexchess::from(&fen) {
         Ok(hexchess) => Some(hexchess),
         Err(_) => None
@@ -114,37 +123,30 @@ pub fn parse_notation(str: String) -> Option<Notation> {
 #[wasm_bindgen(js_name = stringifyHexchess)]
 pub fn stringify_hexchess(hexchess: Hexchess) -> String {
     set_panic_hook();
+
     hexchess.to_string()
 }
 
 /// Get piece color
 #[wasm_bindgen(js_name = getPieceColor)]
-pub fn get_piece_color(val: char) -> JsValue {
+pub fn get_piece_color(val: char) -> Option<Color> {
     set_panic_hook();
 
     match Piece::from_char(val) {
-        Ok(piece) => JsValue::from_serde(&piece.color()).unwrap(),
-        Err(_) => JsValue::NULL,
+        Ok(piece) => Some(piece.color()),
+        Err(_) => None,
     }
 }
 
 #[wasm_bindgen(typescript_custom_section)]
 const TS_APPEND_CONTENT: &'static str = r#"
 /**
-* Test if board is in checkmate
+* Execute a sequence of moves
 * @param {Hexchess} hexchess
-* @param {Color} color
-* @returns {Position | null}
+* @param {string} sequence
+* @returns {Hexchess}
 */
-export function findKing(hexchess: Hexchess, color: Color): Position | null;
-
-/**
-* Find piece color at board position
-* @param {Hexchess} hexchess
-* @param {Position} position
-* @returns {Color | null}
-*/
-export function getPositionColor(hexchess: Hexchess, position: Position): Color | null;
+export function applySequence(hexchess: Hexchess, sequence: string): Hexchess;
 
 /**
  * Find the legal moves from a position
