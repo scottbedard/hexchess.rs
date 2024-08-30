@@ -1,6 +1,6 @@
 {
   "name": "@bedard/hexchess",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "",
   "scripts": {
     "build": "wasm-pack build --release && node scripts/build.mjs",
