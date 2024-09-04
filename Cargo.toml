@@ -5,6 +5,11 @@ edition = "2021"
 repository = "https://github.com/scottbedard/hexchess.rs"
 license = "MIT"
 
+[[bin]]
+edition = "2024"
+name = "hexchess"
+path = "src/main.rs"
+
 [features]
 default = ["console_error_panic_hook"]
 
