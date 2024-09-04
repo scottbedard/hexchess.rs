@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- Cargo library published as [`hexchess`](https://crates.io/crates/hexchess)
+
 ## 0.5.0
 
 - Add `applySequence` method
