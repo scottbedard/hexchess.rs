@@ -33,8 +33,6 @@ jobs:
   rust:
     name: Rust
 
-    needs: [versions]
-
     runs-on: ubuntu-latest
 
     container:
@@ -57,8 +55,6 @@ jobs:
 
   wasm:
     name: WASM
-
-    needs: [versions]
 
     runs-on: ubuntu-latest
 
