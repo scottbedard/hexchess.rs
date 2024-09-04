@@ -103,14 +103,14 @@ jobs:
       - name: Build wasm package
         run: pnpm build
 
-      # - name: Publish to NPM
-      #   run: |
-      #     cd ./pkg
-      #     npm publish --access public
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to NPM
+        run: |
+          cd ./pkg
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish to Crates.io
         run: |
           cargo login ${{ secrets.CARGO_TOKEN }}
-          cargo publish --dry-run
+          cargo publish
