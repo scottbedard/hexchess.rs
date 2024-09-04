@@ -10,6 +10,26 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  versions:
+    name: Check versions
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: pnpm/action-setup@v4
+      name: Install pnpm
+      with:
+        version: 9
+        run_install: false
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Check versions
+      run: node ./scripts/check-versions.mjs
+
   rust:
     name: Rust
 
@@ -41,10 +61,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - uses: pnpm/action-setup@v2
+    - uses: pnpm/action-setup@v4
       name: Install pnpm
       with:
-        version: 8
+        version: 9
         run_install: false
 
     - name: Install dependencies
