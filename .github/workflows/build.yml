@@ -10,8 +10,21 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  versions:
+    name: Versions
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Check versions
+      run: node ./scripts/check-versions.mjs
+
   rust:
     name: Rust
+
+    needs: [versions]
 
     runs-on: ubuntu-latest
 
@@ -35,6 +48,8 @@ jobs:
 
   wasm:
     name: WASM
+
+    needs: [versions]
 
     runs-on: ubuntu-latest
 
