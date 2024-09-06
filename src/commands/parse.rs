@@ -6,5 +6,5 @@ pub fn execute(fen: String) -> Result<String, String> {
         Err(failure) => return Err(failure.to_string()),
     };
 
-    Ok(hexchess.to_string())
+    Ok(hexchess.to_json())
 }
