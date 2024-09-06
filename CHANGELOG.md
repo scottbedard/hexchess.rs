@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.0
+
+- Added `get-targets` to CLI
+- Removed `get` from CLI
+
 ## 0.6.0
 
 - Cargo library published to crates.io as [`hexchess`](https://crates.io/crates/hexchess)
