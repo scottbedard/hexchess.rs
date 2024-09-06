@@ -14,13 +14,13 @@ pub struct App {
 
 #[derive(Debug, Subcommand)]
 enum Command {
-    /// Apply notation to game
+    /// Apply a sequence of moves to a game
     Apply {
         /// Hexchess state
         fen: String,
 
         /// Algebraic hexchess notation
-        notation: String,
+        sequence: String,
     },
 
     /// Get piece value at position
@@ -48,17 +48,19 @@ enum Command {
     },
 }
 
-fn main() {
-    let app = App::parse();
-
-    let result = match app.command {
-        Command::Apply { fen, notation } => commands::apply::execute(fen, notation),
+fn main_body(app: App) -> Result<String, String> {
+    match app.command {
+        Command::Apply { fen, sequence } => commands::apply::execute(fen, sequence),
         Command::Get { fen, position } => commands::get::execute(fen, position),
         Command::Parse { fen } => commands::parse::execute(fen),
         Command::Targets { fen, position } => commands::targets::execute(fen, position),
-    };
+    }
+}
 
-    match result {
+fn main() {
+    let app = App::parse();
+
+    match main_body(app) {
         Ok(output) => {
             println!("{}", output);
             std::process::exit(OK);
@@ -67,5 +69,24 @@ fn main() {
             eprintln!("error: {}", e);
             std::process::exit(DATAERR);
         } 
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_apply_sequence() {
+        let app = App {
+            command: Command::Apply {
+                fen: "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1".to_string(),
+                sequence: "g4g5 e7e6".to_string(),
+            }
+        };
+
+        let output = main_body(app);
+
+        assert_eq!(output, Ok("b/qbk/n1b1n/r5r/ppp1ppppp/4p6/5PP4/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 2".to_string()));
     }
 }
