@@ -54,7 +54,6 @@ fn main_body(app: App) -> Result<String, String> {
         Command::Get { fen, position } => commands::get::execute(fen, position),
         Command::GetTargets { fen, position } => commands::get_targets::execute(fen, position),
         Command::Parse { fen } => commands::parse::execute(fen),
-        Command::GetTargets { fen, position } => commands::targets::execute(fen, position),
     }
 }
 
