@@ -22,11 +22,10 @@ Execute `hexchess` to open the following command line interface.
 Usage: hexchess <COMMAND>
 
 Commands:
-  apply    Apply notation to game
-  get      Get piece value at position
-  parse    Parse hexchess to JSON
-  targets  List target moves from a position
-  help     Print this message or the help of the given subcommand(s)
+  apply-sequence  Apply sequence of moves to a position
+  get-targets     Get legal moves from a position
+  parse           Parse hexchess fen to JSON
+  help            Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help     Print help

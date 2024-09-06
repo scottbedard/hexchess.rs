@@ -14,7 +14,7 @@ pub struct App {
 
 #[derive(Debug, Subcommand)]
 enum Command {
-    /// Apply a sequence of moves to a game
+    /// Apply sequence of moves to a position
     ApplySequence {
         /// Hexchess state
         fen: String,
@@ -23,16 +23,7 @@ enum Command {
         sequence: String,
     },
 
-    /// Get piece value at position
-    Get {
-        /// Hexchess state
-        fen: String,
-
-        /// Hexchess coordinate
-        position: String,
-    },
-
-    /// Get targets from a position
+    /// Get legal moves from a position
     GetTargets {
         /// Hexchess state
         fen: String,
@@ -41,7 +32,7 @@ enum Command {
         position: String,
     },
 
-    /// Parse hexchess to JSON
+    /// Parse hexchess fen to JSON
     Parse {
         /// Hexchess state
         fen: String,
@@ -51,7 +42,6 @@ enum Command {
 fn main_body(app: App) -> Result<String, String> {
     match app.command {
         Command::ApplySequence { fen, sequence } => commands::apply_sequence::execute(fen, sequence),
-        Command::Get { fen, position } => commands::get::execute(fen, position),
         Command::GetTargets { fen, position } => commands::get_targets::execute(fen, position),
         Command::Parse { fen } => commands::parse::execute(fen),
     }
