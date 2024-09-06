@@ -32,28 +32,29 @@ enum Command {
         position: String,
     },
 
-    /// Parse hexchess to JSON
-    Parse {
-        /// Hexchess state
-        fen: String,
-    },
-
-    /// List target moves from a position
-    Targets {
+    /// Get targets from a position
+    GetTargets {
         /// Hexchess state
         fen: String,
 
         /// Hexchess coordinate
         position: String,
     },
+
+    /// Parse hexchess to JSON
+    Parse {
+        /// Hexchess state
+        fen: String,
+    },
 }
 
 fn main_body(app: App) -> Result<String, String> {
     match app.command {
-        Command::ApplySequence { fen, sequence } => commands::apply::execute(fen, sequence),
+        Command::ApplySequence { fen, sequence } => commands::apply_sequence::execute(fen, sequence),
         Command::Get { fen, position } => commands::get::execute(fen, position),
+        Command::GetTargets { fen, position } => commands::get_targets::execute(fen, position),
         Command::Parse { fen } => commands::parse::execute(fen),
-        Command::Targets { fen, position } => commands::targets::execute(fen, position),
+        Command::GetTargets { fen, position } => commands::targets::execute(fen, position),
     }
 }
 
@@ -88,5 +89,19 @@ mod tests {
         let output = main_body(app);
 
         assert_eq!(output, Ok("b/qbk/n1b1n/r5r/ppp1ppppp/4p6/5PP4/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 2".to_string()));
+    }
+
+    #[test]
+    fn test_get_targets() {
+        let app = App {
+            command: Command::GetTargets {
+                fen: "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1".to_string(),
+                position: "g4".to_string(),
+            }
+        };
+
+        let output = main_body(app);
+
+        assert_eq!(output, Ok("g4g5,g4g6".to_string()));
     }
 }
