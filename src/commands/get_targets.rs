@@ -13,11 +13,11 @@ pub fn execute(hexchess_arg: String, position: String) -> Result<String, String>
         Err(failure) => return Err(failure.to_string()),
     };
 
-    let output = hexchess.targets(from)
+    let csv = hexchess.targets(from)
         .into_iter()
-        .map(|x| x.to_string());
+        .map(|x| x.to_string())
+        .collect::<Vec<String>>()
+        .join(",");
 
-    let result_csv = output.collect::<Vec<String>>().join(",");
-
-    Ok(result_csv)
+    Ok(csv)
 }
