@@ -405,7 +405,6 @@ impl fmt::Display for Hexchess {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{constants::{EMPTY_HEXCHESS, INITIAL_HEXCHESS}, game::targets};
 
     #[test]
     fn test_create_hexchess_from_initial_board_fen() {
@@ -741,14 +740,14 @@ mod tests {
     fn test_stringify_hexchess_empty() {
         let hexchess = Hexchess::new();
 
-        assert_eq!(EMPTY_HEXCHESS, hexchess.to_string());
+        assert_eq!(crate::constants::EMPTY_HEXCHESS, hexchess.to_string());
     }
 
     #[test]
     fn test_stringify_hexchess_initial() {
         let hexchess = Hexchess::initial();
 
-        assert_eq!(INITIAL_HEXCHESS, hexchess.to_string());
+        assert_eq!(crate::constants::INITIAL_HEXCHESS, hexchess.to_string());
     }
 
     #[test]
@@ -952,7 +951,7 @@ mod tests {
         let mut hexchess = Hexchess::initial();
         let result = hexchess.apply_sequence("g4g5 whoops");
 
-        assert_eq!(hexchess.to_string(), INITIAL_HEXCHESS); // <- the board has not changed
+        assert_eq!(hexchess.to_string(), crate::constants::INITIAL_HEXCHESS); // <- the board has not changed
         assert_eq!(Err(String::from("invalid notation at index 1: whoops")), result);
     }
 
@@ -961,7 +960,7 @@ mod tests {
         let mut hexchess = Hexchess::initial();
         let result = hexchess.apply_sequence("g4g5 b7a1"); // <- b7 is a black pawn, it cannot move to a1
 
-        assert_eq!(hexchess.to_string(), INITIAL_HEXCHESS); // <- the board has not changed
+        assert_eq!(hexchess.to_string(), crate::constants::INITIAL_HEXCHESS); // <- the board has not changed
         assert_eq!(Err(String::from("Illegal move at index 1: b7a1")), result);
     }
 
@@ -970,7 +969,7 @@ mod tests {
         let mut hexchess = Hexchess::initial();
         let result = hexchess.apply_sequence("f2d4 g10g9");
 
-        assert_eq!(hexchess.to_string(), INITIAL_HEXCHESS);
+        assert_eq!(hexchess.to_string(), crate::constants::INITIAL_HEXCHESS);
         assert_eq!(Err(String::from("Illegal move at index 1: g10g9")), result);
     }
 }
