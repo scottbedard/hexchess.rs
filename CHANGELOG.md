@@ -1,13 +1,17 @@
 # Changelog
 
+## 0.9.0
+
+- Add `check-move` command
+
 ## 0.8.0
 
-- Added `all-targets` to CLI
+- Add `all-targets` command
 
 ## 0.7.0
 
-- Added `get-targets` to CLI
-- Removed `get` from CLI
+- Add `get-targets` command
+- Remove `get` command
 
 ## 0.6.0
 
