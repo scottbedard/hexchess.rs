@@ -22,6 +22,7 @@ Execute `hexchess` to open the following command line interface.
 Usage: hexchess <COMMAND>
 
 Commands:
+  all-targets     Get all legal moves
   apply-sequence  Apply sequence of moves to a position
   get-targets     Get legal moves from a position
   parse           Parse hexchess fen to JSON

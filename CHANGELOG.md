@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Added `all-targets` to CLI
+
 ## 0.7.0
 
 - Added `get-targets` to CLI
