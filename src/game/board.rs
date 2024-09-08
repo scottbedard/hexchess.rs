@@ -1,5 +1,4 @@
 use crate::constants::{INITIAL_BOARD, SORTED_POSITIONS};
-use crate::game::failure::Failure;
 use crate::game::piece::{Color, Piece};
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -284,7 +283,7 @@ pub enum Position {
 }
 
 impl Position {
-    pub fn from(value: &str) -> Result<Self, Failure> {
+    pub fn from(value: &str) -> Result<Self, String> {
         match value {
             "a1" => Ok(Position::A1),
             "a2" => Ok(Position::A2),
@@ -377,7 +376,7 @@ impl Position {
             "l4" => Ok(Position::L4),
             "l5" => Ok(Position::L5),
             "l6" => Ok(Position::L6),
-            _ => return Err(Failure::InvalidPosition),
+            _ => return Err(format!("invalid position: {}", value)),
         }
     }
 }
@@ -676,7 +675,7 @@ impl Board {
     }
 
     /// create board from string
-    pub fn from(value: &str) -> Result<Self, Failure> {
+    pub fn from(value: &str) -> Result<Self, String> {
         let mut board = Self::new();
 
         let mut valid: bool = true;
@@ -806,9 +805,8 @@ impl Board {
 
         match valid {
             true => Ok(board),
-            false => Err(Failure::InvalidBoard),
+            false => Err(format!("invalid board: {}", value)),
         }
-
     }
 
     /// get piece value at position
@@ -911,6 +909,17 @@ impl Board {
     /// create board in new game state
     pub fn initial() -> Self {
         Self::from(INITIAL_BOARD).unwrap()
+    }
+
+    /// get positions occupied by color
+    pub fn occupied_by(&self, color: Color) -> Vec<&Position> {
+        SORTED_POSITIONS
+            .iter()
+            .filter(|&position| match self.get(*position) {
+                Some(piece) => piece.color() == color,
+                None => false,
+            })
+            .collect()
     }
 
     /// set piece value at position
@@ -2395,7 +2404,7 @@ mod tests {
     #[test]
     fn test_to_position() {
         assert_eq!(Ok(Position::A1), Position::from("a1"));
-        assert_eq!(Err(Failure::InvalidPosition), Position::from("whoops"));
+        assert_eq!(Err("invalid position: whoops".to_string()), Position::from("whoops"));
     }
 
     #[test]
@@ -2617,7 +2626,7 @@ mod tests {
     fn test_parse_board_with_invalid_character() {
         let board = Board::from("x/3/5/7/9/11/11/11/11/11/11");
 
-        assert_eq!(Err(Failure::InvalidBoard), board);
+        assert_eq!(Err("invalid board: x/3/5/7/9/11/11/11/11/11/11".to_string()), board);
     }
 
     #[test]
@@ -2779,5 +2788,31 @@ mod tests {
                 unique.push(sibling.unwrap());
             }
         }
+    }
+
+    #[test]
+    fn test_get_occupied_by() {
+        let board = Board::initial();
+        let white = board.occupied_by(Color::White);
+
+        assert_eq!(white.len(), 18);
+        assert_eq!(white[0], &Position::F5);
+        assert_eq!(white[1], &Position::E4);
+        assert_eq!(white[2], &Position::G4);
+        assert_eq!(white[3], &Position::D3);
+        assert_eq!(white[4], &Position::F3);
+        assert_eq!(white[5], &Position::H3);
+        assert_eq!(white[6], &Position::C2);
+        assert_eq!(white[7], &Position::F2);
+        assert_eq!(white[8], &Position::I2);
+        assert_eq!(white[9], &Position::B1);
+        assert_eq!(white[10], &Position::C1);
+        assert_eq!(white[11], &Position::D1);
+        assert_eq!(white[12], &Position::E1);
+        assert_eq!(white[13], &Position::F1);
+        assert_eq!(white[14], &Position::G1);
+        assert_eq!(white[15], &Position::H1);
+        assert_eq!(white[16], &Position::I1);
+        assert_eq!(white[17], &Position::K1);
     }
 }

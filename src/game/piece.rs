@@ -1,9 +1,6 @@
-use crate::game::failure::Failure::{InvalidColor, InvalidPiece, InvalidPromotion};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use tsify::Tsify;
-
-use super::failure::Failure;
 
 /// Piece color
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
@@ -17,11 +14,11 @@ pub enum Color {
 }
 
 impl Color {
-    pub fn from(value: &str) -> Result<Self, Failure> {
+    pub fn from(value: &str) -> Result<Self, String> {
         match value {
             "W" | "w" => Ok(Color::White),
             "B" | "b" => Ok(Color::Black),
-            _ => Err(InvalidColor),
+            _ => Err(format!("invalid color: {}", value)),
         }
     }
 }
@@ -94,7 +91,7 @@ impl Piece {
         }
     }
 
-    pub fn from(value: &str) -> Result<Self, Failure> {
+    pub fn from(value: &str) -> Result<Self, String> {
         match value {
             "P" => Ok(Piece::WhitePawn),
             "N" => Ok(Piece::WhiteKnight),
@@ -108,11 +105,11 @@ impl Piece {
             "r" => Ok(Piece::BlackRook),
             "q" => Ok(Piece::BlackQueen),
             "k" => Ok(Piece::BlackKing),
-            _ => Err(InvalidPiece),
+            _ => Err(format!("invalid piece: {}", value)),
         }
     }
 
-    pub fn from_char(value: char) -> Result<Self, Failure> {
+    pub fn from_char(value: char) -> Result<Self, String> {
         match value {
             'P' => Ok(Piece::WhitePawn),
             'N' => Ok(Piece::WhiteKnight),
@@ -126,7 +123,7 @@ impl Piece {
             'r' => Ok(Piece::BlackRook),
             'q' => Ok(Piece::BlackQueen),
             'k' => Ok(Piece::BlackKing),
-            _ => Err(InvalidPiece),
+            _ => Err(format!("invalid piece: {}", value)),
         }
     }
 }
@@ -168,13 +165,13 @@ pub enum PromotionPiece {
 }
 
 impl PromotionPiece {
-    pub fn from(value: &str) -> Result<Self, Failure> {
+    pub fn from(value: &str) -> Result<Self, String> {
         match value {
             "n" => Ok(PromotionPiece::Knight),
             "b" => Ok(PromotionPiece::Bishop),
             "r" => Ok(PromotionPiece::Rook),
             "q" => Ok(PromotionPiece::Queen),
-            _ => Err(InvalidPromotion),
+            _ => Err(format!("invalid promotion: {}", value)),
         }
     }
 
@@ -217,7 +214,7 @@ mod tests {
         assert_eq!(Ok(Color::Black), Color::from("B"));
         assert_eq!(Ok(Color::White), Color::from("w"));
         assert_eq!(Ok(Color::Black), Color::from("b"));
-        assert_eq!(Err(InvalidColor), Color::from("whoops"));
+        assert_eq!(Err("invalid color: whoops".to_string()), Color::from("whoops"));
     }
 
     #[test]
@@ -234,7 +231,7 @@ mod tests {
         assert_eq!(Ok(Piece::BlackRook), Piece::from("r"));
         assert_eq!(Ok(Piece::BlackQueen), Piece::from("q"));
         assert_eq!(Ok(Piece::BlackKing), Piece::from("k"));
-        assert_eq!(Err(InvalidPiece), Piece::from("whoops"));
+        assert_eq!(Err("invalid piece: whoops".to_string()), Piece::from("whoops"));
     }
 
     #[test]
@@ -251,7 +248,7 @@ mod tests {
         assert_eq!(Ok(Piece::BlackRook), Piece::from_char('r'));
         assert_eq!(Ok(Piece::BlackQueen), Piece::from_char('q'));
         assert_eq!(Ok(Piece::BlackKing), Piece::from_char('k'));
-        assert_eq!(Err(InvalidPiece), Piece::from_char('x'));
+        assert_eq!(Err("invalid piece: x".to_string()), Piece::from_char('x'));
     }
 
     #[test]
@@ -276,7 +273,7 @@ mod tests {
         assert_eq!(Ok(PromotionPiece::Bishop), PromotionPiece::from("b"));
         assert_eq!(Ok(PromotionPiece::Rook), PromotionPiece::from("r"));
         assert_eq!(Ok(PromotionPiece::Queen), PromotionPiece::from("q"));
-        assert_eq!(Err(InvalidPromotion), PromotionPiece::from("whoops"));
+        assert_eq!(Err("invalid promotion: whoops".to_string()), PromotionPiece::from("whoops"));
     }
 
     #[test]

@@ -1,6 +1,5 @@
 use crate::constants::SORTED_POSITIONS;
 use crate::game::board::{Board, Position, get_step};
-use crate::game::failure::Failure;
 use crate::game::notation::Notation;
 use crate::game::piece::{Color, Piece};
 use crate::game::targets::{bishop, king, knight, pawn, queen, rook};
@@ -27,31 +26,44 @@ pub struct Hexchess {
 
 /// Create hexchess from fen
 impl Hexchess {
-    /// Apply a legal move to the game state
-    pub fn apply(&mut self, notation: Notation) -> Result<(), Failure> {
+    /// Apply a legal move to the game
+    pub fn apply(&mut self, notation: Notation) -> Result<(), String> {
         let piece = match self.board.get(notation.from) {
             Some(val) => val,
-            None => return Err(Failure::IllegalMove),
+            None => return Err(format!("illegal move: {}", notation.to_string())),
         };
 
         // verify it is the correct piece's turn
         if piece.color() != self.turn {
-            return Err(Failure::OutOfTurn);
+            return Err("out of turn".to_string());
         }
 
         // verify the piece can move to the target position
         if !self.targets(notation.from).contains(&notation) {
-            return Err(Failure::IllegalMove);
+            return Err(format!("illegal move: {}", notation.to_string()));
         }
 
         self.apply_unsafe(notation)
     }
 
-    /// Apply an arbitrary move to the game state, disregarding turn or legality
-    pub fn apply_unsafe(&mut self, notation: Notation) -> Result<(), Failure> {
+    /// get all legal moves
+    pub fn all_targets(&self) -> Vec<Notation> {
+        let mut targets = vec![];
+
+        self
+            .board
+            .occupied_by(self.turn)
+            .iter()
+            .for_each(|&p| targets.append(&mut self.targets(*p)));
+
+        targets
+    }
+
+    /// Apply a move to the game, regardless of turn or legality
+    pub fn apply_unsafe(&mut self, notation: Notation) -> Result<(), String> {
         let piece = match self.board.get(notation.from) {
             Some(val) => val,
-            None => return Err(Failure::IllegalMove),
+            None => return Err(format!("illegal move: {}", notation.to_string())),
         };
 
         // update halfmove
@@ -76,14 +88,14 @@ impl Hexchess {
             None => Some(piece),
             Some(promotion) => match piece {
                 Piece::BlackPawn => match pawn::is_promotion_position(Color::Black, notation.to) {
-                    false => return Err(Failure::IllegalMove),
+                    false => return Err(format!("illegal move: {}", notation.to_string())),
                     true => Some(promotion.to_piece(Color::Black)),
                 },
                 Piece::WhitePawn => match pawn::is_promotion_position(Color::White, notation.to) {
-                    false => return Err(Failure::IllegalMove),
+                    false => return Err(format!("illegal move: {}", notation.to_string())),
                     true => Some(promotion.to_piece(Color::White)),
                 },
-                _ => return Err(Failure::IllegalMove),
+                _ => return Err(format!("illegal move: {}", notation.to_string())),
             },
         });
 
@@ -142,7 +154,7 @@ impl Hexchess {
             let notation = match Notation::from(part) {
                 Ok(notation) => notation,
                 Err(_) => {
-                    return Err(format!("Invalid notation at index {}: {}", i, part));
+                    return Err(format!("invalid notation at index {}: {}", i, part));
                 },
             };
 
@@ -163,7 +175,7 @@ impl Hexchess {
     }
 
     /// Create hexchess from string
-    pub fn from(value: &str) -> Result<Self, Failure> {
+    pub fn from(value: &str) -> Result<Self, String> {
         let mut parts = value.split_whitespace();
 
         let board = match parts.next() {
@@ -171,7 +183,7 @@ impl Hexchess {
                 Ok(result) => result,
                 Err(failure) => return Err(failure)
             },
-            None => return Err(Failure::InvalidBoard),
+            None => return Err("missing board".to_string()),
         };
 
         let turn = match parts.next() {
@@ -187,7 +199,7 @@ impl Hexchess {
                 "-" => None,
                 _ => match Position::from(part) {
                     Ok(result) => Some(result),
-                    Err(failure) => return Err(failure)
+                    Err(_) => return Err(format!("invalid en passant: {}", part)),
                 },
             },
             None => None,
@@ -196,7 +208,7 @@ impl Hexchess {
         let halfmove = match parts.next() {
             Some(part) => match part.parse::<u8>() {
                 Ok(result) => result,
-                Err(_) => return Err(Failure::InvalidHalfmove),
+                Err(_) => return Err(format!("invalid halfmove: {}", part)),
             },
             None => 0,
         };
@@ -205,9 +217,9 @@ impl Hexchess {
             Some(part) => match part.parse::<u16>() {
                 Ok(result) => match result >= 1 {
                     true => result,
-                    false => return Err(Failure::InvalidFullmove),
+                    false => return Err(format!("invalid fullmove: {}", result)),
                 },
-                Err(_) => return Err(Failure::InvalidFullmove),
+                Err(_) => return Err(format!("invalid fullmove: {}", part)),
             },
             None => 1,
         };
@@ -393,7 +405,7 @@ impl fmt::Display for Hexchess {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::constants::{EMPTY_HEXCHESS, INITIAL_HEXCHESS};
+    use crate::{constants::{EMPTY_HEXCHESS, INITIAL_HEXCHESS}, game::targets};
 
     #[test]
     fn test_create_hexchess_from_initial_board_fen() {
@@ -427,28 +439,28 @@ mod tests {
     fn test_invalid_turn_color_results_in_error() {
         let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 ? - 0 1");
 
-        assert_eq!(Err(Failure::InvalidColor), hexchess);
+        assert_eq!(Err("invalid color: ?".to_string()), hexchess);
     }
 
     #[test]
     fn test_invalid_en_passant_results_in_error() {
         let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w ? 0 1");
 
-        assert_eq!(Err(Failure::InvalidPosition), hexchess);
+        assert_eq!(Err("invalid en passant: ?".to_string()), hexchess);
     }
 
     #[test]
     fn test_invalid_halfmove_results_in_error() {
-        assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - ? 1"));
-        assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0.5 1"));
-        assert_eq!(Err(Failure::InvalidHalfmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - -6 1"));
+        assert_eq!(Err("invalid halfmove: ?".to_string()), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - ? 1"));
+        assert_eq!(Err("invalid halfmove: 0.5".to_string()), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0.5 1"));
+        assert_eq!(Err("invalid halfmove: -6".to_string()), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - -6 1"));
     }
 
     #[test]
     fn test_invalid_fullmove_results_in_error() {
-        assert_eq!(Err(Failure::InvalidFullmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 ?"));
-        assert_eq!(Err(Failure::InvalidFullmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1.5"));
-        assert_eq!(Err(Failure::InvalidFullmove), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 0")); // <- less than 1
+        assert_eq!(Err("invalid fullmove: ?".to_string()), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 ?"));
+        assert_eq!(Err("invalid fullmove: 1.5".to_string()), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1.5"));
+        assert_eq!(Err("invalid fullmove: 0".to_string()), Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 0")); // <- less than 1
     }
 
     #[test]
@@ -505,7 +517,7 @@ mod tests {
 
         let result = hexchess.apply(Notation::from("f5f6").unwrap());
 
-        assert_eq!(Err(Failure::IllegalMove), result);
+        assert_eq!(Err("illegal move: f5f6".to_string()), result);
     }
 
     #[test]
@@ -514,7 +526,7 @@ mod tests {
 
         let result = hexchess.apply(Notation::from("f5a1").unwrap());
 
-        assert_eq!(Err(Failure::IllegalMove), result);
+        assert_eq!(Err("illegal move: f5a1".to_string()), result);
     }
 
     #[test]
@@ -715,14 +727,14 @@ mod tests {
     fn test_white_cannot_promote_on_black_promotion_position() {
         let mut hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/qP9 w - 0 1").unwrap();
         let result = hexchess.apply(Notation::from("b1a1q").unwrap());
-        assert_eq!(Err(Failure::IllegalMove), result);
+        assert_eq!(Err("illegal move: b1a1q".to_string()), result);
     }
 
     #[test]
     fn test_black_cannot_promote_on_white_promotion_position() {
         let mut hexchess = Hexchess::from("1/3/5/7/p8/Q10/11/11/11/11/11 b - 0 1").unwrap();
         let result = hexchess.apply(Notation::from("b7a6q").unwrap());
-        assert_eq!(Err(Failure::IllegalMove), result);
+        assert_eq!(Err("illegal move: b7a6q".to_string()), result);
     }
 
     #[test]
@@ -754,7 +766,7 @@ mod tests {
         
         let result = hexchess.apply(Notation::from("g7g6").unwrap());
 
-        assert_eq!(Err(Failure::OutOfTurn), result);
+        assert_eq!(Err("out of turn".to_string()), result);
     }
 
     #[test]
@@ -765,21 +777,21 @@ mod tests {
         
         let result = hexchess.apply(Notation::from("f10f11q").unwrap());
 
-        assert_eq!(Err(Failure::IllegalMove), result);
+        assert_eq!(Err("illegal move: f10f11q".to_string()), result);
     }
 
     #[test]
     fn test_creating_hexchess_with_invalid_board_returns_failure() {
         let hexchess = Hexchess::from("whoops");
 
-        assert_eq!(Err(Failure::InvalidBoard), hexchess);
+        assert_eq!(Err("invalid board: whoops".to_string()), hexchess);
     }
 
     #[test]
     fn test_creating_hexchess_with_empty_string_returns_failure() {
         let hexchess = Hexchess::from("");
 
-        assert_eq!(Err(Failure::InvalidBoard), hexchess);
+        assert_eq!(Err("missing board".to_string()), hexchess);
     }
 
     #[test]
@@ -941,7 +953,7 @@ mod tests {
         let result = hexchess.apply_sequence("g4g5 whoops");
 
         assert_eq!(hexchess.to_string(), INITIAL_HEXCHESS); // <- the board has not changed
-        assert_eq!(Err(String::from("Invalid notation at index 1: whoops")), result);
+        assert_eq!(Err(String::from("invalid notation at index 1: whoops")), result);
     }
 
     #[test]
@@ -960,5 +972,63 @@ mod tests {
 
         assert_eq!(hexchess.to_string(), INITIAL_HEXCHESS);
         assert_eq!(Err(String::from("Illegal move at index 1: g10g9")), result);
+    }
+
+    #[test]
+    fn test_all_targets() {
+        let targets = Hexchess::initial().all_targets();
+
+        assert_eq!(targets.len(), 51);
+        assert_eq!(targets[0], Notation { from: Position::F5, promotion: None, to: Position::F6 });
+        assert_eq!(targets[1], Notation { from: Position::E4, promotion: None, to: Position::E5 });
+        assert_eq!(targets[2], Notation { from: Position::E4, promotion: None, to: Position::E6 });
+        assert_eq!(targets[3], Notation { from: Position::G4, promotion: None, to: Position::G5 });
+        assert_eq!(targets[4], Notation { from: Position::G4, promotion: None, to: Position::G6 });
+        assert_eq!(targets[5], Notation { from: Position::D3, promotion: None, to: Position::D4 });
+        assert_eq!(targets[6], Notation { from: Position::D3, promotion: None, to: Position::D5 });
+        assert_eq!(targets[7], Notation { from: Position::F3, promotion: None, to: Position::H2 });
+        assert_eq!(targets[8], Notation { from: Position::F3, promotion: None, to: Position::D2 });
+        assert_eq!(targets[9], Notation { from: Position::H3, promotion: None, to: Position::H4 });
+        assert_eq!(targets[10], Notation { from: Position::H3, promotion: None, to: Position::H5 });
+        assert_eq!(targets[11], Notation { from: Position::C2, promotion: None, to: Position::C3 });
+        assert_eq!(targets[12], Notation { from: Position::C2, promotion: None, to: Position::C4 });
+        assert_eq!(targets[13], Notation { from: Position::F2, promotion: None, to: Position::G3 });
+        assert_eq!(targets[14], Notation { from: Position::F2, promotion: None, to: Position::H4 });
+        assert_eq!(targets[15], Notation { from: Position::F2, promotion: None, to: Position::I5 });
+        assert_eq!(targets[16], Notation { from: Position::F2, promotion: None, to: Position::K6 });
+        assert_eq!(targets[17], Notation { from: Position::F2, promotion: None, to: Position::E3 });
+        assert_eq!(targets[18], Notation { from: Position::F2, promotion: None, to: Position::D4 });
+        assert_eq!(targets[19], Notation { from: Position::F2, promotion: None, to: Position::C5 });
+        assert_eq!(targets[20], Notation { from: Position::F2, promotion: None, to: Position::B6 });
+        assert_eq!(targets[21], Notation { from: Position::I2, promotion: None, to: Position::I3 });
+        assert_eq!(targets[22], Notation { from: Position::I2, promotion: None, to: Position::I4 });
+        assert_eq!(targets[23], Notation { from: Position::B1, promotion: None, to: Position::B2 });
+        assert_eq!(targets[24], Notation { from: Position::B1, promotion: None, to: Position::B3 });
+        assert_eq!(targets[25], Notation { from: Position::C1, promotion: None, to: Position::D2 });
+        assert_eq!(targets[26], Notation { from: Position::C1, promotion: None, to: Position::E3 });
+        assert_eq!(targets[27], Notation { from: Position::C1, promotion: None, to: Position::F4 });
+        assert_eq!(targets[28], Notation { from: Position::D1, promotion: None, to: Position::F4 });
+        assert_eq!(targets[29], Notation { from: Position::D1, promotion: None, to: Position::G2 });
+        assert_eq!(targets[30], Notation { from: Position::D1, promotion: None, to: Position::B2 });
+        assert_eq!(targets[31], Notation { from: Position::D1, promotion: None, to: Position::C3 });
+        assert_eq!(targets[32], Notation { from: Position::E1, promotion: None, to: Position::E2 });
+        assert_eq!(targets[33], Notation { from: Position::E1, promotion: None, to: Position::E3 });
+        assert_eq!(targets[34], Notation { from: Position::E1, promotion: None, to: Position::D2 });
+        assert_eq!(targets[35], Notation { from: Position::E1, promotion: None, to: Position::C3 });
+        assert_eq!(targets[36], Notation { from: Position::E1, promotion: None, to: Position::B4 });
+        assert_eq!(targets[37], Notation { from: Position::E1, promotion: None, to: Position::A5 });
+        assert_eq!(targets[38], Notation { from: Position::F1, promotion: None, to: Position::G2 });
+        assert_eq!(targets[39], Notation { from: Position::F1, promotion: None, to: Position::E2 });
+        assert_eq!(targets[40], Notation { from: Position::G1, promotion: None, to: Position::G2 });
+        assert_eq!(targets[41], Notation { from: Position::G1, promotion: None, to: Position::H2 });
+        assert_eq!(targets[42], Notation { from: Position::H1, promotion: None, to: Position::I3 });
+        assert_eq!(targets[43], Notation { from: Position::H1, promotion: None, to: Position::K2 });
+        assert_eq!(targets[44], Notation { from: Position::H1, promotion: None, to: Position::E2 });
+        assert_eq!(targets[45], Notation { from: Position::H1, promotion: None, to: Position::F4 });
+        assert_eq!(targets[46], Notation { from: Position::I1, promotion: None, to: Position::H2 });
+        assert_eq!(targets[47], Notation { from: Position::I1, promotion: None, to: Position::G3 });
+        assert_eq!(targets[48], Notation { from: Position::I1, promotion: None, to: Position::F4 });
+        assert_eq!(targets[49], Notation { from: Position::K1, promotion: None, to: Position::K2 });
+        assert_eq!(targets[50], Notation { from: Position::K1, promotion: None, to: Position::K3 });
     }
 }
