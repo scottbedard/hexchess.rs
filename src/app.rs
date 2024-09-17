@@ -10,12 +10,6 @@ pub struct App {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
-    /// Get all legal moves
-    AllTargets {
-        /// Hexchess state
-        fen: String,
-    },
-
     /// Apply sequence of moves to a position
     Apply {
         /// Hexchess state
@@ -23,6 +17,22 @@ pub enum Command {
 
         /// Algebraic hexchess notation
         sequence: String,
+    },
+
+    /// Get legal moves
+    GetTargets {
+        /// Hexchess state
+        fen: String,
+
+        /// Position to get targets from
+        #[arg(short, long, default_value = None)]
+        position: Option<String>,
+    },
+
+    /// Parse hexchess fen to JSON
+    Parse {
+        /// Hexchess state
+        fen: String,
     },
 
     /// Test if a move is legal
@@ -33,29 +43,13 @@ pub enum Command {
         /// Move notation
         notation: String,
     },
-
-    /// Get legal moves from a position
-    GetTargets {
-        /// Hexchess state
-        fen: String,
-
-        /// Hexchess coordinate
-        position: String,
-    },
-
-    /// Parse hexchess fen to JSON
-    Parse {
-        /// Hexchess state
-        fen: String,
-    },
 }
 
 pub fn handle(app: App) -> Result<String, String> {
     match app.command {
-        Command::AllTargets { fen } => commands::all_targets::execute(fen),
         Command::Apply { fen, sequence } => commands::apply::execute(fen, sequence),
-        Command::TestMove { fen, notation } => commands::test_move::execute(fen, notation),
         Command::GetTargets { fen, position } => commands::get_targets::execute(fen, position),
         Command::Parse { fen } => commands::parse::execute(fen),
+        Command::TestMove { fen, notation } => commands::test_move::execute(fen, notation),
     }
 }
