@@ -25,8 +25,8 @@ pub enum Command {
         sequence: String,
     },
 
-    /// Check if a move is legal
-    CheckMove {
+    /// Test if a move is legal
+    TestMove {
         /// Hexchess state
         fen: String,
 
@@ -54,7 +54,7 @@ pub fn handle(app: App) -> Result<String, String> {
     match app.command {
         Command::AllTargets { fen } => commands::all_targets::execute(fen),
         Command::ApplySequence { fen, sequence } => commands::apply_sequence::execute(fen, sequence),
-        Command::CheckMove { fen, notation } => commands::check_move::execute(fen, notation),
+        Command::TestMove { fen, notation } => commands::test_move::execute(fen, notation),
         Command::GetTargets { fen, position } => commands::get_targets::execute(fen, position),
         Command::Parse { fen } => commands::parse::execute(fen),
     }

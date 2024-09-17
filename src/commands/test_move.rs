@@ -24,9 +24,9 @@ mod tests {
     use crate::app::{App, Command, handle};
 
     #[test]
-    fn test_check_move() {
+    fn test_test_move() {
         let output = handle(App {
-            command: Command::CheckMove {
+            command: Command::TestMove {
                 fen: crate::constants::INITIAL_HEXCHESS.to_string(),
                 notation: "g4g5".to_string(),
             }
@@ -36,9 +36,9 @@ mod tests {
     }
 
     #[test]
-    fn test_check_move_invalid() {        
+    fn test_test_move_invalid() {        
         let output = handle(App {
-            command: Command::CheckMove {
+            command: Command::TestMove {
                 fen: crate::constants::INITIAL_HEXCHESS.to_string(),
                 notation: "whoops".to_string(),
             }
@@ -48,9 +48,9 @@ mod tests {
     }
 
     #[test]
-    fn test_check_move_illegal() {
+    fn test_test_move_illegal() {
         let output = handle(App {
-            command: Command::CheckMove {
+            command: Command::TestMove {
                 fen: crate::constants::INITIAL_HEXCHESS.to_string(),
                 notation: "a1a2".to_string(),
             }

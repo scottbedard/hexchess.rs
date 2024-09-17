@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0 (not published)
+
+- Rename `check-move` command to `test-move`
+
 ## 0.9.0
 
 - Add `check-move` command
