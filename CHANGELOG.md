@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.10.0 (not published)
+## 0.10.0
 
 - Add `get-status` command to check for turn, stalemate, and checkmate
 - Rename `apply-sequence` command to `apply`
