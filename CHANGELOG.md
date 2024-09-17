@@ -2,6 +2,7 @@
 
 ## 0.10.0 (not published)
 
+- Add `get-status` command to check for turn, stalemate, and checkmate
 - Rename `apply-sequence` command to `apply`
 - Rename `check-move` command to `test-move`
 - Combine `all-targets` and `get-targets` to single command with optional position flag

@@ -297,6 +297,11 @@ impl Hexchess {
         false
     }
 
+    /// Test if the board is currently in stalemate
+    pub fn is_stalemate(&self) -> bool {
+        !self.is_checkmate() && self.all_targets().is_empty()
+    }
+
     /// Test if a position is threatened by an enemy piece
     pub fn is_threatened(&self, position: Position) -> bool {
         let piece = match self.board.get(position) {
@@ -925,6 +930,17 @@ mod tests {
         hexchess.turn = Color::Black;
 
         assert_eq!(false, hexchess.is_checkmate());
+    }
+
+    #[test]
+    fn test_is_stalemate() {
+        let mut hexchess = Hexchess::from("k/1P1/5/3K3/9/11/11/11/11/11/11 w - 0 1").unwrap();
+        
+        assert_eq!(false, hexchess.is_stalemate());
+
+        let _ = hexchess.apply(Notation::from("f8f9").unwrap());
+
+        assert_eq!(true, hexchess.is_stalemate());
     }
 
     #[test]

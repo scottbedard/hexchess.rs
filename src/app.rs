@@ -19,6 +19,12 @@ pub enum Command {
         sequence: String,
     },
 
+    /// Get game status (w, b, stalemate, checkmate)
+    GetStatus {
+        /// Hexchess state
+        fen: String,
+    },
+
     /// Get legal moves
     GetTargets {
         /// Hexchess state
@@ -48,6 +54,7 @@ pub enum Command {
 pub fn handle(app: App) -> Result<String, String> {
     match app.command {
         Command::Apply { fen, sequence } => commands::apply::execute(fen, sequence),
+        Command::GetStatus { fen } => commands::get_status::execute(fen),
         Command::GetTargets { fen, position } => commands::get_targets::execute(fen, position),
         Command::Parse { fen } => commands::parse::execute(fen),
         Command::TestMove { fen, notation } => commands::test_move::execute(fen, notation),

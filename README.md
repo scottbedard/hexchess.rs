@@ -23,6 +23,7 @@ Usage: hexchess <COMMAND>
 
 Commands:
   apply        Apply sequence of moves to a position
+  get-status   Get game status (w, b, stalemate, checkmate)
   get-targets  Get legal moves
   parse        Parse hexchess fen to JSON
   test-move    Test if a move is legal
