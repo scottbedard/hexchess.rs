@@ -2,6 +2,7 @@
 
 ## 0.10.0 (not published)
 
+- Rename `apply-sequence` command to `apply`
 - Rename `check-move` command to `test-move`
 
 ## 0.9.0

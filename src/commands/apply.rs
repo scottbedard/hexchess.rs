@@ -19,7 +19,7 @@ mod tests {
     #[test]
     fn test_apply_sequence() {
         let output = handle(App {
-            command: Command::ApplySequence {
+            command: Command::Apply {
                 fen: "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1".to_string(),
                 sequence: "g4g5 e7e6".to_string(),
             }
@@ -32,7 +32,7 @@ mod tests {
     #[test]
     fn test_apply_sequence_invalid_fen() {
         let output = handle(App {
-            command: Command::ApplySequence {
+            command: Command::Apply {
                 fen: "whoops".to_string(),
                 sequence: "g4g5 e7e6".to_string(),
             }
@@ -44,7 +44,7 @@ mod tests {
     #[test]
     fn test_apply_sequence_invalid_sequence() {
         let output = handle(App {
-            command: Command::ApplySequence {
+            command: Command::Apply {
                 fen: "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1".to_string(),
                 sequence: "whoops".to_string(),
             }
