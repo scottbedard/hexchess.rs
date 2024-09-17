@@ -1,5 +1,4 @@
 use crate::game::hexchess::Hexchess;
-use crate::game::notation::Notation;
 
 pub fn execute(hexchess_arg: String) -> Result<String, String> {
     let hexchess = match Hexchess::from(hexchess_arg.as_str()) {
