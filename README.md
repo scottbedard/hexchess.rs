@@ -6,6 +6,8 @@
 [![Crates.io](https://img.shields.io/crates/v/hexchess?logo=rust&logoColor=%23f74c00&label=cargo)](https://crates.io/crates/hexchess)
 [![License](https://img.shields.io/badge/license-MIT-blue)](https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE)
 
+> **Warning:** This project has migrated to pure TypeScript to remove Wasm environment requirements. The Rust version may be revived some day, but for now consider it deprecated. See [`scottbedard/hexchess.ts`](https://github.com/scottbedard/hexchess.ts) for the current version.
+
 A Rust / TypeScript library for [Gliński's hexagonal chess](https://en.wikipedia.org/wiki/Hexagonal_chess#Gli%C5%84ski's_hexagonal_chess), and the brain of [hexchess.club](https://hexchess.club)
 
 <p align="center">
