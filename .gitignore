@@ -1,6 +1,7 @@
-/target
+.DS_Store
 **/*.rs.bk
+bin
 Cargo.lock
-bin/
-pkg/
+pkg
+target
 wasm-pack.log

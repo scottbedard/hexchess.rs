@@ -1,13 +1,10 @@
-mod utils;
+pub mod constants;
+pub mod hexchess;
+pub mod structs;
 
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, hexchess!");
+#[wasm_bindgen(js_name = parseHexchess)]
+pub fn parse_hexchess(source: String) {
+    hexchess::parse::parse_board(source);
 }
