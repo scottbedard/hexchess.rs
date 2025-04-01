@@ -1,11 +1,10 @@
 pub mod constants;
 pub mod hexchess;
 pub mod macros;
-pub mod structs;
 
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen(js_name = parseHexchess)]
-pub fn parse_hexchess(source: String) {
-    // ...
+pub fn from(source: String) {
+    let _hexchess = hexchess::hexchess::Hexchess::from(&source);
 }
