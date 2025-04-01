@@ -1,2 +1,2 @@
-pub mod notation;
+pub mod hexchess;
 pub mod utils;
