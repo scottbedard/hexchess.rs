@@ -1,7 +1,44 @@
 use crate::hex;
 
+/// test if position is black en passant target
+pub fn is_legal_black_en_passant(position: &u8) -> bool {
+    match position {
+        hex!("b6") |
+        hex!("c6") |
+        hex!("d6") |
+        hex!("e6") |
+        hex!("f6") |
+        hex!("g6") |
+        hex!("h6") |
+        hex!("i6") |
+        hex!("k6") => true,
+        _ => false,
+    }
+}
+
+/// test if position is white en passant target
+pub fn is_legal_white_en_passant_position(position: &u8) -> bool {
+    match position {
+        hex!("b2") |
+        hex!("c3") |
+        hex!("d4") |
+        hex!("e5") |
+        hex!("f6") |
+        hex!("g5") |
+        hex!("h4") |
+        hex!("i3") |
+        hex!("k2") => true,
+        _ => false,
+    }
+}
+
+/// test if position is en passant target
+pub fn is_legal_en_passant(position: &u8) -> bool {
+    is_legal_black_en_passant(position) || is_legal_white_en_passant_position(position)
+}
+
 /// test if position is black promotion position
-pub fn is_black_promotion_position(position: u8) -> bool {
+pub fn is_black_promotion_position(position: &u8) -> bool {
     match position {
         hex!("a1") |
         hex!("b1") |
@@ -19,7 +56,7 @@ pub fn is_black_promotion_position(position: u8) -> bool {
 }
 
 /// test if position is on first or last rank
-pub fn is_white_promotion_position(position: u8) -> bool {
+pub fn is_white_promotion_position(position: &u8) -> bool {
     match position {
         hex!("f11") |
         hex!("e10") |
@@ -37,7 +74,7 @@ pub fn is_white_promotion_position(position: u8) -> bool {
 }
 
 /// test if position is a promotion position
-pub fn is_promotion_position(position: u8) -> bool {
+pub fn is_promotion_position(position: &u8) -> bool {
     is_black_promotion_position(position) || is_white_promotion_position(position)
 }
 

@@ -201,7 +201,7 @@ pub fn parse_move<'a>(source: &str) -> Result<San, &'a str> {
     };
 
     // validate promotion to is valid
-    if promotion.is_some() && !is_promotion_position(to) {
+    if promotion.is_some() && !is_promotion_position(&to) {
         return Err("invalid_promotion_position");
     }
 
