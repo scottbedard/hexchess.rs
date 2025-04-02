@@ -330,45 +330,50 @@ mod tests {
     use crate::hex;
     use super::*;
 
-    #[test]
-    fn stop_at_board_edge() {
-        assert_eq!(
-            walk(&Hexchess::new(), hex!("f6"), 0, Color::White),
-            [
-                hex!("f7"),
-                hex!("f8"),
-                hex!("f9"),
-                hex!("f10"),
-                hex!("f11"),
-            ]
-        );        
-    }
+    mod walk {
+        use crate::hex;
+        use super::*;
 
-    #[test]
-    fn stop_before_friendly_piece() {
-        let hexchess = Hexchess::from("1/3/2P2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
+        #[test]
+        fn stop_at_board_edge() {
+            assert_eq!(
+                walk(&Hexchess::new(), hex!("f6"), 0, Color::White),
+                [
+                    hex!("f7"),
+                    hex!("f8"),
+                    hex!("f9"),
+                    hex!("f10"),
+                    hex!("f11"),
+                ]
+            );        
+        }
 
-        assert_eq!(
-            walk(&hexchess, hex!("f6"), 0, Color::White),
-            [
-                hex!("f7"),
-                hex!("f8"),
-                // f9 is a friendly pawn
-            ]
-        );        
-    }
+        #[test]
+        fn stop_before_friendly_piece() {
+            let hexchess = Hexchess::from("1/3/2P2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
 
-    #[test]
-    fn stop_on_hostile_piece() {
-        let hexchess = Hexchess::from("1/3/2p2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
+            assert_eq!(
+                walk(&hexchess, hex!("f6"), 0, Color::White),
+                [
+                    hex!("f7"),
+                    hex!("f8"),
+                    // f9 is a friendly pawn
+                ]
+            );        
+        }
 
-        assert_eq!(
-            walk(&hexchess, hex!("f6"), 0, Color::White),
-            [
-                hex!("f7"),
-                hex!("f8"),
-                hex!("f9"), // <- f9 is a hostile pawn
-            ]
-        );        
+        #[test]
+        fn stop_on_hostile_piece() {
+            let hexchess = Hexchess::from("1/3/2p2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
+
+            assert_eq!(
+                walk(&hexchess, hex!("f6"), 0, Color::White),
+                [
+                    hex!("f7"),
+                    hex!("f8"),
+                    hex!("f9"), // <- f9 is a hostile pawn
+                ]
+            );        
+        }
     }
 }
