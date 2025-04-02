@@ -363,6 +363,17 @@ mod tests {
     }
 
     #[test]
+    fn empty_string() {
+        let hexchess = Hexchess::from("");
+
+        assert!(hexchess.is_err());
+        assert_eq!(
+            hexchess.unwrap_err(),
+            "board not found"
+        );
+    }
+
+    #[test]
     fn turn_color() {
         let white = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
 
@@ -385,6 +396,13 @@ mod tests {
     }
 
     #[test]
+    fn missing_turn_color() {
+        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11").unwrap();
+
+        assert_eq!(hexchess.turn, Color::White);
+    }
+
+    #[test]
     fn en_passant() {
         let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w f6 0 1");
 
@@ -400,6 +418,13 @@ mod tests {
             hexchess.unwrap_err(),
             "invalid en passant position: x"
         );
+    }
+
+    #[test]
+    fn missing_en_passant() {
+        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w").unwrap();
+
+        assert_eq!(hexchess.ep, None);
     }
 
     #[test]
@@ -425,6 +450,13 @@ mod tests {
     }
 
     #[test]
+    fn missing_halfmove() {
+        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w -").unwrap();
+
+        assert_eq!(hexchess.halfmove, 0);
+    }
+
+    #[test]
     fn invalid_fullmove() {
         let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 x");
 
@@ -433,5 +465,12 @@ mod tests {
             hexchess.unwrap_err(),
             "invalid fullmove: x"
         );
+    }
+
+    #[test]
+    fn missing_fullmove() {
+        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0").unwrap();
+
+        assert_eq!(hexchess.fullmove, 1);
     }
 }
