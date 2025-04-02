@@ -38,15 +38,12 @@ impl San {
             Some(c) => c,
             None => return Err("missing third character".to_string()),
         };
-    
+
         // first rank
         let from_rank = match (second_char, third_char) {
             ('1', '0') => String::from("10"),
             ('1', '1') => String::from("11"),
-            _ => match is_rank(second_char) {
-                true => second_char.to_string(),
-                false => return Err(format!("invalid from rank: {}", second_char)),
-            }
+            _ => second_char.to_string(),
         };
     
         let to_file = match from_rank.as_str() {
@@ -146,10 +143,10 @@ fn is_file(c: char) -> bool {
     }
 }
 
-/// test if character could be part of a rank
+/// test if character is a digit
 fn is_rank(c: char) -> bool {
     match c {
-        '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '0' => true,
+        '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => true,
         _ => false,
     }
 }
@@ -160,7 +157,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn no_promotion() {
+    fn success_single_digit_promotion_rank() {
         assert_eq!(
             San::from(&"a1b2".to_string()),
             Ok(San {
@@ -172,13 +169,91 @@ mod tests {
     }
 
     #[test]
-    fn with_promotion() {
+    fn success_promotions() {
+        assert_eq!(
+            San::from(&"a5a6b".to_string()),
+            Ok(San {
+                from: hex!("a5"),
+                promotion: Some(PromotionPiece::Bishop),
+                to: hex!("a6"),
+            })
+        );
+
+        assert_eq!(
+            San::from(&"a5a6n".to_string()),
+            Ok(San {
+                from: hex!("a5"),
+                promotion: Some(PromotionPiece::Knight),
+                to: hex!("a6"),
+            })
+        );
+
+        assert_eq!(
+            San::from(&"a5a6r".to_string()),
+            Ok(San {
+                from: hex!("a5"),
+                promotion: Some(PromotionPiece::Rook),
+                to: hex!("a6"),
+            })
+        );
+
+        assert_eq!(
+            San::from(&"a5a6q".to_string()),
+            Ok(San {
+                from: hex!("a5"),
+                promotion: Some(PromotionPiece::Queen),
+                to: hex!("a6"),
+            })
+        );
+    }
+
+    #[test]
+    fn success_two_digit_promotion_rank() {
         assert_eq!(
             San::from(&"f10f11b".to_string()),
             Ok(San {
                 from: hex!("f10"),
                 promotion: Some(PromotionPiece::Bishop),
                 to: hex!("f11"),
+            })
+        );
+
+        assert_eq!(
+            San::from(&"f10f11n".to_string()),
+            Ok(San {
+                from: hex!("f10"),
+                promotion: Some(PromotionPiece::Knight),
+                to: hex!("f11"),
+            })
+        );
+
+        assert_eq!(
+            San::from(&"f10f11r".to_string()),
+            Ok(San {
+                from: hex!("f10"),
+                promotion: Some(PromotionPiece::Rook),
+                to: hex!("f11"),
+            })
+        );
+
+        assert_eq!(
+            San::from(&"f10f11q".to_string()),
+            Ok(San {
+                from: hex!("f10"),
+                promotion: Some(PromotionPiece::Queen),
+                to: hex!("f11"),
+            })
+        );
+    }
+
+    #[test]
+    fn success_to_10th_rank() {
+        assert_eq!(
+            San::from(&"f9f10".to_string()),
+            Ok(San {
+                from: hex!("f9"),
+                promotion: None,
+                to: hex!("f10"),
             })
         );
     }
