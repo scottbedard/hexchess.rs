@@ -9,7 +9,7 @@ use crate::constants::{
 use crate::hexchess::hexchess::Hexchess;
 
 /// get the color of a piece
-pub fn get_color(piece: Piece) -> Color {
+pub fn get_color(piece: &Piece) -> Color {
     match piece {
         Piece::WhitePawn => Color::White,
         Piece::WhiteKnight => Color::White,
@@ -300,7 +300,7 @@ pub fn to_position(index: &u8) -> &'static str {
 }
 
 /// walk along the board in a given direction
-pub fn walk(hexchess: &Hexchess, from: u8, direction: u8, color: Color) -> Vec<u8> {
+pub fn walk(hexchess: &Hexchess, from: u8, direction: u8, color: &Color) -> Vec<u8> {
     let mut path: Vec<u8> = Vec::new();
     let mut position: u8 = from;
 
@@ -318,7 +318,7 @@ pub fn walk(hexchess: &Hexchess, from: u8, direction: u8, color: Color) -> Vec<u
             }
         };
 
-        if get_color(piece) == color {
+        if get_color(&piece) == *color {
             return path // <- shop short of friendly piece
         }
         
@@ -339,7 +339,7 @@ mod tests {
         #[test]
         fn stop_at_board_edge() {
             assert_eq!(
-                walk(&Hexchess::new(), hex!("f6"), 0, Color::White),
+                walk(&Hexchess::new(), hex!("f6"), 0, &Color::White),
                 [
                     hex!("f7"),
                     hex!("f8"),
@@ -355,7 +355,7 @@ mod tests {
             let hexchess = Hexchess::from("1/3/2P2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
 
             assert_eq!(
-                walk(&hexchess, hex!("f6"), 0, Color::White),
+                walk(&hexchess, hex!("f6"), 0, &Color::White),
                 [
                     hex!("f7"),
                     hex!("f8"),
@@ -369,7 +369,7 @@ mod tests {
             let hexchess = Hexchess::from("1/3/2p2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
 
             assert_eq!(
-                walk(&hexchess, hex!("f6"), 0, Color::White),
+                walk(&hexchess, hex!("f6"), 0, &Color::White),
                 [
                     hex!("f7"),
                     hex!("f8"),
@@ -782,7 +782,7 @@ mod tests {
 
             for test in tests.iter() {
                 assert_eq!(
-                    walk(&hexchess, test.from, test.direction, Color::White),
+                    walk(&hexchess, test.from, test.direction, &Color::White),
                     test.expected
                 );       
             }
