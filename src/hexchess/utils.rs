@@ -1,7 +1,9 @@
 use crate::hex;
 
 use crate::constants::{
-    Color, Piece, GRAPH
+    Color,
+    HEXBOARD_GRAPH,
+    Piece,
 };
 
 use crate::hexchess::hexchess::Hexchess;
@@ -303,7 +305,7 @@ pub fn walk(hexchess: &Hexchess, from: u8, direction: u8, color: Color) -> Vec<u
     let mut position: u8 = from;
 
     loop {
-        position = match GRAPH[position as usize][direction as usize] {
+        position = match HEXBOARD_GRAPH[position as usize][direction as usize] {
             Some(index) => index,
             None => return path // <- end of board
         };
