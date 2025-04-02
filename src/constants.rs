@@ -1,5 +1,4 @@
 use crate::hex;
-use std::collections::HashMap;
 
 /// Initial game position
 pub const INITIAL_POSITION: &str = "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1";
@@ -13,7 +12,7 @@ pub const INITIAL_POSITION: &str = "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1
 /// For example, to find the position directly below f6, we'd first go to that
 /// position in the fen (index 30), then look at the 6th index of that array,
 /// which is 41. The 41st fen index is f5.
-pub const GRAPH: [[Option<u8>; 12]; 91] = [
+pub const HEXBOARD_GRAPH: [[Option<u8>; 12]; 91] = [
     [ 
         /* f11 */
         None, 
