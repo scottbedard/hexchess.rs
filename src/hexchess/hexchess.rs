@@ -1,13 +1,20 @@
 use crate::constants::{
-    INITIAL_POSITION,
     Color,
+    INITIAL_POSITION,
     Piece,
+    San,
 };
 
 use crate::hexchess::utils::{
+    get_color,
     is_legal_en_passant,
     to_index,
 };
+
+use crate::hexchess::pieces::king::king_moves_unsafe;
+use crate::hexchess::pieces::knight::knight_moves_unsafe;
+use crate::hexchess::pieces::pawn::pawn_moves_unsafe;
+use crate::hexchess::pieces::straight_line::straight_line_moves_unsafe;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Hexchess {
@@ -23,6 +30,50 @@ pub struct Hexchess {
 }
 
 impl Hexchess {
+    /// get current legal moves
+    pub fn current_moves(&self) -> Vec<San> {
+        self.current_moves_unsafe(&self.turn)
+    }
+
+    /// get current moves, regardless of turn or legality
+    pub fn current_moves_unsafe(&self, color: &Color) -> Vec<San> {
+        let mut result: Vec<San> = vec![];
+
+        for from in 0..91 {
+            let piece = match self.board[from as usize] {
+                Some(piece) => piece,
+                None => continue,
+            };
+            
+            let piece_color = get_color(&piece);
+
+            if piece_color == *color {
+                result.extend(match piece {
+                    Piece::BlackKing | Piece::WhiteKing => {
+                        king_moves_unsafe(&self, &from, &color, &piece)
+                    },
+                    Piece::BlackKnight | Piece::WhiteKnight => {
+                        knight_moves_unsafe(&self, &from, &color, &piece)
+                    },
+                    Piece::BlackPawn | Piece::WhitePawn => {
+                        pawn_moves_unsafe(&self, &from, &color, &piece)
+                    },
+                    Piece::BlackBishop | Piece::WhiteBishop => {
+                        straight_line_moves_unsafe(&self, &from, &color, &[1, 3, 5, 7, 9, 11])
+                    },
+                    Piece::BlackRook | Piece::WhiteRook => {
+                        straight_line_moves_unsafe(&self, &from, &color, &[0, 2, 4, 6, 8, 10])
+                    },
+                    Piece::BlackQueen | Piece::WhiteQueen => {
+                        straight_line_moves_unsafe(&self, &from, &color, &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+                    }
+                });
+            }
+        }
+        
+        result
+    }
+
     /// create a new hexchess instance
     pub fn new() -> Self {
         Self {
