@@ -66,8 +66,8 @@ mod tests {
     #[test]
     fn white_knight() {
         let result = Hexchess::from("P/3/5/2P1p2/9/5N5/11/11/11/11/11 w - 0 1")
-        .unwrap()
-        .current_moves();
+            .unwrap()
+            .current_moves();
 
         assert!(result.iter().eq([ 
             San { from: hex!("f6"), promotion: None, to: hex!("g8") }, // <- g8 is hostile
@@ -89,8 +89,8 @@ mod tests {
     #[test]
     fn black_knight() {
         let result = Hexchess::from("P/3/5/2P1p2/9/5n5/11/11/11/11/11 b - 0 1")
-        .unwrap()
-        .current_moves();
+            .unwrap()
+            .current_moves();
 
         assert!(result.iter().eq([ 
             // g8 is friendly
