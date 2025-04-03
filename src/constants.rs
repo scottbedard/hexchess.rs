@@ -1412,11 +1412,3 @@ pub enum PromotionPiece {
     Queen,
     Rook,
 }
-
-/// parsed standard algebraic notation
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct San {
-    pub from: u8,
-    pub promotion: Option<PromotionPiece>,
-    pub to: u8,
-}
