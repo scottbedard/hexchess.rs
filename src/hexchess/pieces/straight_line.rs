@@ -28,7 +28,7 @@ pub fn straight_line_moves_unsafe(
 
 #[cfg(test)]
 mod tests {
-    use crate::{hex, hexchess::utils::to_position};
+    use crate::hex;
     use super::*;
 
     #[test]
