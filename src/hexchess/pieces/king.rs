@@ -47,10 +47,7 @@ mod tests {
     fn white_king() {
         let result = Hexchess::from("1/3/5/7/3P5/5K5/11/6p4/11/11/11 w - 0 1")
             .unwrap()
-            .current_moves()
-            .into_iter()
-            .filter(|san| san.from == hex!("f6"))
-            .collect::<Vec<San>>();
+            .moves_from(hex!("f6"));
 
         assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
         assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("g7") });
@@ -70,10 +67,7 @@ mod tests {
     fn black_king() {
         let result = Hexchess::from("1/3/5/7/3P5/5k5/11/6p4/11/11/11 b - 0 1")
             .unwrap()
-            .current_moves()
-            .into_iter()
-            .filter(|san| san.from == hex!("f6"))
-            .collect::<Vec<San>>();
+            .moves_from(hex!("f6"));
 
         assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
         assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("g7") });

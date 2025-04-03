@@ -30,46 +30,42 @@ pub struct Hexchess {
 }
 
 impl Hexchess {
-    /// get current legal moves
-    pub fn current_moves(&self) -> Vec<San> {
-        self.current_moves_unsafe(&self.turn)
+    /// get moves a position
+    pub fn moves_from(&self, from: u8) -> Vec<San> {
+        self.moves_from_unsafe(from)
     }
 
-    /// get current moves, regardless of turn or legality
-    pub fn current_moves_unsafe(&self, color: &Color) -> Vec<San> {
+    /// get moves from a position, regardless of turn or legality
+    pub fn moves_from_unsafe(&self, from: u8) -> Vec<San> {
         let mut result: Vec<San> = vec![];
 
-        for from in 0..91 {
-            let piece = match self.board[from as usize] {
-                Some(piece) => piece,
-                None => continue,
-            };
-            
-            let piece_color = get_color(&piece);
+        let piece = match self.board[from as usize] {
+            Some(piece) => piece,
+            None => return result,
+        };
+        
+        let color = get_color(&piece);
 
-            if piece_color == *color {
-                result.extend(match piece {
-                    Piece::BlackKing | Piece::WhiteKing => {
-                        king_moves_unsafe(&self, from, &color)
-                    },
-                    Piece::BlackKnight | Piece::WhiteKnight => {
-                        knight_moves_unsafe(&self, from, &color)
-                    },
-                    Piece::BlackPawn | Piece::WhitePawn => {
-                        pawn_moves_unsafe(&self, from, &color)
-                    },
-                    Piece::BlackBishop | Piece::WhiteBishop => {
-                        straight_line_moves_unsafe(&self, &from, &color, &[1, 3, 5, 7, 9, 11])
-                    },
-                    Piece::BlackRook | Piece::WhiteRook => {
-                        straight_line_moves_unsafe(&self, &from, &color, &[0, 2, 4, 6, 8, 10])
-                    },
-                    Piece::BlackQueen | Piece::WhiteQueen => {
-                        straight_line_moves_unsafe(&self, &from, &color, &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
-                    }
-                });
+        result.extend(match piece {
+            Piece::BlackKing | Piece::WhiteKing => {
+                king_moves_unsafe(&self, from, &color)
+            },
+            Piece::BlackKnight | Piece::WhiteKnight => {
+                knight_moves_unsafe(&self, from, &color)
+            },
+            Piece::BlackPawn | Piece::WhitePawn => {
+                pawn_moves_unsafe(&self, from, &color)
+            },
+            Piece::BlackBishop | Piece::WhiteBishop => {
+                straight_line_moves_unsafe(&self, &from, &color, &[1, 3, 5, 7, 9, 11])
+            },
+            Piece::BlackRook | Piece::WhiteRook => {
+                straight_line_moves_unsafe(&self, &from, &color, &[0, 2, 4, 6, 8, 10])
+            },
+            Piece::BlackQueen | Piece::WhiteQueen => {
+                straight_line_moves_unsafe(&self, &from, &color, &[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
             }
-        }
+        });
         
         result
     }
