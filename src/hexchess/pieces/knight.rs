@@ -82,7 +82,6 @@ mod tests {
         assert_eq!(result[11], San { from: hex!("f6"), promotion: None, to: hex!("d7") });
         // e8 is friendly
     }
-    
 
     #[test]
     fn black_knight() {
