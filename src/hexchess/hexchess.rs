@@ -164,9 +164,9 @@ fn parse_board(source: &String) -> Result<[Option<Piece>; 91], String> {
     for (index, current) in source.chars().enumerate() {
         match current {
             '/' => continue,
+            '0' => continue,
             '1' => match source.chars().nth(index as usize + 1) {
-                Some('0') => fen_index += 9,
-                Some('1') => fen_index += 10,
+                Some('0') | Some('1') => fen_index += 10,
                 _ => fen_index += 1,
             },
             '2' => fen_index += 2,
@@ -472,5 +472,82 @@ mod tests {
         let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0").unwrap();
 
         assert_eq!(hexchess.fullmove, 1);
+    }
+
+    #[test]
+    fn fen_with_skip_1() {
+        let hexchess = Hexchess::from("1/3/5/7/9/1p9/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("b6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_2() {
+        let hexchess = Hexchess::from("1/3/5/7/9/2p8/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("c6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_3() {
+      let hexchess = Hexchess::from("1/3/5/7/9/3p7/11/11/11/11/11 w - 0 1").unwrap();
+
+      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("d6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_4() {
+      let hexchess = Hexchess::from("1/3/5/7/9/4p6/11/11/11/11/11 w - 0 1").unwrap();
+
+      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("e6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_5() {
+      let hexchess = Hexchess::from("1/3/5/7/9/5p5/11/11/11/11/11 w - 0 1").unwrap();
+
+      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("f6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_6() {
+      let hexchess = Hexchess::from("1/3/5/7/9/6p4/11/11/11/11/11 w - 0 1").unwrap();
+
+      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("g6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_7() {
+      let hexchess = Hexchess::from("1/3/5/7/9/7p3/11/11/11/11/11 w - 0 1").unwrap();
+
+      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("h6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_8() {
+      let hexchess = Hexchess::from("1/3/5/7/9/8p2/11/11/11/11/11 w - 0 1").unwrap();
+
+      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("i6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_9() {
+      let hexchess = Hexchess::from("1/3/5/7/9/9p1/11/11/11/11/11 w - 0 1").unwrap();
+
+      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("k6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_10() {
+        let hexchess = Hexchess::from("1/3/5/7/9/p10/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("a6")]);
+    }
+
+    #[test]
+    fn fen_with_skip_11() {
+        let hexchess = Hexchess::from("1/3/5/7/9/11/p10/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("a5")]);
     }
 }
