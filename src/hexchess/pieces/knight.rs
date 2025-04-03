@@ -66,10 +66,7 @@ mod tests {
     fn white_knight() {
         let result = Hexchess::from("1/3/5/2P1p2/9/5N5/11/11/11/11/11 w - 0 1")
             .unwrap()
-            .current_moves()
-            .into_iter()
-            .filter(|san| san.from == hex!("f6"))
-            .collect::<Vec<San>>();
+            .moves_from(hex!("f6"));
 
         assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("g8") }); // <- g8 is hostile
         assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("h7") });
@@ -89,10 +86,7 @@ mod tests {
     fn black_knight() {
         let result = Hexchess::from("1/3/5/2P1p2/9/5n5/11/11/11/11/11 b - 0 1")
             .unwrap()
-            .current_moves()
-            .into_iter()
-            .filter(|san| san.from == hex!("f6"))
-            .collect::<Vec<San>>();
+            .moves_from(hex!("f6"));
 
         assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("h7") });
         assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("i5") });
