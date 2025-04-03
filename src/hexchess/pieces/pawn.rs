@@ -7,7 +7,7 @@ use crate::constants::{
 
 pub fn pawn_moves_unsafe(
     _hexchess: &Hexchess,
-    _from: &u8,
+    _from: u8,
     _color: &Color,
 ) -> Vec<San> {
     let result: Vec<San> = vec![];
