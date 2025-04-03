@@ -1,17 +1,14 @@
 use crate::hexchess::hexchess::Hexchess;
-use crate::hexchess::utils;
 
 use crate::constants::{
     Color,
-    Piece,
     San,
 };
 
 pub fn knight_moves_unsafe(
-    hexchess: &Hexchess,
-    from: &u8,
-    color: &Color,
-    piece: &Piece,
+    _hexchess: &Hexchess,
+    _from: &u8,
+    _color: &Color,
 ) -> Vec<San> {
     let result: Vec<San> = vec![];
 
