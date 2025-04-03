@@ -6,6 +6,7 @@ use crate::hexchess::san::San;
 use crate::hexchess::utils::{
     get_color,
     step,
+    to_position,
 };
 
 
@@ -26,14 +27,14 @@ pub fn pawn_moves_unsafe(
     };
 
     // advance forward one position
-    match advance(hexchess, from, forward_direction) {
+    match advance(hexchess, from, from, forward_direction) {
         None => {},
         Some(san) => {
             result.push(san);
 
             // advance forward another position if possible
             if is_starting_position(from, *color) {
-                match advance(hexchess, san.to, forward_direction) {
+                match advance(hexchess, from, san.to, forward_direction) {
                     None => {}
                     Some(san) => result.push(san),
                 };
@@ -72,11 +73,11 @@ pub fn pawn_moves_unsafe(
     result
 }
 
-fn advance(hexchess: &Hexchess, from: u8, forward_direction: u8) -> Option<San> {
+fn advance(hexchess: &Hexchess, start: u8, from: u8, forward_direction: u8) -> Option<San> {
     match step(from, forward_direction) {
         None => None,
         Some(to) => match hexchess.board[to as usize] {
-            None => Some(San { from, promotion: None, to }),
+            None => Some(San { from: start, promotion: None, to }),
             Some(_) => None,
         }
     }
@@ -142,21 +143,24 @@ mod tests {
             .unwrap()
             .current_moves();
 
-        assert_eq!(result.len(), 18);
-        
-        panic!("result: {:?}", result.into_iter().map(|san| san.to_string()));
-
-        // assert_eq!(result[0], San { from: hex!("b7"), promotion: None, to: hex!("b6") });
-        // assert_eq!(result[1], San { from: hex!("b7"), promotion: None, to: hex!("b5") });
-        
-        // expect(hexchess.moves('c7')).toEqual([{ from: 'c7', to: 'c6' }, { from: 'c7', to: 'c5' }])
-        // expect(hexchess.moves('d7')).toEqual([{ from: 'd7', to: 'd6' }, { from: 'd7', to: 'd5' }])
-        // expect(hexchess.moves('e7')).toEqual([{ from: 'e7', to: 'e6' }, { from: 'e7', to: 'e5' }])
-        // expect(hexchess.moves('f7')).toEqual([{ from: 'f7', to: 'f6' }, { from: 'f7', to: 'f5' }])
-        // expect(hexchess.moves('g7')).toEqual([{ from: 'g7', to: 'g6' }, { from: 'g7', to: 'g5' }])
-        // expect(hexchess.moves('h7')).toEqual([{ from: 'h7', to: 'h6' }, { from: 'h7', to: 'h5' }])
-        // expect(hexchess.moves('i7')).toEqual([{ from: 'i7', to: 'i6' }, { from: 'i7', to: 'i5' }])
-        // expect(hexchess.moves('k7')).toEqual([{ from: 'k7', to: 'k6' }, { from: 'k7', to: 'k5' }])
+        assert_eq!(result[0], San { from: hex!("b7"), promotion: None, to: hex!("b6") });
+        assert_eq!(result[1], San { from: hex!("b7"), promotion: None, to: hex!("b5") });
+        assert_eq!(result[2], San { from: hex!("c7"), promotion: None, to: hex!("c6") });
+        assert_eq!(result[3], San { from: hex!("c7"), promotion: None, to: hex!("c5") });
+        assert_eq!(result[4], San { from: hex!("d7"), promotion: None, to: hex!("d6") });
+        assert_eq!(result[5], San { from: hex!("d7"), promotion: None, to: hex!("d5") });
+        assert_eq!(result[6], San { from: hex!("e7"), promotion: None, to: hex!("e6") });
+        assert_eq!(result[7], San { from: hex!("e7"), promotion: None, to: hex!("e5") });
+        assert_eq!(result[8], San { from: hex!("f7"), promotion: None, to: hex!("f6") });
+        assert_eq!(result[9], San { from: hex!("f7"), promotion: None, to: hex!("f5") });
+        assert_eq!(result[10], San { from: hex!("g7"), promotion: None, to: hex!("g6") });
+        assert_eq!(result[11], San { from: hex!("g7"), promotion: None, to: hex!("g5") });
+        assert_eq!(result[12], San { from: hex!("h7"), promotion: None, to: hex!("h6") });
+        assert_eq!(result[13], San { from: hex!("h7"), promotion: None, to: hex!("h5") });
+        assert_eq!(result[14], San { from: hex!("i7"), promotion: None, to: hex!("i6") });
+        assert_eq!(result[15], San { from: hex!("i7"), promotion: None, to: hex!("i5") });
+        assert_eq!(result[16], San { from: hex!("k7"), promotion: None, to: hex!("k6") });
+        assert_eq!(result[17], San { from: hex!("k7"), promotion: None, to: hex!("k5") });
     }
 }
 
