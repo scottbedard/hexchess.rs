@@ -50,13 +50,13 @@ impl Hexchess {
             if piece_color == *color {
                 result.extend(match piece {
                     Piece::BlackKing | Piece::WhiteKing => {
-                        king_moves_unsafe(&self, &from, &color, &piece)
+                        king_moves_unsafe(&self, from, &color)
                     },
                     Piece::BlackKnight | Piece::WhiteKnight => {
-                        knight_moves_unsafe(&self, &from, &color, &piece)
+                        knight_moves_unsafe(&self, from, &color)
                     },
                     Piece::BlackPawn | Piece::WhitePawn => {
-                        pawn_moves_unsafe(&self, &from, &color, &piece)
+                        pawn_moves_unsafe(&self, from, &color)
                     },
                     Piece::BlackBishop | Piece::WhiteBishop => {
                         straight_line_moves_unsafe(&self, &from, &color, &[1, 3, 5, 7, 9, 11])
