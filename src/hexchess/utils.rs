@@ -310,7 +310,7 @@ pub fn walk(hexchess: &Hexchess, from: u8, direction: u8, color: &Color) -> Vec<
     let mut position: u8 = from;
 
     loop {
-        position = match HEXBOARD_GRAPH[position as usize][direction as usize] {
+        position = match step(position, direction) {
             Some(index) => index,
             None => return path // <- end of board
         };

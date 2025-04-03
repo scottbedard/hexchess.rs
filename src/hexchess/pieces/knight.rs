@@ -1,10 +1,10 @@
+use crate::constants::Color;
 use crate::hexchess::hexchess::Hexchess;
 use crate::hexchess::san::San;
-use crate::hexchess::utils::get_color;
 
-use crate::constants::{
-    Color,
-    HEXBOARD_GRAPH,
+use crate::hexchess::utils::{
+    get_color,
+    step,
 };
 
 pub fn knight_moves_unsafe(
@@ -25,37 +25,36 @@ pub fn knight_moves_unsafe(
     ];
 
     for (diagonal, orthogonal1, orthagonal2) in targets {
-        let intermediate = match HEXBOARD_GRAPH[from as usize][diagonal as usize] {
+        let intermediate = match step(from, diagonal) {
             Some(index) => index,
             None => continue,
         };
-    
-        match HEXBOARD_GRAPH[intermediate as usize][orthogonal1 as usize] {
-            Some(to) => match hexchess.board[to as usize] {
-                Some(piece) => {
-                    if get_color(&piece) != *color {
-                        result.push(San { from, promotion: None, to }); // <- occupied by enemy
-                    }
-                }
-                None => result.push(San { from, promotion: None, to }), // <- unoccupied
-            },
-            None => (), // <- no position
+
+        match knight_steps(hexchess, from, intermediate, orthogonal1, color) {
+            Some(to) => result.push(to),
+            None => (),
         };
 
-        match HEXBOARD_GRAPH[intermediate as usize][orthagonal2 as usize] {
-            Some(to) => match hexchess.board[to as usize] {
-                Some(piece) => {
-                    if get_color(&piece) != *color {
-                        result.push(San { from, promotion: None, to });
-                    }
-                }
-                None => result.push(San { from, promotion: None, to }),
-            },
+        match knight_steps(hexchess, from, intermediate, orthagonal2, color) {
+            Some(to) => result.push(to),
             None => (),
         };
     }
 
     result
+}
+
+fn knight_steps(hexchess: &Hexchess, from: u8, intermediate: u8, orthogonal: u8, color: &Color) -> Option<San> {
+    match step(intermediate, orthogonal) {
+        Some(to) => match hexchess.board[to as usize] {
+            Some(piece) => match get_color(&piece) != *color {
+                true => Some(San { from, promotion: None, to }),
+                false => None,
+            },
+            None => Some(San { from, promotion: None, to }),
+        },
+        None => None,
+    }
 }
 
 #[cfg(test)]
