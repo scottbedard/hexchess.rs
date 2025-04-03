@@ -299,6 +299,11 @@ pub fn to_position(index: &u8) -> &'static str {
     }
 }
 
+// step along the hexboard graph
+pub fn step(from: u8, direction: u8) -> Option<u8> {
+    HEXBOARD_GRAPH[from as usize][direction as usize]
+}
+
 /// walk along the board in a given direction
 pub fn walk(hexchess: &Hexchess, from: u8, direction: u8, color: &Color) -> Vec<u8> {
     let mut path: Vec<u8> = Vec::new();

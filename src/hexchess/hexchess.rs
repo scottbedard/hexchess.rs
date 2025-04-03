@@ -2,7 +2,6 @@ use crate::constants::{
     Color,
     INITIAL_POSITION,
     Piece,
-    San,
 };
 
 use crate::hexchess::utils::{
@@ -15,6 +14,7 @@ use crate::hexchess::pieces::king::king_moves_unsafe;
 use crate::hexchess::pieces::knight::knight_moves_unsafe;
 use crate::hexchess::pieces::pawn::pawn_moves_unsafe;
 use crate::hexchess::pieces::straight_line::straight_line_moves_unsafe;
+use crate::hexchess::san::San;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Hexchess {

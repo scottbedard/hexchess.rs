@@ -1,10 +1,7 @@
+use crate::constants::Color;
 use crate::hexchess::hexchess::Hexchess;
+use crate::hexchess::san::San;
 use crate::hexchess::utils::walk;
-
-use crate::constants::{
-    Color,
-    San,
-};
 
 pub fn straight_line_moves_unsafe(
     hexchess: &Hexchess,
@@ -31,7 +28,7 @@ pub fn straight_line_moves_unsafe(
 
 #[cfg(test)]
 mod tests {
-    use crate::hex;
+    use crate::{hex, hexchess::utils::to_position};
     use super::*;
 
     #[test]
@@ -40,50 +37,48 @@ mod tests {
             .unwrap()
             .current_moves();
 
-        assert!(result.iter().eq([ 
-            San { from: hex!("f6"), promotion: None, to: hex!("f7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f8") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f9") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f10") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f11") }, // <- f11 is hostile
-            San { from: hex!("f6"), promotion: None, to: hex!("g7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h8") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("i6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("l6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("i3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("l1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("c3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("a1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("c6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b6") },
+        assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
+        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("f8") });
+        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("f9") });
+        assert_eq!(result[3], San { from: hex!("f6"), promotion: None, to: hex!("f10") });
+        assert_eq!(result[4], San { from: hex!("f6"), promotion: None, to: hex!("f11") }); // <- f11 is hostile
+        assert_eq!(result[5], San { from: hex!("f6"), promotion: None, to: hex!("g7") });
+        assert_eq!(result[6], San { from: hex!("f6"), promotion: None, to: hex!("h8") });
+        assert_eq!(result[7], San { from: hex!("f6"), promotion: None, to: hex!("g6") });
+        assert_eq!(result[8], San { from: hex!("f6"), promotion: None, to: hex!("h6") });
+        assert_eq!(result[9], San { from: hex!("f6"), promotion: None, to: hex!("i6") });
+        assert_eq!(result[10], San { from: hex!("f6"), promotion: None, to: hex!("k6") });
+        assert_eq!(result[11], San { from: hex!("f6"), promotion: None, to: hex!("l6") });
+        assert_eq!(result[12], San { from: hex!("f6"), promotion: None, to: hex!("h5") });
+        assert_eq!(result[13], San { from: hex!("f6"), promotion: None, to: hex!("k4") });
+        assert_eq!(result[14], San { from: hex!("f6"), promotion: None, to: hex!("g5") });
+        assert_eq!(result[15], San { from: hex!("f6"), promotion: None, to: hex!("h4") });
+        assert_eq!(result[16], San { from: hex!("f6"), promotion: None, to: hex!("i3") });
+        assert_eq!(result[17], San { from: hex!("f6"), promotion: None, to: hex!("k2") });
+        assert_eq!(result[18], San { from: hex!("f6"), promotion: None, to: hex!("l1") });
+        assert_eq!(result[19], San { from: hex!("f6"), promotion: None, to: hex!("g4") });
+        assert_eq!(result[20], San { from: hex!("f6"), promotion: None, to: hex!("h2") });
+        assert_eq!(result[21], San { from: hex!("f6"), promotion: None, to: hex!("f5") });
+        assert_eq!(result[22], San { from: hex!("f6"), promotion: None, to: hex!("f4") });
+        assert_eq!(result[23], San { from: hex!("f6"), promotion: None, to: hex!("f3") });
+        assert_eq!(result[24], San { from: hex!("f6"), promotion: None, to: hex!("f2") });
+        assert_eq!(result[25], San { from: hex!("f6"), promotion: None, to: hex!("f1") });
+        assert_eq!(result[26], San { from: hex!("f6"), promotion: None, to: hex!("e4") });
+        assert_eq!(result[27], San { from: hex!("f6"), promotion: None, to: hex!("d2") });
+        assert_eq!(result[28], San { from: hex!("f6"), promotion: None, to: hex!("e5") });
+        assert_eq!(result[29], San { from: hex!("f6"), promotion: None, to: hex!("d4") });
+        assert_eq!(result[30], San { from: hex!("f6"), promotion: None, to: hex!("c3") });
+        assert_eq!(result[31], San { from: hex!("f6"), promotion: None, to: hex!("b2") });
+        assert_eq!(result[32], San { from: hex!("f6"), promotion: None, to: hex!("a1") });
+        assert_eq!(result[33], San { from: hex!("f6"), promotion: None, to: hex!("d5") });
+        assert_eq!(result[34], San { from: hex!("f6"), promotion: None, to: hex!("b4") });
+        assert_eq!(result[35], San { from: hex!("f6"), promotion: None, to: hex!("e6") });
+        assert_eq!(result[36], San { from: hex!("f6"), promotion: None, to: hex!("d6") });
+        assert_eq!(result[37], San { from: hex!("f6"), promotion: None, to: hex!("c6") });
+        assert_eq!(result[38], San { from: hex!("f6"), promotion: None, to: hex!("b6") });
             // a6 is friendly
-            San { from: hex!("f6"), promotion: None, to: hex!("e7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d8") },
-        ].iter()));
+        assert_eq!(result[39], San { from: hex!("f6"), promotion: None, to: hex!("e7") });
+        assert_eq!(result[40], San { from: hex!("f6"), promotion: None, to: hex!("d8") });
     }
 
     #[test]
@@ -92,50 +87,49 @@ mod tests {
             .unwrap()
             .current_moves();
 
-        assert!(result.iter().eq([ 
-            San { from: hex!("f6"), promotion: None, to: hex!("f7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f8") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f9") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f10") },
-            // f11 is friendly
-            San { from: hex!("f6"), promotion: None, to: hex!("g7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h8") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("i6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("l6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("i3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("l1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("c3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("a1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("c6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("a6") }, // <- a6 is hostile
-            San { from: hex!("f6"), promotion: None, to: hex!("e7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d8") },
-        ].iter()));
+        // ignore black pawn move at index 0
+        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
+        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("f8") });
+        assert_eq!(result[3], San { from: hex!("f6"), promotion: None, to: hex!("f9") });
+        assert_eq!(result[4], San { from: hex!("f6"), promotion: None, to: hex!("f10") });
+        // f11 is friendly
+        assert_eq!(result[5], San { from: hex!("f6"), promotion: None, to: hex!("g7") });
+        assert_eq!(result[6], San { from: hex!("f6"), promotion: None, to: hex!("h8") });
+        assert_eq!(result[7], San { from: hex!("f6"), promotion: None, to: hex!("g6") });
+        assert_eq!(result[8], San { from: hex!("f6"), promotion: None, to: hex!("h6") });
+        assert_eq!(result[9], San { from: hex!("f6"), promotion: None, to: hex!("i6") });
+        assert_eq!(result[10], San { from: hex!("f6"), promotion: None, to: hex!("k6") });
+        assert_eq!(result[11], San { from: hex!("f6"), promotion: None, to: hex!("l6") });
+        assert_eq!(result[12], San { from: hex!("f6"), promotion: None, to: hex!("h5") });
+        assert_eq!(result[13], San { from: hex!("f6"), promotion: None, to: hex!("k4") });
+        assert_eq!(result[14], San { from: hex!("f6"), promotion: None, to: hex!("g5") });
+        assert_eq!(result[15], San { from: hex!("f6"), promotion: None, to: hex!("h4") });
+        assert_eq!(result[16], San { from: hex!("f6"), promotion: None, to: hex!("i3") });
+        assert_eq!(result[17], San { from: hex!("f6"), promotion: None, to: hex!("k2") });
+        assert_eq!(result[18], San { from: hex!("f6"), promotion: None, to: hex!("l1") });
+        assert_eq!(result[19], San { from: hex!("f6"), promotion: None, to: hex!("g4") });
+        assert_eq!(result[20], San { from: hex!("f6"), promotion: None, to: hex!("h2") });
+        assert_eq!(result[21], San { from: hex!("f6"), promotion: None, to: hex!("f5") });
+        assert_eq!(result[22], San { from: hex!("f6"), promotion: None, to: hex!("f4") });
+        assert_eq!(result[23], San { from: hex!("f6"), promotion: None, to: hex!("f3") });
+        assert_eq!(result[24], San { from: hex!("f6"), promotion: None, to: hex!("f2") });
+        assert_eq!(result[25], San { from: hex!("f6"), promotion: None, to: hex!("f1") });
+        assert_eq!(result[26], San { from: hex!("f6"), promotion: None, to: hex!("e4") });
+        assert_eq!(result[27], San { from: hex!("f6"), promotion: None, to: hex!("d2") });
+        assert_eq!(result[28], San { from: hex!("f6"), promotion: None, to: hex!("e5") });
+        assert_eq!(result[29], San { from: hex!("f6"), promotion: None, to: hex!("d4") });
+        assert_eq!(result[30], San { from: hex!("f6"), promotion: None, to: hex!("c3") });
+        assert_eq!(result[31], San { from: hex!("f6"), promotion: None, to: hex!("b2") });
+        assert_eq!(result[32], San { from: hex!("f6"), promotion: None, to: hex!("a1") });
+        assert_eq!(result[33], San { from: hex!("f6"), promotion: None, to: hex!("d5") });
+        assert_eq!(result[34], San { from: hex!("f6"), promotion: None, to: hex!("b4") });
+        assert_eq!(result[35], San { from: hex!("f6"), promotion: None, to: hex!("e6") });
+        assert_eq!(result[36], San { from: hex!("f6"), promotion: None, to: hex!("d6") });
+        assert_eq!(result[37], San { from: hex!("f6"), promotion: None, to: hex!("c6") });
+        assert_eq!(result[38], San { from: hex!("f6"), promotion: None, to: hex!("b6") });
+        assert_eq!(result[39], San { from: hex!("f6"), promotion: None, to: hex!("a6") }); // <- a6 is hostile
+        assert_eq!(result[40], San { from: hex!("f6"), promotion: None, to: hex!("e7") });
+        assert_eq!(result[41], San { from: hex!("f6"), promotion: None, to: hex!("d8") });
     }
 
     #[test]
@@ -144,20 +138,19 @@ mod tests {
             .unwrap()
             .current_moves();
 
-        assert!(result.iter().eq([ 
-            San { from: hex!("f6"), promotion: None, to: hex!("g7") },
-            // h8 is friendly
-            San { from: hex!("f6"), promotion: None, to: hex!("h5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d8") }, // <- d8 is hostile
-        ].iter()));
+        // ignore pawn move at index 0
+        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("g7") });
+        // h8 is friendly
+        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("h5") });
+        assert_eq!(result[3], San { from: hex!("f6"), promotion: None, to: hex!("k4") });
+        assert_eq!(result[4], San { from: hex!("f6"), promotion: None, to: hex!("g4") });
+        assert_eq!(result[5], San { from: hex!("f6"), promotion: None, to: hex!("h2") });
+        assert_eq!(result[6], San { from: hex!("f6"), promotion: None, to: hex!("e4") });
+        assert_eq!(result[7], San { from: hex!("f6"), promotion: None, to: hex!("d2") });
+        assert_eq!(result[8], San { from: hex!("f6"), promotion: None, to: hex!("d5") });
+        assert_eq!(result[9], San { from: hex!("f6"), promotion: None, to: hex!("b4") });
+        assert_eq!(result[10], San { from: hex!("f6"), promotion: None, to: hex!("e7") });
+        assert_eq!(result[11], San { from: hex!("f6"), promotion: None, to: hex!("d8") }); // <- d8 is hostile
     }
 
     #[test]
@@ -166,20 +159,19 @@ mod tests {
             .unwrap()
             .current_moves();
 
-        assert!(result.iter().eq([
-            San { from: hex!("f6"), promotion: None, to: hex!("g7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h8") }, // <- h8 is hostile
-            San { from: hex!("f6"), promotion: None, to: hex!("h5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e7") },
-            // d8 is friendly
-        ].iter()));
+        // ignore pawn move at index 0
+        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("g7") });
+        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("h8") }); // <- h8 is hostile
+        assert_eq!(result[3], San { from: hex!("f6"), promotion: None, to: hex!("h5") });
+        assert_eq!(result[4], San { from: hex!("f6"), promotion: None, to: hex!("k4") });
+        assert_eq!(result[5], San { from: hex!("f6"), promotion: None, to: hex!("g4") });
+        assert_eq!(result[6], San { from: hex!("f6"), promotion: None, to: hex!("h2") });
+        assert_eq!(result[7], San { from: hex!("f6"), promotion: None, to: hex!("e4") });
+        assert_eq!(result[8], San { from: hex!("f6"), promotion: None, to: hex!("d2") });
+        assert_eq!(result[9], San { from: hex!("f6"), promotion: None, to: hex!("d5") });
+        assert_eq!(result[10], San { from: hex!("f6"), promotion: None, to: hex!("b4") });
+        assert_eq!(result[11], San { from: hex!("f6"), promotion: None, to: hex!("e7") });
+        // d8 is friendly
     }
 
     #[test]
@@ -188,38 +180,36 @@ mod tests {
             .unwrap()
             .current_moves();
 
-        assert!(result.iter().eq([ 
-            San { from: hex!("f6"), promotion: None, to: hex!("f7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f8") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f9") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f10") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f11") }, // <- f11 is hostile
-            San { from: hex!("f6"), promotion: None, to: hex!("g6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("i6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("l6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("i3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("l1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("c3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("a1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("c6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b6") },
-            // a6 is friendly        
-        ].iter()));
+        assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
+        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("f8") });
+        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("f9") });
+        assert_eq!(result[3], San { from: hex!("f6"), promotion: None, to: hex!("f10") });
+        assert_eq!(result[4], San { from: hex!("f6"), promotion: None, to: hex!("f11") }); // <- f11 is hostile
+        assert_eq!(result[5], San { from: hex!("f6"), promotion: None, to: hex!("g6") });
+        assert_eq!(result[6], San { from: hex!("f6"), promotion: None, to: hex!("h6") });
+        assert_eq!(result[7], San { from: hex!("f6"), promotion: None, to: hex!("i6") });
+        assert_eq!(result[8], San { from: hex!("f6"), promotion: None, to: hex!("k6") });
+        assert_eq!(result[9], San { from: hex!("f6"), promotion: None, to: hex!("l6") });
+        assert_eq!(result[10], San { from: hex!("f6"), promotion: None, to: hex!("g5") });
+        assert_eq!(result[11], San { from: hex!("f6"), promotion: None, to: hex!("h4") });
+        assert_eq!(result[12], San { from: hex!("f6"), promotion: None, to: hex!("i3") });
+        assert_eq!(result[13], San { from: hex!("f6"), promotion: None, to: hex!("k2") });
+        assert_eq!(result[14], San { from: hex!("f6"), promotion: None, to: hex!("l1") });
+        assert_eq!(result[15], San { from: hex!("f6"), promotion: None, to: hex!("f5") });
+        assert_eq!(result[16], San { from: hex!("f6"), promotion: None, to: hex!("f4") });
+        assert_eq!(result[17], San { from: hex!("f6"), promotion: None, to: hex!("f3") });
+        assert_eq!(result[18], San { from: hex!("f6"), promotion: None, to: hex!("f2") });
+        assert_eq!(result[19], San { from: hex!("f6"), promotion: None, to: hex!("f1") });
+        assert_eq!(result[20], San { from: hex!("f6"), promotion: None, to: hex!("e5") });
+        assert_eq!(result[21], San { from: hex!("f6"), promotion: None, to: hex!("d4") });
+        assert_eq!(result[22], San { from: hex!("f6"), promotion: None, to: hex!("c3") });
+        assert_eq!(result[23], San { from: hex!("f6"), promotion: None, to: hex!("b2") });
+        assert_eq!(result[24], San { from: hex!("f6"), promotion: None, to: hex!("a1") });
+        assert_eq!(result[25], San { from: hex!("f6"), promotion: None, to: hex!("e6") });
+        assert_eq!(result[26], San { from: hex!("f6"), promotion: None, to: hex!("d6") });
+        assert_eq!(result[27], San { from: hex!("f6"), promotion: None, to: hex!("c6") });
+        assert_eq!(result[28], San { from: hex!("f6"), promotion: None, to: hex!("b6") });
+        // a6 is friendly
     }
 
     #[test]
@@ -228,37 +218,36 @@ mod tests {
             .unwrap()
             .current_moves();
 
-        assert!(result.iter().eq([ 
-            San { from: hex!("f6"), promotion: None, to: hex!("f7") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f8") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f9") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f10") },
-            // f11 is friendly
-            San { from: hex!("f6"), promotion: None, to: hex!("g6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("i6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("l6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("g5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("h4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("i3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("k2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("l1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("f1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e5") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d4") },
-            San { from: hex!("f6"), promotion: None, to: hex!("c3") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b2") },
-            San { from: hex!("f6"), promotion: None, to: hex!("a1") },
-            San { from: hex!("f6"), promotion: None, to: hex!("e6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("d6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("c6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("b6") },
-            San { from: hex!("f6"), promotion: None, to: hex!("a6") }, // <- a6 is hostile        
-        ].iter()));
+        // ignore black pawn move at index 0
+        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
+        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("f8") });
+        assert_eq!(result[3], San { from: hex!("f6"), promotion: None, to: hex!("f9") });
+        assert_eq!(result[4], San { from: hex!("f6"), promotion: None, to: hex!("f10") });
+        // f11 is friendly
+        assert_eq!(result[5], San { from: hex!("f6"), promotion: None, to: hex!("g6") });
+        assert_eq!(result[6], San { from: hex!("f6"), promotion: None, to: hex!("h6") });
+        assert_eq!(result[7], San { from: hex!("f6"), promotion: None, to: hex!("i6") });
+        assert_eq!(result[8], San { from: hex!("f6"), promotion: None, to: hex!("k6") });
+        assert_eq!(result[9], San { from: hex!("f6"), promotion: None, to: hex!("l6") });
+        assert_eq!(result[10], San { from: hex!("f6"), promotion: None, to: hex!("g5") });
+        assert_eq!(result[11], San { from: hex!("f6"), promotion: None, to: hex!("h4") });
+        assert_eq!(result[12], San { from: hex!("f6"), promotion: None, to: hex!("i3") });
+        assert_eq!(result[13], San { from: hex!("f6"), promotion: None, to: hex!("k2") });
+        assert_eq!(result[14], San { from: hex!("f6"), promotion: None, to: hex!("l1") });
+        assert_eq!(result[15], San { from: hex!("f6"), promotion: None, to: hex!("f5") });
+        assert_eq!(result[16], San { from: hex!("f6"), promotion: None, to: hex!("f4") });
+        assert_eq!(result[17], San { from: hex!("f6"), promotion: None, to: hex!("f3") });
+        assert_eq!(result[18], San { from: hex!("f6"), promotion: None, to: hex!("f2") });
+        assert_eq!(result[19], San { from: hex!("f6"), promotion: None, to: hex!("f1") });
+        assert_eq!(result[20], San { from: hex!("f6"), promotion: None, to: hex!("e5") });
+        assert_eq!(result[21], San { from: hex!("f6"), promotion: None, to: hex!("d4") });
+        assert_eq!(result[22], San { from: hex!("f6"), promotion: None, to: hex!("c3") });
+        assert_eq!(result[23], San { from: hex!("f6"), promotion: None, to: hex!("b2") });
+        assert_eq!(result[24], San { from: hex!("f6"), promotion: None, to: hex!("a1") });
+        assert_eq!(result[25], San { from: hex!("f6"), promotion: None, to: hex!("e6") });
+        assert_eq!(result[26], San { from: hex!("f6"), promotion: None, to: hex!("d6") });
+        assert_eq!(result[27], San { from: hex!("f6"), promotion: None, to: hex!("c6") });
+        assert_eq!(result[28], San { from: hex!("f6"), promotion: None, to: hex!("b6") });
+        assert_eq!(result[29], San { from: hex!("f6"), promotion: None, to: hex!("a6") }); // <- a6 is hostile
     }
 }

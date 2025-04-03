@@ -1,15 +1,18 @@
 use crate::constants::PromotionPiece;
+use std::fmt;
 
 use crate::hexchess::utils::{
     is_promotion_position,
     to_index,
 };
 
+use super::utils::to_position;
+
 #[derive(Clone, Copy, Debug, PartialEq)]
-struct San {
-    from: u8,
-    promotion: Option<PromotionPiece>,
-    to: u8,
+pub struct San {
+    pub from: u8,
+    pub promotion: Option<PromotionPiece>,
+    pub to: u8,
 }
 
 impl San {
@@ -132,6 +135,26 @@ impl San {
         }
     
         Ok(Self { from, promotion, to })
+    }
+}
+
+impl fmt::Display for San {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut value = to_position(&self.from).to_string() + &to_position(&self.to).to_string();
+
+        match self.promotion {
+            Some(promotion) => {
+                value.push(match promotion {
+                    PromotionPiece::Bishop => 'b',
+                    PromotionPiece::Knight => 'n',
+                    PromotionPiece::Queen => 'q',
+                    PromotionPiece::Rook => 'r',
+                });
+            }
+            None => {}
+        };
+
+        write!(f, "{}", value)
     }
 }
 
