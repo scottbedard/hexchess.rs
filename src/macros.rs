@@ -1,6 +1,6 @@
 /// position index aliases
 #[macro_export]
-macro_rules! hex {
+macro_rules! h {
     ("f11") => { 0 };
     ("e10") => { 1 };
     ("f10") => { 2 };

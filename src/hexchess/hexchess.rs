@@ -1,7 +1,15 @@
+use crate::h;
+use crate::hexchess::pieces::king::king_moves_unsafe;
+use crate::hexchess::pieces::knight::knight_moves_unsafe;
+use crate::hexchess::pieces::pawn::pawn_moves_unsafe;
+use crate::hexchess::pieces::straight_line::straight_line_moves_unsafe;
+use crate::hexchess::san::San;
+
 use crate::constants::{
     Color,
     INITIAL_POSITION,
     Piece,
+    PromotionPiece,
 };
 
 use crate::hexchess::utils::{
@@ -9,12 +17,6 @@ use crate::hexchess::utils::{
     is_legal_en_passant,
     to_index,
 };
-
-use crate::hexchess::pieces::king::king_moves_unsafe;
-use crate::hexchess::pieces::knight::knight_moves_unsafe;
-use crate::hexchess::pieces::pawn::pawn_moves_unsafe;
-use crate::hexchess::pieces::straight_line::straight_line_moves_unsafe;
-use crate::hexchess::san::San;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Hexchess {
@@ -30,6 +32,90 @@ pub struct Hexchess {
 }
 
 impl Hexchess {
+    /// apply move
+    pub fn apply_move(&mut self, san: &San) {
+        self.apply_move_unsafe(san);
+    }
+
+    /// apply move, regardless of legality
+    pub fn apply_move_unsafe(&mut self, san: &San) {
+        let piece = match self.board[san.from as usize] {
+            Some(piece) => piece,
+            None => panic!("cannot apply move from empty position: {}", san.from),
+        };
+
+        // update halfmove
+        if self.board[san.to as usize].is_some() || (
+            piece == Piece::BlackPawn ||
+            piece == Piece::WhitePawn
+        ) {
+            self.halfmove = 0;
+        } else {
+            self.halfmove += 1;
+        }
+
+        let color = get_color(&piece);
+
+        // update fullmove and turn color
+        if color == Color::Black {
+            self.fullmove += 1;
+            self.turn = Color::White;
+        } else {
+            self.turn = Color::Black;
+        }
+
+        // set from positions
+        self.board[san.from as usize] = None;
+
+        // set to position
+        self.board[san.to as usize] = Some(
+            match san.promotion {
+                None => piece,
+                Some(piece) => match color {
+                    Color::Black => match piece {
+                        PromotionPiece::Bishop => Piece::BlackBishop,
+                        PromotionPiece::Knight => Piece::BlackKnight,
+                        PromotionPiece::Queen => Piece::BlackQueen,
+                        PromotionPiece::Rook => Piece::BlackRook,
+                    },
+                    Color::White => match piece {
+                        PromotionPiece::Bishop => Piece::WhiteBishop,
+                        PromotionPiece::Knight => Piece::WhiteKnight,
+                        PromotionPiece::Queen => Piece::WhiteQueen,
+                        PromotionPiece::Rook => Piece::WhiteRook,
+                    },
+                },
+            }
+        );
+
+        // set en passsant
+        self.ep = match piece {
+            Piece::BlackPawn => match (san.from, san.to) {
+                (h!("c7"), h!("c5")) => Some(h!("c6")),
+                (h!("d7"), h!("d5")) => Some(h!("d6")),
+                (h!("e7"), h!("e5")) => Some(h!("e6")),
+                (h!("f7"), h!("f5")) => Some(h!("f6")),
+                (h!("g7"), h!("g5")) => Some(h!("g6")),
+                (h!("h7"), h!("h5")) => Some(h!("h6")),
+                (h!("i7"), h!("i5")) => Some(h!("i6")),
+                (h!("k7"), h!("k5")) => Some(h!("k6")),
+                _ => None,
+            },
+            Piece::WhitePawn => match (san.from, san.to) {
+                (h!("c2"), h!("c4")) => Some(h!("c3")),
+                (h!("d3"), h!("d5")) => Some(h!("d4")),
+                (h!("e4"), h!("e6")) => Some(h!("e5")),
+                (h!("f5"), h!("f7")) => Some(h!("f6")),
+                (h!("g4"), h!("g6")) => Some(h!("g5")),
+                (h!("h3"), h!("h5")) => Some(h!("h4")),
+                (h!("i2"), h!("i4")) => Some(h!("i3")),
+                (h!("k1"), h!("k3")) => Some(h!("k2")),
+                _ => None,
+            },
+            _ => None,
+        };
+    }
+
     /// get moves a position
     pub fn moves_from(&self, from: u8) -> Vec<San> {
         self.moves_from_unsafe(from)
@@ -218,7 +304,6 @@ fn parse_board(source: &String) -> Result<[Option<Piece>; 91], String> {
     Ok(arr)
 }
 
-
 /// convert character to piece
 fn to_piece(source: char) -> Result<Piece, &'static str> {
     match source {
@@ -240,313 +325,331 @@ fn to_piece(source: char) -> Result<Piece, &'static str> {
 
 #[cfg(test)]
 mod tests {
-    use crate::hex;
     use super::*;
 
-    #[test]
-    fn empty_state() {
-      let hexchess = Hexchess::new();
-    
-      assert!(hexchess.board.iter().all(|&square| square.is_none()));
-      assert_eq!(hexchess.ep, None);
-      assert_eq!(hexchess.fullmove, 1);
-      assert_eq!(hexchess.halfmove, 0);
-      assert_eq!(hexchess.turn, Color::White);
-    }
+    mod parsing {
+        use crate::h;
+        use super::*;
 
-    #[test]
-    fn initial_state() {
-        let hexchess = Hexchess::init();
-
-        assert!(hexchess.board.iter().eq([
-            Some(Piece::BlackBishop),
-            Some(Piece::BlackQueen),
-            Some(Piece::BlackBishop),
-            Some(Piece::BlackKing),
-            Some(Piece::BlackKnight),
-            None,
-            Some(Piece::BlackBishop),
-            None,
-            Some(Piece::BlackKnight),
-            Some(Piece::BlackRook),
-            None,
-            None,
-            None,
-            None,
-            None,
-            Some(Piece::BlackRook),
-            Some(Piece::BlackPawn),
-            Some(Piece::BlackPawn),
-            Some(Piece::BlackPawn),
-            Some(Piece::BlackPawn),
-            Some(Piece::BlackPawn),
-            Some(Piece::BlackPawn),
-            Some(Piece::BlackPawn),
-            Some(Piece::BlackPawn),
-            Some(Piece::BlackPawn),
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            Some(Piece::WhitePawn),
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            Some(Piece::WhitePawn),
-            None,
-            Some(Piece::WhitePawn),
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            None,
-            Some(Piece::WhitePawn),
-            None,
-            Some(Piece::WhiteBishop),
-            None,
-            Some(Piece::WhitePawn),
-            None,
-            None,
-            None,
-            None,
-            None,
-            Some(Piece::WhitePawn),
-            None,
-            None,
-            Some(Piece::WhiteBishop),
-            None,
-            None,
-            Some(Piece::WhitePawn),
-            None,
-            None,
-            None,
-            Some(Piece::WhitePawn),
-            Some(Piece::WhiteRook),
-            Some(Piece::WhiteKnight),
-            Some(Piece::WhiteQueen),
-            Some(Piece::WhiteBishop),
-            Some(Piece::WhiteKing),
-            Some(Piece::WhiteKnight),
-            Some(Piece::WhiteRook),
-            Some(Piece::WhitePawn),
-            None,
-        ].iter()));
-      
-        assert_eq!(hexchess.turn, Color::White);
+        #[test]
+        fn empty_state() {
+        let hexchess = Hexchess::new();
+        
+        assert!(hexchess.board.iter().all(|&square| square.is_none()));
         assert_eq!(hexchess.ep, None);
-        assert_eq!(hexchess.halfmove, 0);
         assert_eq!(hexchess.fullmove, 1);
-    }
-
-    #[test]
-    fn empty_string() {
-        let hexchess = Hexchess::from("");
-
-        assert!(hexchess.is_err());
-        assert_eq!(
-            hexchess.unwrap_err(),
-            "board not found"
-        );
-    }
-
-    #[test]
-    fn turn_color() {
-        let white = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
-
-        assert_eq!(white.turn, Color::White);
-
-        let black = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 b - 0 1").unwrap();
-
-        assert_eq!(black.turn, Color::Black);
-    }
-
-    #[test]
-    fn invalid_turn_color() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 x - 0 1");
-
-        assert!(hexchess.is_err());
-        assert_eq!(
-            hexchess.unwrap_err(),
-            "invalid turn color: x"
-        );
-    }
-
-    #[test]
-    fn missing_turn_color() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11").unwrap();
-
+        assert_eq!(hexchess.halfmove, 0);
         assert_eq!(hexchess.turn, Color::White);
+        }
+
+        #[test]
+        fn initial_state() {
+            let hexchess = Hexchess::init();
+
+            assert!(hexchess.board.iter().eq([
+                Some(Piece::BlackBishop),
+                Some(Piece::BlackQueen),
+                Some(Piece::BlackBishop),
+                Some(Piece::BlackKing),
+                Some(Piece::BlackKnight),
+                None,
+                Some(Piece::BlackBishop),
+                None,
+                Some(Piece::BlackKnight),
+                Some(Piece::BlackRook),
+                None,
+                None,
+                None,
+                None,
+                None,
+                Some(Piece::BlackRook),
+                Some(Piece::BlackPawn),
+                Some(Piece::BlackPawn),
+                Some(Piece::BlackPawn),
+                Some(Piece::BlackPawn),
+                Some(Piece::BlackPawn),
+                Some(Piece::BlackPawn),
+                Some(Piece::BlackPawn),
+                Some(Piece::BlackPawn),
+                Some(Piece::BlackPawn),
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                Some(Piece::WhitePawn),
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                Some(Piece::WhitePawn),
+                None,
+                Some(Piece::WhitePawn),
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                Some(Piece::WhitePawn),
+                None,
+                Some(Piece::WhiteBishop),
+                None,
+                Some(Piece::WhitePawn),
+                None,
+                None,
+                None,
+                None,
+                None,
+                Some(Piece::WhitePawn),
+                None,
+                None,
+                Some(Piece::WhiteBishop),
+                None,
+                None,
+                Some(Piece::WhitePawn),
+                None,
+                None,
+                None,
+                Some(Piece::WhitePawn),
+                Some(Piece::WhiteRook),
+                Some(Piece::WhiteKnight),
+                Some(Piece::WhiteQueen),
+                Some(Piece::WhiteBishop),
+                Some(Piece::WhiteKing),
+                Some(Piece::WhiteKnight),
+                Some(Piece::WhiteRook),
+                Some(Piece::WhitePawn),
+                None,
+            ].iter()));
+        
+            assert_eq!(hexchess.turn, Color::White);
+            assert_eq!(hexchess.ep, None);
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.fullmove, 1);
+        }
+
+        #[test]
+        fn empty_string() {
+            let hexchess = Hexchess::from("");
+
+            assert!(hexchess.is_err());
+            assert_eq!(
+                hexchess.unwrap_err(),
+                "board not found"
+            );
+        }
+
+        #[test]
+        fn turn_color() {
+            let white = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+
+            assert_eq!(white.turn, Color::White);
+
+            let black = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 b - 0 1").unwrap();
+
+            assert_eq!(black.turn, Color::Black);
+        }
+
+        #[test]
+        fn invalid_turn_color() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 x - 0 1");
+
+            assert!(hexchess.is_err());
+            assert_eq!(
+                hexchess.unwrap_err(),
+                "invalid turn color: x"
+            );
+        }
+
+        #[test]
+        fn missing_turn_color() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11").unwrap();
+
+            assert_eq!(hexchess.turn, Color::White);
+        }
+
+        #[test]
+        fn en_passant() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w f6 0 1");
+
+            assert_eq!(hexchess.unwrap().ep, Some(h!("f6")));
+        }
+
+        #[test]
+        fn invalid_en_passant() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w x 0 1");
+
+            assert!(hexchess.is_err());
+            assert_eq!(
+                hexchess.unwrap_err(),
+                "invalid en passant position: x"
+            );
+        }
+
+        #[test]
+        fn missing_en_passant() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w").unwrap();
+
+            assert_eq!(hexchess.ep, None);
+        }
+
+        #[test]
+        fn illegal_en_passant() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w a1 0 1");
+
+            assert!(hexchess.is_err());
+            assert_eq!(
+                hexchess.unwrap_err(),
+                "illegal en passant position: a1"
+            );
+        }
+
+        #[test]
+        fn invalid_halfmove() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - x 1");
+
+            assert!(hexchess.is_err());
+            assert_eq!(
+                hexchess.unwrap_err(),
+                "invalid halfmove: x"
+            );
+        }
+
+        #[test]
+        fn missing_halfmove() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w -").unwrap();
+
+            assert_eq!(hexchess.halfmove, 0);
+        }
+
+        #[test]
+        fn invalid_fullmove() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 x");
+
+            assert!(hexchess.is_err());
+            assert_eq!(
+                hexchess.unwrap_err(),
+                "invalid fullmove: x"
+            );
+        }
+
+        #[test]
+        fn missing_fullmove() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0").unwrap();
+
+            assert_eq!(hexchess.fullmove, 1);
+        }
+
+        #[test]
+        fn fen_with_skip_1() {
+            let hexchess = Hexchess::from("1/3/5/7/9/1p9/11/11/11/11/11 w - 0 1").unwrap();
+
+            assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("b6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_2() {
+            let hexchess = Hexchess::from("1/3/5/7/9/2p8/11/11/11/11/11 w - 0 1").unwrap();
+
+            assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("c6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_3() {
+        let hexchess = Hexchess::from("1/3/5/7/9/3p7/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("d6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_4() {
+        let hexchess = Hexchess::from("1/3/5/7/9/4p6/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("e6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_5() {
+        let hexchess = Hexchess::from("1/3/5/7/9/5p5/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("f6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_6() {
+        let hexchess = Hexchess::from("1/3/5/7/9/6p4/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("g6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_7() {
+        let hexchess = Hexchess::from("1/3/5/7/9/7p3/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("h6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_8() {
+        let hexchess = Hexchess::from("1/3/5/7/9/8p2/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("i6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_9() {
+        let hexchess = Hexchess::from("1/3/5/7/9/9p1/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("k6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_10() {
+            let hexchess = Hexchess::from("1/3/5/7/9/p10/11/11/11/11/11 w - 0 1").unwrap();
+
+            assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("a6")]);
+        }
+
+        #[test]
+        fn fen_with_skip_11() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/p10/11/11/11/11 w - 0 1").unwrap();
+
+            assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("a5")]);
+        }
+
     }
 
-    #[test]
-    fn en_passant() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w f6 0 1");
+    mod apply_move {
+        use crate::h;
+        use super::*;
 
-        assert_eq!(hexchess.unwrap().ep, Some(hex!("f6")));
+        #[test]
+        fn successful_opening_move() {
+            let mut hexchess = Hexchess::init();
+
+            // hexchess.apply_move(&San::from(&String::from("g4g5")).unwrap());
+
+            // panic!("hexchess: {:?}", hexchess);
+        }
     }
-
-    #[test]
-    fn invalid_en_passant() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w x 0 1");
-
-        assert!(hexchess.is_err());
-        assert_eq!(
-            hexchess.unwrap_err(),
-            "invalid en passant position: x"
-        );
-    }
-
-    #[test]
-    fn missing_en_passant() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w").unwrap();
-
-        assert_eq!(hexchess.ep, None);
-    }
-
-    #[test]
-    fn illegal_en_passant() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w a1 0 1");
-
-        assert!(hexchess.is_err());
-        assert_eq!(
-            hexchess.unwrap_err(),
-            "illegal en passant position: a1"
-        );
-    }
-
-    #[test]
-    fn invalid_halfmove() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - x 1");
-
-        assert!(hexchess.is_err());
-        assert_eq!(
-            hexchess.unwrap_err(),
-            "invalid halfmove: x"
-        );
-    }
-
-    #[test]
-    fn missing_halfmove() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w -").unwrap();
-
-        assert_eq!(hexchess.halfmove, 0);
-    }
-
-    #[test]
-    fn invalid_fullmove() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 x");
-
-        assert!(hexchess.is_err());
-        assert_eq!(
-            hexchess.unwrap_err(),
-            "invalid fullmove: x"
-        );
-    }
-
-    #[test]
-    fn missing_fullmove() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0").unwrap();
-
-        assert_eq!(hexchess.fullmove, 1);
-    }
-
-    #[test]
-    fn fen_with_skip_1() {
-        let hexchess = Hexchess::from("1/3/5/7/9/1p9/11/11/11/11/11 w - 0 1").unwrap();
-
-        assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("b6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_2() {
-        let hexchess = Hexchess::from("1/3/5/7/9/2p8/11/11/11/11/11 w - 0 1").unwrap();
-
-        assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("c6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_3() {
-      let hexchess = Hexchess::from("1/3/5/7/9/3p7/11/11/11/11/11 w - 0 1").unwrap();
-
-      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("d6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_4() {
-      let hexchess = Hexchess::from("1/3/5/7/9/4p6/11/11/11/11/11 w - 0 1").unwrap();
-
-      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("e6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_5() {
-      let hexchess = Hexchess::from("1/3/5/7/9/5p5/11/11/11/11/11 w - 0 1").unwrap();
-
-      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("f6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_6() {
-      let hexchess = Hexchess::from("1/3/5/7/9/6p4/11/11/11/11/11 w - 0 1").unwrap();
-
-      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("g6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_7() {
-      let hexchess = Hexchess::from("1/3/5/7/9/7p3/11/11/11/11/11 w - 0 1").unwrap();
-
-      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("h6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_8() {
-      let hexchess = Hexchess::from("1/3/5/7/9/8p2/11/11/11/11/11 w - 0 1").unwrap();
-
-      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("i6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_9() {
-      let hexchess = Hexchess::from("1/3/5/7/9/9p1/11/11/11/11/11 w - 0 1").unwrap();
-
-      assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("k6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_10() {
-        let hexchess = Hexchess::from("1/3/5/7/9/p10/11/11/11/11/11 w - 0 1").unwrap();
-
-        assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("a6")]);
-    }
-
-    #[test]
-    fn fen_with_skip_11() {
-        let hexchess = Hexchess::from("1/3/5/7/9/11/p10/11/11/11/11 w - 0 1").unwrap();
-
-        assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("a5")]);
-    }
-
     // test('en passant unsets on next move', () => {
     //     const hexchess = new Hexchess('1/3/5/7/8p/11/11/11/11/11/1P9 w - 0 1')
 

@@ -40,26 +40,26 @@ pub fn king_moves_unsafe(
 
 #[cfg(test)]
 mod tests {
-    use crate::hex;
+    use crate::h;
     use super::*;
 
     #[test]
     fn white_king() {
         let result = Hexchess::from("1/3/5/7/3P5/5K5/11/6p4/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f6"));
+            .moves_from(h!("f6"));
 
-        assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
-        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("g7") });
-        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("g6") });
-        assert_eq!(result[3], San { from: hex!("f6"), promotion: None, to: hex!("h5") });
-        assert_eq!(result[4], San { from: hex!("f6"), promotion: None, to: hex!("g5") });
-        assert_eq!(result[5], San { from: hex!("f6"), promotion: None, to: hex!("g4") }); // <- g4 is hostile
-        assert_eq!(result[6], San { from: hex!("f6"), promotion: None, to: hex!("f5") });
-        assert_eq!(result[7], San { from: hex!("f6"), promotion: None, to: hex!("e4") });
-        assert_eq!(result[8], San { from: hex!("f6"), promotion: None, to: hex!("e5") });
-        assert_eq!(result[9], San { from: hex!("f6"), promotion: None, to: hex!("d5") });
-        assert_eq!(result[10], San { from: hex!("f6"), promotion: None, to: hex!("e6") });
+        assert_eq!(result[0], San { from: h!("f6"), promotion: None, to: h!("f7") });
+        assert_eq!(result[1], San { from: h!("f6"), promotion: None, to: h!("g7") });
+        assert_eq!(result[2], San { from: h!("f6"), promotion: None, to: h!("g6") });
+        assert_eq!(result[3], San { from: h!("f6"), promotion: None, to: h!("h5") });
+        assert_eq!(result[4], San { from: h!("f6"), promotion: None, to: h!("g5") });
+        assert_eq!(result[5], San { from: h!("f6"), promotion: None, to: h!("g4") }); // <- g4 is hostile
+        assert_eq!(result[6], San { from: h!("f6"), promotion: None, to: h!("f5") });
+        assert_eq!(result[7], San { from: h!("f6"), promotion: None, to: h!("e4") });
+        assert_eq!(result[8], San { from: h!("f6"), promotion: None, to: h!("e5") });
+        assert_eq!(result[9], San { from: h!("f6"), promotion: None, to: h!("d5") });
+        assert_eq!(result[10], San { from: h!("f6"), promotion: None, to: h!("e6") });
         // e7 is friendly
     }
 
@@ -67,19 +67,19 @@ mod tests {
     fn black_king() {
         let result = Hexchess::from("1/3/5/7/3P5/5k5/11/6p4/11/11/11 b - 0 1")
             .unwrap()
-            .moves_from(hex!("f6"));
+            .moves_from(h!("f6"));
 
-        assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
-        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("g7") });
-        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("g6") });
-        assert_eq!(result[3], San { from: hex!("f6"), promotion: None, to: hex!("h5") });
-        assert_eq!(result[4], San { from: hex!("f6"), promotion: None, to: hex!("g5") });
+        assert_eq!(result[0], San { from: h!("f6"), promotion: None, to: h!("f7") });
+        assert_eq!(result[1], San { from: h!("f6"), promotion: None, to: h!("g7") });
+        assert_eq!(result[2], San { from: h!("f6"), promotion: None, to: h!("g6") });
+        assert_eq!(result[3], San { from: h!("f6"), promotion: None, to: h!("h5") });
+        assert_eq!(result[4], San { from: h!("f6"), promotion: None, to: h!("g5") });
         // g4 is friendly
-        assert_eq!(result[5], San { from: hex!("f6"), promotion: None, to: hex!("f5") });
-        assert_eq!(result[6], San { from: hex!("f6"), promotion: None, to: hex!("e4") });
-        assert_eq!(result[7], San { from: hex!("f6"), promotion: None, to: hex!("e5") });
-        assert_eq!(result[8], San { from: hex!("f6"), promotion: None, to: hex!("d5") });
-        assert_eq!(result[9], San { from: hex!("f6"), promotion: None, to: hex!("e6") });
-        assert_eq!(result[10], San { from: hex!("f6"), promotion: None, to: hex!("e7") }); // <- e7 is hostile
+        assert_eq!(result[5], San { from: h!("f6"), promotion: None, to: h!("f5") });
+        assert_eq!(result[6], San { from: h!("f6"), promotion: None, to: h!("e4") });
+        assert_eq!(result[7], San { from: h!("f6"), promotion: None, to: h!("e5") });
+        assert_eq!(result[8], San { from: h!("f6"), promotion: None, to: h!("d5") });
+        assert_eq!(result[9], San { from: h!("f6"), promotion: None, to: h!("e6") });
+        assert_eq!(result[10], San { from: h!("f6"), promotion: None, to: h!("e7") }); // <- e7 is hostile
     }
 }

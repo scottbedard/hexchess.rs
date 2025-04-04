@@ -11,7 +11,9 @@ use super::utils::to_position;
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct San {
     pub from: u8,
+
     pub promotion: Option<PromotionPiece>,
+
     pub to: u8,
 }
 
@@ -176,7 +178,7 @@ fn is_rank(c: char) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::hex;
+    use crate::h;
     use super::*;
 
     #[test]
@@ -184,9 +186,9 @@ mod tests {
         assert_eq!(
             San::from(&"a1b2".to_string()),
             Ok(San {
-                from: hex!("a1"),
+                from: h!("a1"),
                 promotion: None,
-                to: hex!("b2"),
+                to: h!("b2"),
             })
         );
     }
@@ -196,36 +198,36 @@ mod tests {
         assert_eq!(
             San::from(&"a5a6b".to_string()),
             Ok(San {
-                from: hex!("a5"),
+                from: h!("a5"),
                 promotion: Some(PromotionPiece::Bishop),
-                to: hex!("a6"),
+                to: h!("a6"),
             })
         );
 
         assert_eq!(
             San::from(&"a5a6n".to_string()),
             Ok(San {
-                from: hex!("a5"),
+                from: h!("a5"),
                 promotion: Some(PromotionPiece::Knight),
-                to: hex!("a6"),
+                to: h!("a6"),
             })
         );
 
         assert_eq!(
             San::from(&"a5a6r".to_string()),
             Ok(San {
-                from: hex!("a5"),
+                from: h!("a5"),
                 promotion: Some(PromotionPiece::Rook),
-                to: hex!("a6"),
+                to: h!("a6"),
             })
         );
 
         assert_eq!(
             San::from(&"a5a6q".to_string()),
             Ok(San {
-                from: hex!("a5"),
+                from: h!("a5"),
                 promotion: Some(PromotionPiece::Queen),
-                to: hex!("a6"),
+                to: h!("a6"),
             })
         );
     }
@@ -235,36 +237,36 @@ mod tests {
         assert_eq!(
             San::from(&"f10f11b".to_string()),
             Ok(San {
-                from: hex!("f10"),
+                from: h!("f10"),
                 promotion: Some(PromotionPiece::Bishop),
-                to: hex!("f11"),
+                to: h!("f11"),
             })
         );
 
         assert_eq!(
             San::from(&"f10f11n".to_string()),
             Ok(San {
-                from: hex!("f10"),
+                from: h!("f10"),
                 promotion: Some(PromotionPiece::Knight),
-                to: hex!("f11"),
+                to: h!("f11"),
             })
         );
 
         assert_eq!(
             San::from(&"f10f11r".to_string()),
             Ok(San {
-                from: hex!("f10"),
+                from: h!("f10"),
                 promotion: Some(PromotionPiece::Rook),
-                to: hex!("f11"),
+                to: h!("f11"),
             })
         );
 
         assert_eq!(
             San::from(&"f10f11q".to_string()),
             Ok(San {
-                from: hex!("f10"),
+                from: h!("f10"),
                 promotion: Some(PromotionPiece::Queen),
-                to: hex!("f11"),
+                to: h!("f11"),
             })
         );
     }
@@ -274,9 +276,9 @@ mod tests {
         assert_eq!(
             San::from(&"f9f10".to_string()),
             Ok(San {
-                from: hex!("f9"),
+                from: h!("f9"),
                 promotion: None,
-                to: hex!("f10"),
+                to: h!("f10"),
             })
         );
     }
