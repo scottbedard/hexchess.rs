@@ -638,27 +638,50 @@ mod tests {
     }
 
     mod apply_move {
-        use crate::h;
+        use crate::{h, s};
         use super::*;
 
         #[test]
-        fn successful_opening_move() {
+        fn sets_to_and_from_positions() {
             let mut hexchess = Hexchess::init();
 
-            // hexchess.apply_move(&San::from(&String::from("g4g5")).unwrap());
+            hexchess.apply_move(&s!("g4g5"));
+            hexchess.apply_move(&s!("e7e6"));
 
-            // panic!("hexchess: {:?}", hexchess);
+            assert_eq!(hexchess.board[h!("g5")], Some(Piece::WhitePawn));
+            assert_eq!(hexchess.board[h!("g4")], None);
+            assert_eq!(hexchess.board[h!("e6")], Some(Piece::BlackPawn));
+            assert_eq!(hexchess.board[h!("e7")], None);
         }
+
+        #[test]
+        fn sets_and_unsets_en_passant() {
+            let mut hexchess = Hexchess::init();
+
+            hexchess.apply_move(&s!("g4g6"));
+            assert_eq!(hexchess.ep, Some(h!("g5")));
+
+            hexchess.apply_move(&s!("e7e5"));
+            assert_eq!(hexchess.ep, Some(h!("e6")));
+
+            hexchess.apply_move(&s!("b1b2"));
+            assert_eq!(hexchess.ep, None);
+        }
+
+        // cannot step out of pin
+
+        // cannot self check on opponent's turn
+
+        // king cannot step into check
+
+        // promote white pieces
+
+        // promote black pieces
+
+        // white cannot promote on black's promotion positions
+
+        // black cannot promote on white's promotion positions
+
+        // out of turn error
     }
-    // test('en passant unsets on next move', () => {
-    //     const hexchess = new Hexchess('1/3/5/7/8p/11/11/11/11/11/1P9 w - 0 1')
-
-    //     hexchess.apply('b1b3')
-
-    //     expect(hexchess.ep).toEqual('b2')
-
-    //     hexchess.apply('k7k6')
-
-    //     expect(hexchess.ep).toEqual(null)
-    // })
 }
