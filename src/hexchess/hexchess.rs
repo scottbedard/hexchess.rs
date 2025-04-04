@@ -655,6 +655,19 @@ mod tests {
         }
 
         #[test]
+        fn alternate_color_back_and_forth() {
+            let mut hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.turn, Color::White);
+            hexchess.apply_move(&s!("g4g5"));
+            assert_eq!(hexchess.turn, Color::Black);
+            hexchess.apply_move(&s!("e7e6"));
+            assert_eq!(hexchess.turn, Color::White);
+            hexchess.apply_move(&s!("f5f6"));
+            assert_eq!(hexchess.turn, Color::Black);
+        }
+
+        #[test]
         fn sets_and_unsets_en_passant() {
             let mut hexchess = Hexchess::init();
 
@@ -666,6 +679,34 @@ mod tests {
 
             hexchess.apply_move(&s!("b1b2"));
             assert_eq!(hexchess.ep, None);
+        }
+
+        #[test]
+        fn sets_halfmove_and_fullmove() {
+            let mut hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.fullmove, 1);
+
+            hexchess.apply_move(&s!("c2c4"));
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.fullmove, 1);
+
+            hexchess.apply_move(&s!("b7b5"));
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.fullmove, 2);
+
+            hexchess.apply_move(&s!("c1c3"));
+            assert_eq!(hexchess.halfmove, 1);
+            assert_eq!(hexchess.fullmove, 2);
+
+            hexchess.apply_move(&s!("i8i6"));
+            assert_eq!(hexchess.halfmove, 2);
+            assert_eq!(hexchess.fullmove, 3);
+
+            hexchess.apply_move(&s!("c3i6"));
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.fullmove, 3);
         }
 
         // cannot step out of pin
