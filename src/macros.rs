@@ -93,3 +93,10 @@ macro_rules! h {
     ("k1") => { 89 };
     ("l1") => { 90 };
 }
+
+#[macro_export]
+macro_rules! s {
+    ($expression:expr) => {
+        crate::hexchess::san::San::from(&$expression.to_string()).unwrap()
+    };
+}
