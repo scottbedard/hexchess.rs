@@ -167,6 +167,22 @@ impl Hexchess {
         }
     }
 
+    /// find a king
+    pub fn find_king(&self, color: Color) -> Option<u8> {
+        let king = match color {
+            Color::Black => Piece::BlackKing,
+            Color::White => Piece::WhiteKing,
+        };
+
+        for (index, piece) in self.board.iter().enumerate() {
+            if piece == &Some(king) {
+                return Some(index as u8);
+            }
+        }
+
+        None
+    }
+
     /// create hexchess instance from fen
     pub fn from(source: &str) -> Result<Self, String> {
         let mut parts = source.split_whitespace();
@@ -715,5 +731,13 @@ mod tests {
         // black cannot promote on white's promotion positions
 
         // out of turn error
+    }
+
+    #[test]
+    fn find_kings_by_color() {
+        let hexchess = Hexchess::init();
+
+        assert_eq!(hexchess.find_king(Color::Black), Some(h!("g10")));
+        assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
     }
 }
