@@ -546,4 +546,16 @@ mod tests {
 
         assert_eq!(Some(Piece::BlackPawn), hexchess.board[hex!("a5")]);
     }
+
+    // test('en passant unsets on next move', () => {
+    //     const hexchess = new Hexchess('1/3/5/7/8p/11/11/11/11/11/1P9 w - 0 1')
+
+    //     hexchess.apply('b1b3')
+
+    //     expect(hexchess.ep).toEqual('b2')
+
+    //     hexchess.apply('k7k6')
+
+    //     expect(hexchess.ep).toEqual(null)
+    // })
 }
