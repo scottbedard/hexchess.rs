@@ -1,4 +1,4 @@
-use crate::hex;
+use crate::h;
 use crate::hexchess::hexchess::Hexchess;
 use crate::hexchess::san::San;
 
@@ -92,31 +92,31 @@ fn capture(hexchess: &Hexchess, from: u8, capture_direction: u8, friendly_color:
 fn is_promotion_position(position: u8, color: Color) -> bool {
     match color {
         Color::Black => match position {
-            hex!("a1") |
-            hex!("b1") |
-            hex!("c1") |
-            hex!("d1") |
-            hex!("e1") |
-            hex!("f1") |
-            hex!("g1") |
-            hex!("h1") |
-            hex!("i1") |
-            hex!("k1") |
-            hex!("l1") => true,
+            h!("a1") |
+            h!("b1") |
+            h!("c1") |
+            h!("d1") |
+            h!("e1") |
+            h!("f1") |
+            h!("g1") |
+            h!("h1") |
+            h!("i1") |
+            h!("k1") |
+            h!("l1") => true,
             _ => false,
         },
         Color::White => match position {
-            hex!("a6") |
-            hex!("b7") |
-            hex!("c8") |
-            hex!("d9") |
-            hex!("e10") |
-            hex!("f11") |
-            hex!("g10") |
-            hex!("h9") |
-            hex!("i8") |
-            hex!("k7") |
-            hex!("l6") => true,
+            h!("a6") |
+            h!("b7") |
+            h!("c8") |
+            h!("d9") |
+            h!("e10") |
+            h!("f11") |
+            h!("g10") |
+            h!("h9") |
+            h!("i8") |
+            h!("k7") |
+            h!("l6") => true,
             _ => false,
         }
     }
@@ -125,27 +125,27 @@ fn is_promotion_position(position: u8, color: Color) -> bool {
 fn is_starting_position(position: u8, color: Color) -> bool {
     match color {
         Color::Black => match position {
-            hex!("b7") |
-            hex!("c7") |
-            hex!("d7") |
-            hex!("e7") |
-            hex!("f7") |
-            hex!("g7") |
-            hex!("h7") |
-            hex!("i7") |
-            hex!("k7") => true,
+            h!("b7") |
+            h!("c7") |
+            h!("d7") |
+            h!("e7") |
+            h!("f7") |
+            h!("g7") |
+            h!("h7") |
+            h!("i7") |
+            h!("k7") => true,
             _ => false,
         },
         Color::White => match position {
-            hex!("b1") |
-            hex!("c2") |
-            hex!("d3") |
-            hex!("e4") |
-            hex!("f5") |
-            hex!("g4") |
-            hex!("h3") |
-            hex!("i2") |
-            hex!("k1") => true,
+            h!("b1") |
+            h!("c2") |
+            h!("d3") |
+            h!("e4") |
+            h!("f5") |
+            h!("g4") |
+            h!("h3") |
+            h!("i2") |
+            h!("k1") => true,
             _ => false,
         }
     }
@@ -168,53 +168,53 @@ fn push_moves(
 
 #[cfg(test)]
 mod tests {
-    use crate::hex;
+    use crate::h;
     use super::*;
 
     #[test]
     fn black_starting_pawns() {
-        let b7 = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(hex!("b7"));
-        assert_eq!(b7[0], San { from: hex!("b7"), promotion: None, to: hex!("b6") });
-        assert_eq!(b7[1], San { from: hex!("b7"), promotion: None, to: hex!("b5") });
+        let b7 = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(h!("b7"));
+        assert_eq!(b7[0], San { from: h!("b7"), promotion: None, to: h!("b6") });
+        assert_eq!(b7[1], San { from: h!("b7"), promotion: None, to: h!("b5") });
 
-        let c7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(hex!("c7"));
-        assert_eq!(c7[0], San { from: hex!("c7"), promotion: None, to: hex!("c6") });
-        assert_eq!(c7[1], San { from: hex!("c7"), promotion: None, to: hex!("c5") });
+        let c7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(h!("c7"));
+        assert_eq!(c7[0], San { from: h!("c7"), promotion: None, to: h!("c6") });
+        assert_eq!(c7[1], San { from: h!("c7"), promotion: None, to: h!("c5") });
 
-        let d7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(hex!("d7"));
-        assert_eq!(d7[0], San { from: hex!("d7"), promotion: None, to: hex!("d6") });
-        assert_eq!(d7[1], San { from: hex!("d7"), promotion: None, to: hex!("d5") });
+        let d7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(h!("d7"));
+        assert_eq!(d7[0], San { from: h!("d7"), promotion: None, to: h!("d6") });
+        assert_eq!(d7[1], San { from: h!("d7"), promotion: None, to: h!("d5") });
 
-        let e7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(hex!("e7"));
-        assert_eq!(e7[0], San { from: hex!("e7"), promotion: None, to: hex!("e6") });
-        assert_eq!(e7[1], San { from: hex!("e7"), promotion: None, to: hex!("e5") });
+        let e7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(h!("e7"));
+        assert_eq!(e7[0], San { from: h!("e7"), promotion: None, to: h!("e6") });
+        assert_eq!(e7[1], San { from: h!("e7"), promotion: None, to: h!("e5") });
 
-        let f7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(hex!("f7"));
-        assert_eq!(f7[0], San { from: hex!("f7"), promotion: None, to: hex!("f6") });
-        assert_eq!(f7[1], San { from: hex!("f7"), promotion: None, to: hex!("f5") });
+        let f7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(h!("f7"));
+        assert_eq!(f7[0], San { from: h!("f7"), promotion: None, to: h!("f6") });
+        assert_eq!(f7[1], San { from: h!("f7"), promotion: None, to: h!("f5") });
 
-        let g7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(hex!("g7"));
-        assert_eq!(g7[0], San { from: hex!("g7"), promotion: None, to: hex!("g6") });
-        assert_eq!(g7[1], San { from: hex!("g7"), promotion: None, to: hex!("g5") });
+        let g7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(h!("g7"));
+        assert_eq!(g7[0], San { from: h!("g7"), promotion: None, to: h!("g6") });
+        assert_eq!(g7[1], San { from: h!("g7"), promotion: None, to: h!("g5") });
 
-        let h7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(hex!("h7"));
-        assert_eq!(h7[0], San { from: hex!("h7"), promotion: None, to: hex!("h6") });
-        assert_eq!(h7[1], San { from: hex!("h7"), promotion: None, to: hex!("h5") });
+        let h7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(h!("h7"));
+        assert_eq!(h7[0], San { from: h!("h7"), promotion: None, to: h!("h6") });
+        assert_eq!(h7[1], San { from: h!("h7"), promotion: None, to: h!("h5") });
 
-        let i7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(hex!("i7"));
-        assert_eq!(i7[0], San { from: hex!("i7"), promotion: None, to: hex!("i6") });
-        assert_eq!(i7[1], San { from: hex!("i7"), promotion: None, to: hex!("i5") });
+        let i7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(h!("i7"));
+        assert_eq!(i7[0], San { from: h!("i7"), promotion: None, to: h!("i6") });
+        assert_eq!(i7[1], San { from: h!("i7"), promotion: None, to: h!("i5") });
 
-        let k7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(hex!("k7"));
-        assert_eq!(k7[0], San { from: hex!("k7"), promotion: None, to: hex!("k6") });
-        assert_eq!(k7[1], San { from: hex!("k7"), promotion: None, to: hex!("k5") });
+        let k7: Vec<San> = Hexchess::from("1/3/5/7/ppppppppp/11/11/11/11/11/11 b - 0 1").unwrap().moves_from(h!("k7"));
+        assert_eq!(k7[0], San { from: h!("k7"), promotion: None, to: h!("k6") });
+        assert_eq!(k7[1], San { from: h!("k7"), promotion: None, to: h!("k5") });
     }
 
     #[test]
     fn black_blocked_friendly() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4p4/5p5/11/11/11/11/11 b - 0 1")
             .unwrap()
-            .moves_from(hex!("f7"));
+            .moves_from(h!("f7"));
 
         assert_eq!(result.len(), 0);
     }
@@ -223,17 +223,17 @@ mod tests {
     fn black_blocked_friendly_double() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4p4/11/5p5/11/11/11/11 b - 0 1")
             .unwrap()
-            .moves_from(hex!("f7"));
+            .moves_from(h!("f7"));
 
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0], San { from: hex!("f7"), promotion: None, to: hex!("f6") });
+        assert_eq!(result[0], San { from: h!("f7"), promotion: None, to: h!("f6") });
     }
 
     #[test]
     fn black_blocked_hostile() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4p4/5P5/11/11/11/11/11 b - 0 1")
             .unwrap()
-            .moves_from(hex!("f7"));
+            .moves_from(h!("f7"));
 
         assert_eq!(result.len(), 0);
     }
@@ -242,56 +242,56 @@ mod tests {
     fn black_blocked_hostile_double() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4p4/11/5P5/11/11/11/11 b - 0 1")
             .unwrap()
-            .moves_from(hex!("f7"));
+            .moves_from(h!("f7"));
 
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0], San { from: hex!("f7"), promotion: None, to: hex!("f6") });
+        assert_eq!(result[0], San { from: h!("f7"), promotion: None, to: h!("f6") });
     }
 
     #[test]
     fn white_starting_pawns() {
-        let f5: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(hex!("f5"));
-        assert_eq!(f5[0], San { from: hex!("f5"), promotion: None, to: hex!("f6") });
-        assert_eq!(f5[1], San { from: hex!("f5"), promotion: None, to: hex!("f7") });
+        let f5: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(h!("f5"));
+        assert_eq!(f5[0], San { from: h!("f5"), promotion: None, to: h!("f6") });
+        assert_eq!(f5[1], San { from: h!("f5"), promotion: None, to: h!("f7") });
 
-        let e4: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(hex!("e4"));
-        assert_eq!(e4[0], San { from: hex!("e4"), promotion: None, to: hex!("e5") });
-        assert_eq!(e4[1], San { from: hex!("e4"), promotion: None, to: hex!("e6") });
+        let e4: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(h!("e4"));
+        assert_eq!(e4[0], San { from: h!("e4"), promotion: None, to: h!("e5") });
+        assert_eq!(e4[1], San { from: h!("e4"), promotion: None, to: h!("e6") });
 
-        let g4: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(hex!("g4"));
-        assert_eq!(g4[0], San { from: hex!("g4"), promotion: None, to: hex!("g5") });
-        assert_eq!(g4[1], San { from: hex!("g4"), promotion: None, to: hex!("g6") });
+        let g4: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(h!("g4"));
+        assert_eq!(g4[0], San { from: h!("g4"), promotion: None, to: h!("g5") });
+        assert_eq!(g4[1], San { from: h!("g4"), promotion: None, to: h!("g6") });
 
-        let d3: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(hex!("d3"));
-        assert_eq!(d3[0], San { from: hex!("d3"), promotion: None, to: hex!("d4") });
-        assert_eq!(d3[1], San { from: hex!("d3"), promotion: None, to: hex!("d5") });
+        let d3: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(h!("d3"));
+        assert_eq!(d3[0], San { from: h!("d3"), promotion: None, to: h!("d4") });
+        assert_eq!(d3[1], San { from: h!("d3"), promotion: None, to: h!("d5") });
 
-        let h3: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(hex!("h3"));
-        assert_eq!(h3[0], San { from: hex!("h3"), promotion: None, to: hex!("h4") });
-        assert_eq!(h3[1], San { from: hex!("h3"), promotion: None, to: hex!("h5") });
+        let h3: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(h!("h3"));
+        assert_eq!(h3[0], San { from: h!("h3"), promotion: None, to: h!("h4") });
+        assert_eq!(h3[1], San { from: h!("h3"), promotion: None, to: h!("h5") });
 
-        let c2: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(hex!("c2"));
-        assert_eq!(c2[0], San { from: hex!("c2"), promotion: None, to: hex!("c3") });
-        assert_eq!(c2[1], San { from: hex!("c2"), promotion: None, to: hex!("c4") });
+        let c2: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(h!("c2"));
+        assert_eq!(c2[0], San { from: h!("c2"), promotion: None, to: h!("c3") });
+        assert_eq!(c2[1], San { from: h!("c2"), promotion: None, to: h!("c4") });
 
-        let i2: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(hex!("i2"));
-        assert_eq!(i2[0], San { from: hex!("i2"), promotion: None, to: hex!("i3") });
-        assert_eq!(i2[1], San { from: hex!("i2"), promotion: None, to: hex!("i4") });
+        let i2: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(h!("i2"));
+        assert_eq!(i2[0], San { from: h!("i2"), promotion: None, to: h!("i3") });
+        assert_eq!(i2[1], San { from: h!("i2"), promotion: None, to: h!("i4") });
 
-        let b1: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(hex!("b1"));
-        assert_eq!(b1[0], San { from: hex!("b1"), promotion: None, to: hex!("b2") });
-        assert_eq!(b1[1], San { from: hex!("b1"), promotion: None, to: hex!("b3") });
+        let b1: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(h!("b1"));
+        assert_eq!(b1[0], San { from: h!("b1"), promotion: None, to: h!("b2") });
+        assert_eq!(b1[1], San { from: h!("b1"), promotion: None, to: h!("b3") });
 
-        let k1: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(hex!("k1"));
-        assert_eq!(k1[0], San { from: hex!("k1"), promotion: None, to: hex!("k2") });
-        assert_eq!(k1[1], San { from: hex!("k1"), promotion: None, to: hex!("k3") });
+        let k1: Vec<San> = Hexchess::from("1/3/5/7/9/11/5P5/4P1P4/3P3P3/2P5P2/1P7P1 w - 0 1").unwrap().moves_from(h!("k1"));
+        assert_eq!(k1[0], San { from: h!("k1"), promotion: None, to: h!("k2") });
+        assert_eq!(k1[1], San { from: h!("k1"), promotion: None, to: h!("k3") });
     }
 
     #[test]
     fn white_blocked_friendly() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/9/5P5/5P5/11/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f5"));
+            .moves_from(h!("f5"));
 
         assert_eq!(result.len(), 0);
     }
@@ -300,17 +300,17 @@ mod tests {
     fn white_blocked_friendly_double() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4P4/11/5P5/11/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f5"));
+            .moves_from(h!("f5"));
 
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0], San { from: hex!("f5"), promotion: None, to: hex!("f6") });
+        assert_eq!(result[0], San { from: h!("f5"), promotion: None, to: h!("f6") });
     }
 
     #[test]
     fn white_blocked_hostile() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/9/5p5/5P5/11/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f5"));
+            .moves_from(h!("f5"));
 
         assert_eq!(result.len(), 0);
     }
@@ -319,75 +319,75 @@ mod tests {
     fn white_blocked_hostile_double() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4p4/11/5P5/11/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f5"));
+            .moves_from(h!("f5"));
 
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0], San { from: hex!("f5"), promotion: None, to: hex!("f6") });
+        assert_eq!(result[0], San { from: h!("f5"), promotion: None, to: h!("f6") });
     }
 
     #[test]
     fn black_capture() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/9/5p5/4P1P4/11/11/11/11 b - 0 1")
             .unwrap()
-            .moves_from(hex!("f6"));
+            .moves_from(h!("f6"));
 
         assert_eq!(result.len(), 3);
-        assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f5") });
-        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("g5") });
-        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("e5") });
+        assert_eq!(result[0], San { from: h!("f6"), promotion: None, to: h!("f5") });
+        assert_eq!(result[1], San { from: h!("f6"), promotion: None, to: h!("g5") });
+        assert_eq!(result[2], San { from: h!("f6"), promotion: None, to: h!("e5") });
     }
 
     #[test]
     fn black_capture_blocked() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/9/5p5/4p1p4/11/11/11/11 b - 0 1")
             .unwrap()
-            .moves_from(hex!("f6"));
+            .moves_from(h!("f6"));
 
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f5") });
+        assert_eq!(result[0], San { from: h!("f6"), promotion: None, to: h!("f5") });
     }
 
     #[test]
     fn white_capture() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/9/4pPp4/11/11/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f6"));
+            .moves_from(h!("f6"));
 
         assert_eq!(result.len(), 3);
-        assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
-        assert_eq!(result[1], San { from: hex!("f6"), promotion: None, to: hex!("e6") });
-        assert_eq!(result[2], San { from: hex!("f6"), promotion: None, to: hex!("g6") });
+        assert_eq!(result[0], San { from: h!("f6"), promotion: None, to: h!("f7") });
+        assert_eq!(result[1], San { from: h!("f6"), promotion: None, to: h!("e6") });
+        assert_eq!(result[2], San { from: h!("f6"), promotion: None, to: h!("g6") });
     }
 
     #[test]
     fn white_capture_blocked() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/9/4PPP4/11/11/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f6"));
+            .moves_from(h!("f6"));
 
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0], San { from: hex!("f6"), promotion: None, to: hex!("f7") });
+        assert_eq!(result[0], San { from: h!("f6"), promotion: None, to: h!("f7") });
     }
 
     #[test]
     fn black_en_passant_portside() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4P4/4p6/11/11/11/11/11 b f6 0 1")
             .unwrap()
-            .moves_from(hex!("e6"));
+            .moves_from(h!("e6"));
 
         assert_eq!(result.len(), 2);
-        assert_eq!(result[0], San { from: hex!("e6"), promotion: None, to: hex!("e5") });
-        assert_eq!(result[1], San { from: hex!("e6"), promotion: None, to: hex!("f6") });
+        assert_eq!(result[0], San { from: h!("e6"), promotion: None, to: h!("e5") });
+        assert_eq!(result[1], San { from: h!("e6"), promotion: None, to: h!("f6") });
     }
     
     #[test]
     fn black_en_passant_portside_out_of_turn() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4P4/4p6/11/11/11/11/11 w f6 0 1")
             .unwrap()
-            .moves_from(hex!("e6"));
+            .moves_from(h!("e6"));
 
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0], San { from: hex!("e6"), promotion: None, to: hex!("e5") });
+        assert_eq!(result[0], San { from: h!("e6"), promotion: None, to: h!("e5") });
         // f6 is out of turn
     }
 
@@ -395,21 +395,21 @@ mod tests {
     fn black_en_passant_starboard() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4P4/6p4/11/11/11/11/11 b f6 0 1")
             .unwrap()
-            .moves_from(hex!("g6"));
+            .moves_from(h!("g6"));
 
         assert_eq!(result.len(), 2);
-        assert_eq!(result[0], San { from: hex!("g6"), promotion: None, to: hex!("g5") });
-        assert_eq!(result[1], San { from: hex!("g6"), promotion: None, to: hex!("f6") });
+        assert_eq!(result[0], San { from: h!("g6"), promotion: None, to: h!("g5") });
+        assert_eq!(result[1], San { from: h!("g6"), promotion: None, to: h!("f6") });
     }
 
     #[test]
     fn black_en_passant_starboard_out_of_turn() {
         let result: Vec<San> = Hexchess::from("1/3/5/7/4P4/6p4/11/11/11/11/11 w f6 0 1")
             .unwrap()
-            .moves_from(hex!("g6"));
+            .moves_from(h!("g6"));
 
         assert_eq!(result.len(), 1);
-        assert_eq!(result[0], San { from: hex!("g6"), promotion: None, to: hex!("g5") });
+        assert_eq!(result[0], San { from: h!("g6"), promotion: None, to: h!("g5") });
         // f6 is out of turn
     }
 
@@ -417,77 +417,77 @@ mod tests {
     fn promote_black_forward() {
         let result = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/11 b - 0 1")
             .unwrap()
-            .moves_from(hex!("f2"));
+            .moves_from(h!("f2"));
 
         assert_eq!(result.len(), 4);
-        assert_eq!(result[0], San { from: hex!("f2"), promotion: Some(PromotionPiece::Bishop), to: hex!("f1") });
-        assert_eq!(result[1], San { from: hex!("f2"), promotion: Some(PromotionPiece::Knight), to: hex!("f1") });
-        assert_eq!(result[2], San { from: hex!("f2"), promotion: Some(PromotionPiece::Queen), to: hex!("f1") });
-        assert_eq!(result[3], San { from: hex!("f2"), promotion: Some(PromotionPiece::Rook), to: hex!("f1") });
+        assert_eq!(result[0], San { from: h!("f2"), promotion: Some(PromotionPiece::Bishop), to: h!("f1") });
+        assert_eq!(result[1], San { from: h!("f2"), promotion: Some(PromotionPiece::Knight), to: h!("f1") });
+        assert_eq!(result[2], San { from: h!("f2"), promotion: Some(PromotionPiece::Queen), to: h!("f1") });
+        assert_eq!(result[3], San { from: h!("f2"), promotion: Some(PromotionPiece::Rook), to: h!("f1") });
     }
 
     #[test]
     fn promote_black_capture_portside() {
         let result = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/4rrK4 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f2"));
+            .moves_from(h!("f2"));
 
         assert_eq!(result.len(), 4);
-        assert_eq!(result[0], San { from: hex!("f2"), promotion: Some(PromotionPiece::Bishop), to: hex!("g1") });
-        assert_eq!(result[1], San { from: hex!("f2"), promotion: Some(PromotionPiece::Knight), to: hex!("g1") });
-        assert_eq!(result[2], San { from: hex!("f2"), promotion: Some(PromotionPiece::Queen), to: hex!("g1") });
-        assert_eq!(result[3], San { from: hex!("f2"), promotion: Some(PromotionPiece::Rook), to: hex!("g1") });
+        assert_eq!(result[0], San { from: h!("f2"), promotion: Some(PromotionPiece::Bishop), to: h!("g1") });
+        assert_eq!(result[1], San { from: h!("f2"), promotion: Some(PromotionPiece::Knight), to: h!("g1") });
+        assert_eq!(result[2], San { from: h!("f2"), promotion: Some(PromotionPiece::Queen), to: h!("g1") });
+        assert_eq!(result[3], San { from: h!("f2"), promotion: Some(PromotionPiece::Rook), to: h!("g1") });
     }
 
     #[test]
     fn promote_black_capture_starboard() {
         let result = Hexchess::from("1/3/5/7/9/11/11/11/11/5p5/4Krr4 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f2"));
+            .moves_from(h!("f2"));
 
         assert_eq!(result.len(), 4);
-        assert_eq!(result[0], San { from: hex!("f2"), promotion: Some(PromotionPiece::Bishop), to: hex!("e1") });
-        assert_eq!(result[1], San { from: hex!("f2"), promotion: Some(PromotionPiece::Knight), to: hex!("e1") });
-        assert_eq!(result[2], San { from: hex!("f2"), promotion: Some(PromotionPiece::Queen), to: hex!("e1") });
-        assert_eq!(result[3], San { from: hex!("f2"), promotion: Some(PromotionPiece::Rook), to: hex!("e1") });
+        assert_eq!(result[0], San { from: h!("f2"), promotion: Some(PromotionPiece::Bishop), to: h!("e1") });
+        assert_eq!(result[1], San { from: h!("f2"), promotion: Some(PromotionPiece::Knight), to: h!("e1") });
+        assert_eq!(result[2], San { from: h!("f2"), promotion: Some(PromotionPiece::Queen), to: h!("e1") });
+        assert_eq!(result[3], San { from: h!("f2"), promotion: Some(PromotionPiece::Rook), to: h!("e1") });
     }
     
     #[test]
     fn promote_white_forward() {
         let result = Hexchess::from("1/1P1/5/7/9/11/11/11/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f10"));
+            .moves_from(h!("f10"));
 
         assert_eq!(result.len(), 4);
-        assert_eq!(result[0], San { from: hex!("f10"), promotion: Some(PromotionPiece::Bishop), to: hex!("f11") });
-        assert_eq!(result[1], San { from: hex!("f10"), promotion: Some(PromotionPiece::Knight), to: hex!("f11") });
-        assert_eq!(result[2], San { from: hex!("f10"), promotion: Some(PromotionPiece::Queen), to: hex!("f11") });
-        assert_eq!(result[3], San { from: hex!("f10"), promotion: Some(PromotionPiece::Rook), to: hex!("f11") });
+        assert_eq!(result[0], San { from: h!("f10"), promotion: Some(PromotionPiece::Bishop), to: h!("f11") });
+        assert_eq!(result[1], San { from: h!("f10"), promotion: Some(PromotionPiece::Knight), to: h!("f11") });
+        assert_eq!(result[2], San { from: h!("f10"), promotion: Some(PromotionPiece::Queen), to: h!("f11") });
+        assert_eq!(result[3], San { from: h!("f10"), promotion: Some(PromotionPiece::Rook), to: h!("f11") });
     }
     
     #[test]
     fn promote_white_capture_portside() {
         let result = Hexchess::from("R/kPR/5/7/9/11/11/11/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f10"));
+            .moves_from(h!("f10"));
 
         assert_eq!(result.len(), 4);
-        assert_eq!(result[0], San { from: hex!("f10"), promotion: Some(PromotionPiece::Bishop), to: hex!("e10") });
-        assert_eq!(result[1], San { from: hex!("f10"), promotion: Some(PromotionPiece::Knight), to: hex!("e10") });
-        assert_eq!(result[2], San { from: hex!("f10"), promotion: Some(PromotionPiece::Queen), to: hex!("e10") });
-        assert_eq!(result[3], San { from: hex!("f10"), promotion: Some(PromotionPiece::Rook), to: hex!("e10") });
+        assert_eq!(result[0], San { from: h!("f10"), promotion: Some(PromotionPiece::Bishop), to: h!("e10") });
+        assert_eq!(result[1], San { from: h!("f10"), promotion: Some(PromotionPiece::Knight), to: h!("e10") });
+        assert_eq!(result[2], San { from: h!("f10"), promotion: Some(PromotionPiece::Queen), to: h!("e10") });
+        assert_eq!(result[3], San { from: h!("f10"), promotion: Some(PromotionPiece::Rook), to: h!("e10") });
     }
 
     #[test]
     fn promote_white_capture_starboard() {
         let result = Hexchess::from("R/RPk/5/7/9/11/11/11/11/11/11 w - 0 1")
             .unwrap()
-            .moves_from(hex!("f10"));
+            .moves_from(h!("f10"));
 
         assert_eq!(result.len(), 4);
-        assert_eq!(result[0], San { from: hex!("f10"), promotion: Some(PromotionPiece::Bishop), to: hex!("g10") });
-        assert_eq!(result[1], San { from: hex!("f10"), promotion: Some(PromotionPiece::Knight), to: hex!("g10") });
-        assert_eq!(result[2], San { from: hex!("f10"), promotion: Some(PromotionPiece::Queen), to: hex!("g10") });
-        assert_eq!(result[3], San { from: hex!("f10"), promotion: Some(PromotionPiece::Rook), to: hex!("g10") });
+        assert_eq!(result[0], San { from: h!("f10"), promotion: Some(PromotionPiece::Bishop), to: h!("g10") });
+        assert_eq!(result[1], San { from: h!("f10"), promotion: Some(PromotionPiece::Knight), to: h!("g10") });
+        assert_eq!(result[2], San { from: h!("f10"), promotion: Some(PromotionPiece::Queen), to: h!("g10") });
+        assert_eq!(result[3], San { from: h!("f10"), promotion: Some(PromotionPiece::Rook), to: h!("g10") });
     }
 }
