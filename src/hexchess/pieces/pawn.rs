@@ -61,12 +61,13 @@ pub fn pawn_moves_unsafe(
 }
 
 fn advance(hexchess: &Hexchess, start: u8, from: u8, forward_direction: u8) -> Option<San> {
-    match step(from, forward_direction) {
-        None => None,
-        Some(to) => match hexchess.board[to as usize] {
-            None => Some(San { from: start, promotion: None, to }),
-            Some(_) => None,
-        }
+    // we don't need to verify the step exists, because pawns cannot exist
+    // on the final rank without promoting. there will always be one more step.
+    let to = step(from, forward_direction).unwrap();
+
+    match hexchess.board[to as usize] {
+        None => Some(San { from: start, promotion: None, to }),
+        Some(_) => None,
     }
 }
 

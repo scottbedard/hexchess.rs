@@ -700,6 +700,19 @@ mod tests {
             assert_eq!(hexchess.is_legal(&k7l6), true);
             assert_eq!(hexchess.is_legal(&k7l6q), false);
         }
+
+        #[test]
+        fn pawn_must_promote_on_final_rank() {
+            let mut hexchess = Hexchess::from("1/1P1/5/7/9/11/11/11/11/5p5/11 w - 0 1").unwrap();
+
+            assert_eq!(hexchess.is_legal(&s!("f10f11")), false);
+            assert_eq!(hexchess.is_legal(&s!("f10f11q")), true);
+
+            hexchess.turn = Color::Black;
+
+            assert_eq!(hexchess.is_legal(&s!("f2f1")), false);
+            assert_eq!(hexchess.is_legal(&s!("f2f1q")), true);
+        }
     }
 
     mod is_threatened {
@@ -1055,7 +1068,7 @@ mod tests {
 
     }
 
-    mod rules {
+    mod self_check {
         use super::*;
 
         #[test]
