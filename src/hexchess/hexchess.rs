@@ -539,6 +539,43 @@ mod tests {
             assert_eq!(hexchess.halfmove, 0);
             assert_eq!(hexchess.fullmove, 3);
         }
+
+
+        // promote white pieces
+        #[test]
+        fn white_and_black_promotions() {
+            let mut hexchess = Hexchess::from("1/3/1P1P1/7/1P5P1/11/11/11/11/2p1p1p1p2/11 w - 0 1").unwrap();
+
+            hexchess.apply_move(&s!("c7c8r"));
+            assert_eq!(hexchess.board[h!("c8")], Some(Piece::WhiteRook));
+
+            hexchess.apply_move(&s!("c2c1r"));
+            assert_eq!(hexchess.board[h!("c1")], Some(Piece::BlackRook));
+
+            hexchess.apply_move(&s!("e9e10b"));
+            assert_eq!(hexchess.board[h!("e10")], Some(Piece::WhiteBishop));
+
+            hexchess.apply_move(&s!("e2e1b"));
+            assert_eq!(hexchess.board[h!("e1")], Some(Piece::BlackBishop));
+
+            hexchess.apply_move(&s!("g9g10q"));
+            assert_eq!(hexchess.board[h!("g10")], Some(Piece::WhiteQueen));
+
+            hexchess.apply_move(&s!("g2g1q"));
+            assert_eq!(hexchess.board[h!("g1")], Some(Piece::BlackQueen));
+
+            hexchess.apply_move(&s!("i7i8n"));
+            assert_eq!(hexchess.board[h!("i8")], Some(Piece::WhiteKnight));
+
+            hexchess.apply_move(&s!("i2i1n"));
+            assert_eq!(hexchess.board[h!("i1")], Some(Piece::BlackKnight));
+        }
+
+        // white cannot promote on black's promotion positions
+
+        // black cannot promote on white's promotion positions
+
+        // out of turn error
     }
 
     #[test]
@@ -932,16 +969,6 @@ mod tests {
 
             assert_eq!(moves.len(), 0);
         }
-
-        // promote white pieces
-
-        // promote black pieces
-
-        // white cannot promote on black's promotion positions
-
-        // black cannot promote on white's promotion positions
-
-        // out of turn error
     }
 
     mod to_string {
