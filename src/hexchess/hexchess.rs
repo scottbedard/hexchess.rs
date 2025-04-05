@@ -125,6 +125,23 @@ impl Hexchess {
         self
     }
 
+    /// get positions occupied by a color
+    pub fn get_color(&self, color: Color) -> Vec<u8> {
+        let mut result: Vec<u8> = vec![];
+
+        for (index, piece) in self.board.iter().enumerate() {
+            match piece {
+                Some(piece) => match get_color(piece) == color {
+                    true => result.push(index as u8),
+                    false => continue,
+                },
+                None => continue,
+            };
+        }
+
+        result
+    }
+
     /// get legal moves for current turn
     pub fn current_moves(&self) -> Vec<San> {
         let result: Vec<San> = vec![];
@@ -598,6 +615,32 @@ mod tests {
 
         assert_eq!(hexchess.find_king(Color::Black), Some(h!("g10")));
         assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
+    }
+
+    #[test]
+    fn get_color() {
+        let hexchess = Hexchess::init();
+        let results = hexchess.get_color(Color::Black);
+
+        assert_eq!(results.len(), 18);
+        assert_eq!(results[0], h!("f11"));
+        assert_eq!(results[1], h!("e10"));
+        assert_eq!(results[2], h!("f10"));
+        assert_eq!(results[3], h!("g10"));
+        assert_eq!(results[4], h!("d9"));
+        assert_eq!(results[5], h!("f9"));
+        assert_eq!(results[6], h!("h9"));
+        assert_eq!(results[7], h!("c8"));
+        assert_eq!(results[8], h!("i8"));
+        assert_eq!(results[9], h!("b7"));
+        assert_eq!(results[10], h!("c7"));
+        assert_eq!(results[11], h!("d7"));
+        assert_eq!(results[12], h!("e7"));
+        assert_eq!(results[13], h!("f7"));
+        assert_eq!(results[14], h!("g7"));
+        assert_eq!(results[15], h!("h7"));
+        assert_eq!(results[16], h!("i7"));
+        assert_eq!(results[17], h!("k7"));
     }
 
     mod is_legal {
