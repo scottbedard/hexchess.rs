@@ -59,7 +59,7 @@ fn knight_steps(hexchess: &Hexchess, from: u8, intermediate: u8, orthogonal: u8,
 
 #[cfg(test)]
 mod tests {
-    use crate::h;
+    use crate::{h, s};
     use super::*;
 
     #[test]
@@ -101,5 +101,20 @@ mod tests {
         assert_eq!(result[8], San { from: h!("f6"), promotion: None, to: h!("c5") });
         assert_eq!(result[9], San { from: h!("f6"), promotion: None, to: h!("d7") });
         assert_eq!(result[10], San { from: h!("f6"), promotion: None, to: h!("e8") }); // <- e8 is hostile
+    }
+
+    #[test]
+    fn near_edge_of_board() {
+        let result = Hexchess::from("1/1N1/5/7/9/11/11/11/11/11/11 w - 0 1")
+            .unwrap()
+            .moves_from(h!("f10"));
+
+        assert_eq!(result.len(), 6);
+        assert_eq!(result[0], s!("f10i8"));
+        assert_eq!(result[1], s!("f10h7"));
+        assert_eq!(result[2], s!("f10g7"));
+        assert_eq!(result[3], s!("f10e7"));
+        assert_eq!(result[4], s!("f10d7"));
+        assert_eq!(result[5], s!("f10c8"));
     }
 }
