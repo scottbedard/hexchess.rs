@@ -998,6 +998,20 @@ mod tests {
         }
 
         #[test]
+        fn multiple_black_kings() {
+            let hexchess = Hexchess::from("1/k1k/5/7/9/11/11/11/11/11/11 w - 0 1");
+            assert!(hexchess.is_err());
+            assert_eq!(hexchess.unwrap_err(), "multiple black kings");
+        }
+
+        #[test]
+        fn multiple_white_kings() {
+            let hexchess = Hexchess::from("1/K1K/5/7/9/11/11/11/11/11/11 w - 0 1");
+            assert!(hexchess.is_err());
+            assert_eq!(hexchess.unwrap_err(), "multiple white kings");
+        }
+    
+        #[test]
         fn missing_halfmove() {
             let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w -").unwrap();
 
