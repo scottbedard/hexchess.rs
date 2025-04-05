@@ -510,11 +510,11 @@ mod tests {
             let mut hexchess = Hexchess::init();
 
             assert_eq!(hexchess.turn, Color::White);
-            hexchess.apply_move(&s!("g4g5"));
+            let _ = hexchess.apply_move(&s!("g4g5"));
             assert_eq!(hexchess.turn, Color::Black);
-            hexchess.apply_move(&s!("e7e6"));
+            let _ = hexchess.apply_move(&s!("e7e6"));
             assert_eq!(hexchess.turn, Color::White);
-            hexchess.apply_move(&s!("f5f6"));
+            let _ = hexchess.apply_move(&s!("f5f6"));
             assert_eq!(hexchess.turn, Color::Black);
         }
 
@@ -566,28 +566,28 @@ mod tests {
         fn white_and_black_promotions() {
             let mut hexchess = Hexchess::from("1/3/1P1P1/7/1P5P1/11/11/11/11/2p1p1p1p2/11 w - 0 1").unwrap();
 
-            hexchess.apply_move(&s!("c7c8r"));
+            let _ = hexchess.apply_move(&s!("c7c8r"));
             assert_eq!(hexchess.board[h!("c8")], Some(Piece::WhiteRook));
 
-            hexchess.apply_move(&s!("c2c1r"));
+            let _ = hexchess.apply_move(&s!("c2c1r"));
             assert_eq!(hexchess.board[h!("c1")], Some(Piece::BlackRook));
 
-            hexchess.apply_move(&s!("e9e10b"));
+            let _ = hexchess.apply_move(&s!("e9e10b"));
             assert_eq!(hexchess.board[h!("e10")], Some(Piece::WhiteBishop));
 
-            hexchess.apply_move(&s!("e2e1b"));
+            let _ = hexchess.apply_move(&s!("e2e1b"));
             assert_eq!(hexchess.board[h!("e1")], Some(Piece::BlackBishop));
 
-            hexchess.apply_move(&s!("g9g10q"));
+            let _ = hexchess.apply_move(&s!("g9g10q"));
             assert_eq!(hexchess.board[h!("g10")], Some(Piece::WhiteQueen));
 
-            hexchess.apply_move(&s!("g2g1q"));
+            let _ = hexchess.apply_move(&s!("g2g1q"));
             assert_eq!(hexchess.board[h!("g1")], Some(Piece::BlackQueen));
 
-            hexchess.apply_move(&s!("i7i8n"));
+            let _ = hexchess.apply_move(&s!("i7i8n"));
             assert_eq!(hexchess.board[h!("i8")], Some(Piece::WhiteKnight));
 
-            hexchess.apply_move(&s!("i2i1n"));
+            let _ = hexchess.apply_move(&s!("i2i1n"));
             assert_eq!(hexchess.board[h!("i1")], Some(Piece::BlackKnight));
         }
     }
@@ -1065,7 +1065,7 @@ mod tests {
         fn with_en_passant() {
             let mut hexchess = Hexchess::init();
 
-            hexchess.apply_move(&s!("g4g6"));
+            let _ = hexchess.apply_move(&s!("g4g6"));
 
             assert_eq!(hexchess.to_string(), "b/qbk/n1b1n/r5r/ppppppppp/6P4/5P5/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 b g5 0 1");
         }
