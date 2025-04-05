@@ -632,6 +632,24 @@ mod tests {
         assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
     }
 
+    mod from {
+        use super::*;
+
+        #[test]
+        fn valid() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1");
+
+            assert!(hexchess.is_ok());
+        }
+
+        #[test]
+        fn invalid() {
+            let hexchess = Hexchess::from("whoops");
+
+            assert!(hexchess.is_err());
+        }
+    }
+
     #[test]
     fn get_color() {
         let hexchess = Hexchess::init();
