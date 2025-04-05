@@ -915,8 +915,23 @@ mod tests {
         }
 
         // cannot self check on opponent's turn
+        #[test]
+        fn cannot_self_check_on_opponents_turn() {
+            let hexchess    = Hexchess::from("1/3/5/7/4K4/5R5/5q5/11/11/11/11 b - 0 1").unwrap();
+            let moves = hexchess.moves_from(h!("f6"));
+
+            assert_eq!(moves.len(), 1);
+            assert_eq!(moves[0], s!("f6f5"));
+        }
 
         // king cannot step into check
+        #[test]
+        fn king_cannot_step_into_check() {
+            let hexchess = Hexchess::from("K/3/2q2/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+            let moves = hexchess.moves_from(h!("f11"));
+
+            assert_eq!(moves.len(), 0);
+        }
 
         // promote white pieces
 
