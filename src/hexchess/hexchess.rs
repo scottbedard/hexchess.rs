@@ -607,6 +607,21 @@ mod tests {
             let _ = hexchess.apply_move(&s!("i2i1n"));
             assert_eq!(hexchess.board[h!("i1")], Some(Piece::BlackKnight));
         }
+    
+        #[test]
+        fn errors_on_illegal_move() {
+            let mut hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.apply_move(&s!("a4a5")).is_err(), true);
+        }
+
+        #[test]
+        #[should_panic]
+        fn apply_move_unsafe_panics_on_empty_positions() {
+            let mut hexchess = Hexchess::init();
+
+            hexchess.apply_move_unsafe(&s!("a4a5"));
+        }
     }
 
     #[test]
@@ -755,6 +770,18 @@ mod tests {
             let hexchess = Hexchess::new();
 
             assert_eq!(hexchess.is_threatened(h!("f5")), false);
+        }
+    }
+
+    mod moves_from {
+        use super::*;
+
+        #[test]
+        fn returns_empty_vector_for_empty_position() {
+            let hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.moves_from(h!("a4")).len(), 0);
+            assert_eq!(hexchess.moves_from_unsafe(h!("a4")).len(), 0);
         }
     }
 
