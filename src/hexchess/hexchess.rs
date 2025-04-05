@@ -127,9 +127,11 @@ impl Hexchess {
 
     /// get legal moves for current turn
     pub fn current_moves(&self) -> Vec<San> {
-        let result: Vec<San> = vec![];
+        let mut result: Vec<San> = vec![];
 
-        // ...
+        for n in self.get_color(self.turn) {
+            result.extend(self.moves_from(n));
+        }
 
         result
     }
@@ -629,6 +631,65 @@ mod tests {
 
             hexchess.apply_move_unsafe(&s!("a4a5"));
         }
+    }
+
+    #[test]
+    fn test_current_moves() {
+        let hexchess = Hexchess::init();
+        let result = hexchess.current_moves().iter().map(|s| s.to_string()).collect::<Vec<String>>();
+
+        assert_eq!(result.len(), 51);
+        assert_eq!(result[0], "f5f6");
+        assert_eq!(result[1], "e4e5");
+        assert_eq!(result[2], "e4e6");
+        assert_eq!(result[3], "g4g5");
+        assert_eq!(result[4], "g4g6");
+        assert_eq!(result[5], "d3d4");
+        assert_eq!(result[6], "d3d5");
+        assert_eq!(result[7], "f3h2");
+        assert_eq!(result[8], "f3d2");
+        assert_eq!(result[9], "h3h4");
+        assert_eq!(result[10], "h3h5");
+        assert_eq!(result[11], "c2c3");
+        assert_eq!(result[12], "c2c4");
+        assert_eq!(result[13], "f2g3");
+        assert_eq!(result[14], "f2h4");
+        assert_eq!(result[15], "f2i5");
+        assert_eq!(result[16], "f2k6");
+        assert_eq!(result[17], "f2e3");
+        assert_eq!(result[18], "f2d4");
+        assert_eq!(result[19], "f2c5");
+        assert_eq!(result[20], "f2b6");
+        assert_eq!(result[21], "i2i3");
+        assert_eq!(result[22], "i2i4");
+        assert_eq!(result[23], "b1b2");
+        assert_eq!(result[24], "b1b3");
+        assert_eq!(result[25], "c1d2");
+        assert_eq!(result[26], "c1e3");
+        assert_eq!(result[27], "c1f4");
+        assert_eq!(result[28], "d1f4");
+        assert_eq!(result[29], "d1g2");
+        assert_eq!(result[30], "d1b2");
+        assert_eq!(result[31], "d1c3");
+        assert_eq!(result[32], "e1e2");
+        assert_eq!(result[33], "e1e3");
+        assert_eq!(result[34], "e1d2");
+        assert_eq!(result[35], "e1c3");
+        assert_eq!(result[36], "e1b4");
+        assert_eq!(result[37], "e1a5");
+        assert_eq!(result[38], "f1g2");
+        assert_eq!(result[39], "f1e2");
+        assert_eq!(result[40], "g1g2");
+        assert_eq!(result[41], "g1h2");
+        assert_eq!(result[42], "h1i3");
+        assert_eq!(result[43], "h1k2");
+        assert_eq!(result[44], "h1e2");
+        assert_eq!(result[45], "h1f4");
+        assert_eq!(result[46], "i1h2");
+        assert_eq!(result[47], "i1g3");
+        assert_eq!(result[48], "i1f4");
+        assert_eq!(result[49], "k1k2");
+        assert_eq!(result[50], "k1k3");
     }
 
     #[test]
