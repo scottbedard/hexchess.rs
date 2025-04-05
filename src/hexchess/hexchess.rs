@@ -701,12 +701,13 @@ mod tests {
     }
 
     #[test]
-    fn get() {
+    fn test_get() {
         let hexchess = Hexchess::init();
 
         assert_eq!(hexchess.get("g10"), Some(Piece::BlackKing));
         assert_eq!(hexchess.get("g1"), Some(Piece::WhiteKing));
         assert_eq!(hexchess.get("a4"), None);
+        assert_eq!(hexchess.get("whoops"), None);
     }
 
     #[test]
