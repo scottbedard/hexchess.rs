@@ -632,24 +632,6 @@ mod tests {
         assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
     }
 
-    mod from {
-        use super::*;
-
-        #[test]
-        fn valid() {
-            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1");
-
-            assert!(hexchess.is_ok());
-        }
-
-        #[test]
-        fn invalid() {
-            let hexchess = Hexchess::from("whoops");
-
-            assert!(hexchess.is_err());
-        }
-    }
-
     #[test]
     fn get_color() {
         let hexchess = Hexchess::init();
@@ -809,13 +791,13 @@ mod tests {
 
         #[test]
         fn empty_state() {
-        let hexchess = Hexchess::new();
-        
-        assert!(hexchess.board.iter().all(|&square| square.is_none()));
-        assert_eq!(hexchess.ep, None);
-        assert_eq!(hexchess.fullmove, 1);
-        assert_eq!(hexchess.halfmove, 0);
-        assert_eq!(hexchess.turn, Color::White);
+            let hexchess = Hexchess::new();
+            
+            assert!(hexchess.board.iter().all(|&square| square.is_none()));
+            assert_eq!(hexchess.ep, None);
+            assert_eq!(hexchess.fullmove, 1);
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.turn, Color::White);
         }
 
         #[test]
@@ -934,6 +916,13 @@ mod tests {
         }
 
         #[test]
+        fn invalid() {
+            let hexchess = Hexchess::from("whoops");
+
+            assert!(hexchess.is_err());
+        }
+
+        #[test]
         fn turn_color() {
             let white = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
 
@@ -1018,13 +1007,13 @@ mod tests {
 
         #[test]
         fn invalid_fullmove() {
-            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 x");
+            let invalid1 = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 x");
+            assert!(invalid1.is_err());
+            assert_eq!(invalid1.unwrap_err(), "invalid fullmove: x");
 
-            assert!(hexchess.is_err());
-            assert_eq!(
-                hexchess.unwrap_err(),
-                "invalid fullmove: x"
-            );
+            let invalid2 = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w - 0 0");
+            assert!(invalid2.is_err());
+            assert_eq!(invalid2.unwrap_err(), "invalid fullmove: 0");
         }
 
         #[test]
