@@ -202,6 +202,7 @@ pub fn to_index(source: &str) -> Result<u8, ()> {
     }
 }
 
+/// convert index to position name
 pub fn to_position(index: &u8) -> &'static str {
     match index {
         0 => "f11",
