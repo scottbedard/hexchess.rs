@@ -169,7 +169,7 @@ fn push_moves(
 
 #[cfg(test)]
 mod tests {
-    use crate::h;
+    use crate::{h, s};
     use super::*;
 
     #[test]
@@ -368,6 +368,19 @@ mod tests {
 
         assert_eq!(result.len(), 1);
         assert_eq!(result[0], San { from: h!("f6"), promotion: None, to: h!("f7") });
+    }
+
+    #[test]
+    fn test_capture_near_edge_of_board() {
+        let hexchess = Hexchess::from("1/3/5/7/9/11/Rr9/P8Rp/10r/11/11 w - 0 1").unwrap();
+
+        let a4 = hexchess.moves_from(h!("a4"));
+        assert_eq!(a4.len(), 1);
+        assert_eq!(a4[0], s!("a4b5"));
+
+        let l4 = hexchess.moves_from(h!("l4"));
+        assert_eq!(l4.len(), 1);
+        assert_eq!(l4[0], s!("l4k4"));
     }
 
     #[test]
