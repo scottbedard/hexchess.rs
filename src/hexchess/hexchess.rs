@@ -276,6 +276,34 @@ impl Hexchess {
         Self::from(INITIAL_POSITION).unwrap()
     }
 
+    /// test of a position is threatened
+    pub fn is_threatened(&self, position: u8) -> bool {
+        let threatened_piece = match self.board[position as usize] {
+            Some(piece) => piece,
+            None => return false,
+        };
+
+        let color = get_color(&threatened_piece);
+
+        for n in 0u8..91u8 {
+            match self.board[n as usize] {
+                Some(piece) => match color == get_color(&piece) {
+                    true => continue,
+                    false => {
+                        for san in self.moves_from_unsafe(n) {
+                            if san.to == position {
+                                return true
+                            }
+                        }
+                    }
+                },
+                None => continue,
+            };
+        }
+
+        false
+    }
+
     /// format as fen string
     pub fn to_string(&self) -> String {
         format!(
@@ -537,6 +565,57 @@ mod tests {
         // black cannot promote on white's promotion positions
 
         // out of turn error
+    }
+
+    #[test]
+    fn find_kings_by_color() {
+        let hexchess = Hexchess::init();
+
+        assert_eq!(hexchess.find_king(Color::Black), Some(h!("g10")));
+        assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
+    }
+
+    mod is_threatened {
+        use super::*;
+
+        #[test]
+        fn unattacked_position_is_not_threatened() {
+            let hexchess = Hexchess::from("1/2K/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+
+            assert_eq!(hexchess.is_threatened(h!("g10")), false);
+        }
+
+        #[test]
+        fn threatened_by_enemy_piece() {
+            let hexchess = Hexchess::from("1/2K/5/7/9/11/11/11/11/11/6r4 w - 0 1").unwrap();
+
+            assert_eq!(hexchess.is_threatened(h!("g10")), true);
+        }
+        
+        #[test]
+        fn not_threatened_by_friendly_piece() {
+            let hexchess = Hexchess::from("1/2K/5/7/9/11/11/11/11/11/6R4 w - 0 1").unwrap();
+
+            assert_eq!(hexchess.is_threatened(h!("g10")), false);
+        }
+
+        #[test]
+        fn  position_is_threatened_in_and_out_of_turn() {
+            let mut hexchess = Hexchess::from("1/3/5/7/4q4/5K5/11/11/11/11/11 w - 0 1").unwrap();
+
+            hexchess.turn = Color::Black;
+            assert_eq!(hexchess.is_threatened(h!("f6")), true);
+
+            hexchess.turn = Color::White;
+            assert_eq!(hexchess.is_threatened(h!("f6")), true);
+        }
+
+        #[test]
+        fn unoccupied_position_is_not_threatened() {
+            let hexchess = Hexchess::new();
+
+            assert_eq!(hexchess.is_threatened(h!("f5")), false);
+        }
     }
 
     mod parsing {
@@ -847,14 +926,6 @@ mod tests {
             assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("a5")]);
         }
 
-    }
-
-    #[test]
-    fn find_kings_by_color() {
-        let hexchess = Hexchess::init();
-
-        assert_eq!(hexchess.find_king(Color::Black), Some(h!("g10")));
-        assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
     }
 
     mod to_string {
