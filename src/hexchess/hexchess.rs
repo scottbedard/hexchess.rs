@@ -393,10 +393,9 @@ fn parse_board(source: &String) -> Result<[Option<Piece>; 91], String> {
             '8' => fen_index += 8,
             '9' => fen_index += 9,
             'b' | 'B' | 'n' | 'N' | 'p' | 'P' | 'Q' | 'q' | 'r' | 'R' => {
-                arr[fen_index as usize] = match to_piece(current) {
-                    Ok(piece) => Some(piece),
-                    Err(_) => return Err(format!("invalid piece at index {}: {}", index, current)),
-                };
+                // // it's safe to unwrap current because our match already checks for it
+                arr[fen_index as usize] = Some(to_piece(current).unwrap());
+
                 fen_index += 1;
             }
             'k' => {
