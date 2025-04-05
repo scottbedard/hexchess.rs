@@ -140,8 +140,15 @@ impl Hexchess {
         self.moves_from_unsafe(from)
             .into_iter()
             .filter(|san| {
-                let c = self.clone();
-                true
+                // prevent self check
+                let mut clone = self.clone();
+
+                clone.apply_move_unsafe(san);
+                
+                match clone.find_king(color) {
+                    Some(king) => !clone.is_threatened(king),
+                    None => false,
+                }
             })
             .collect()
     }
@@ -532,39 +539,6 @@ mod tests {
             assert_eq!(hexchess.halfmove, 0);
             assert_eq!(hexchess.fullmove, 3);
         }
-
-        #[test]
-        fn cannot_step_out_of_pin() {
-            // let hexchess = Hexchess::from("1/3/5/7/4K4/5R5/5q5/11/11/11/11 w - 0 1").unwrap();
-
-            // let moves = hexchess.moves_from(h!("f6"));
-            // assert_eq!(moves.len(), 0);
-            // assert_eq!(moves[0], s!("f6f5"));
-
-            // const hexchess = new Hexchess()
-            // hexchess.board.f7 = 'K'
-            // hexchess.board.f6 = 'R'
-            // hexchess.board.f5 = 'q'
-
-            // const moves = hexchess.moves('f6')
-
-            // expect(moves.length).toBe(1)
-            // expect(moves[0].to).toBe('f5')
-        }
-
-        // cannot self check on opponent's turn
-
-        // king cannot step into check
-
-        // promote white pieces
-
-        // promote black pieces
-
-        // white cannot promote on black's promotion positions
-
-        // black cannot promote on white's promotion positions
-
-        // out of turn error
     }
 
     #[test]
@@ -926,6 +900,33 @@ mod tests {
             assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("a5")]);
         }
 
+    }
+
+    mod rules {
+        use super::*;
+
+        #[test]
+        fn cannot_step_out_of_a_pin() {
+            let hexchess = Hexchess::from("1/3/5/7/4K4/5R5/5q5/11/11/11/11 w - 0 1").unwrap();
+
+            let moves = hexchess.moves_from(h!("f6"));
+            assert_eq!(moves.len(), 1);
+            assert_eq!(moves[0], s!("f6f5"));
+        }
+
+        // cannot self check on opponent's turn
+
+        // king cannot step into check
+
+        // promote white pieces
+
+        // promote black pieces
+
+        // white cannot promote on black's promotion positions
+
+        // black cannot promote on white's promotion positions
+
+        // out of turn error
     }
 
     mod to_string {
