@@ -1181,6 +1181,14 @@ mod tests {
         assert_eq!(to_piece('R'), Ok(Piece::WhiteRook));
     }
 
+    #[test]
+    fn test_to_piece_invalid() {
+        assert_eq!(to_piece('x'), Err("invalid_piece_character"));
+        assert_eq!(to_piece('1'), Err("invalid_piece_character"));
+        assert_eq!(to_piece('/'), Err("invalid_piece_character"));
+        assert_eq!(to_piece(' '), Err("invalid_piece_character"));
+    }
+
     mod to_string {
         use super::*;
 
