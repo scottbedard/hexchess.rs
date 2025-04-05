@@ -125,6 +125,23 @@ impl Hexchess {
         self
     }
 
+    /// get legal moves for current turn
+    pub fn current_moves(&self) -> Vec<San> {
+        let result: Vec<San> = vec![];
+
+        // ...
+
+        result
+    }
+
+    /// get piece at position
+    pub fn get(&self, position: &str) -> Option<Piece> {
+        match to_index(position) {
+            Ok(index) => self.board[index as usize],
+            Err(_) => None,
+        }
+    }
+
     /// get positions occupied by a color
     pub fn get_color(&self, color: Color) -> Vec<u8> {
         let mut result: Vec<u8> = vec![];
@@ -138,15 +155,6 @@ impl Hexchess {
                 None => continue,
             };
         }
-
-        result
-    }
-
-    /// get legal moves for current turn
-    pub fn current_moves(&self) -> Vec<San> {
-        let result: Vec<San> = vec![];
-
-        // ...
 
         result
     }
@@ -629,6 +637,15 @@ mod tests {
 
         assert_eq!(hexchess.find_king(Color::Black), Some(h!("g10")));
         assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
+    }
+
+    #[test]
+    fn get() {
+        let hexchess = Hexchess::init();
+
+        assert_eq!(hexchess.get("g10"), Some(Piece::BlackKing));
+        assert_eq!(hexchess.get("g1"), Some(Piece::WhiteKing));
+        assert_eq!(hexchess.get("a4"), None);
     }
 
     #[test]
