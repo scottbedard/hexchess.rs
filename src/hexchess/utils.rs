@@ -337,6 +337,107 @@ pub fn walk(hexchess: &Hexchess, from: u8, direction: u8, color: &Color) -> Vec<
 mod tests {
     use super::*;
 
+    #[test]
+    fn test_to_position() {
+        assert_eq!(to_position(&0), "f11");
+        assert_eq!(to_position(&1), "e10");
+        assert_eq!(to_position(&2), "f10");
+        assert_eq!(to_position(&3), "g10");
+        assert_eq!(to_position(&4), "d9");
+        assert_eq!(to_position(&5), "e9");
+        assert_eq!(to_position(&6), "f9");
+        assert_eq!(to_position(&7), "g9");
+        assert_eq!(to_position(&8), "h9");
+        assert_eq!(to_position(&9), "c8");
+        assert_eq!(to_position(&10), "d8");
+        assert_eq!(to_position(&11), "e8");
+        assert_eq!(to_position(&12), "f8");
+        assert_eq!(to_position(&13), "g8");
+        assert_eq!(to_position(&14), "h8");
+        assert_eq!(to_position(&15), "i8");
+        assert_eq!(to_position(&16), "b7");
+        assert_eq!(to_position(&17), "c7");
+        assert_eq!(to_position(&18), "d7");
+        assert_eq!(to_position(&19), "e7");
+        assert_eq!(to_position(&20), "f7");
+        assert_eq!(to_position(&21), "g7");
+        assert_eq!(to_position(&22), "h7");
+        assert_eq!(to_position(&23), "i7");
+        assert_eq!(to_position(&24), "k7");
+        assert_eq!(to_position(&25), "a6");
+        assert_eq!(to_position(&26), "b6");
+        assert_eq!(to_position(&27), "c6");
+        assert_eq!(to_position(&28), "d6");
+        assert_eq!(to_position(&29), "e6");
+        assert_eq!(to_position(&30), "f6");
+        assert_eq!(to_position(&31), "g6");
+        assert_eq!(to_position(&32), "h6");
+        assert_eq!(to_position(&33), "i6");
+        assert_eq!(to_position(&34), "k6");
+        assert_eq!(to_position(&35), "l6");
+        assert_eq!(to_position(&36), "a5");
+        assert_eq!(to_position(&37), "b5");
+        assert_eq!(to_position(&38), "c5");
+        assert_eq!(to_position(&39), "d5");
+        assert_eq!(to_position(&40), "e5");
+        assert_eq!(to_position(&41), "f5");
+        assert_eq!(to_position(&42), "g5");
+        assert_eq!(to_position(&43), "h5");
+        assert_eq!(to_position(&44), "i5");
+        assert_eq!(to_position(&45), "k5");
+        assert_eq!(to_position(&46), "l5");
+        assert_eq!(to_position(&47), "a4");
+        assert_eq!(to_position(&48), "b4");
+        assert_eq!(to_position(&49), "c4");
+        assert_eq!(to_position(&50), "d4");
+        assert_eq!(to_position(&51), "e4");
+        assert_eq!(to_position(&52), "f4");
+        assert_eq!(to_position(&53), "g4");
+        assert_eq!(to_position(&54), "h4");
+        assert_eq!(to_position(&55), "i4");
+        assert_eq!(to_position(&56), "k4");
+        assert_eq!(to_position(&57), "l4");
+        assert_eq!(to_position(&58), "a3");
+        assert_eq!(to_position(&59), "b3");
+        assert_eq!(to_position(&60), "c3");
+        assert_eq!(to_position(&61), "d3");
+        assert_eq!(to_position(&62), "e3");
+        assert_eq!(to_position(&63), "f3");
+        assert_eq!(to_position(&64), "g3");
+        assert_eq!(to_position(&65), "h3");
+        assert_eq!(to_position(&66), "i3");
+        assert_eq!(to_position(&67), "k3");
+        assert_eq!(to_position(&68), "l3");
+        assert_eq!(to_position(&69), "a2");
+        assert_eq!(to_position(&70), "b2");
+        assert_eq!(to_position(&71), "c2");
+        assert_eq!(to_position(&72), "d2");
+        assert_eq!(to_position(&73), "e2");
+        assert_eq!(to_position(&74), "f2");
+        assert_eq!(to_position(&75), "g2");
+        assert_eq!(to_position(&76), "h2");
+        assert_eq!(to_position(&77), "i2");
+        assert_eq!(to_position(&78), "k2");
+        assert_eq!(to_position(&79), "l2");
+        assert_eq!(to_position(&80), "a1");
+        assert_eq!(to_position(&81), "b1");
+        assert_eq!(to_position(&82), "c1");
+        assert_eq!(to_position(&83), "d1");
+        assert_eq!(to_position(&84), "e1");
+        assert_eq!(to_position(&85), "f1");
+        assert_eq!(to_position(&86), "g1");
+        assert_eq!(to_position(&87), "h1");
+        assert_eq!(to_position(&88), "i1");
+        assert_eq!(to_position(&89), "k1");
+        assert_eq!(to_position(&90), "l1");
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_to_position_panics_on_out_of_bounds() {
+        to_position(&91);
+    }
+
     mod walk {
         use crate::h;
         use super::*;
