@@ -178,7 +178,7 @@ fn is_rank(c: char) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::h;
+    use crate::{h, s};
     use super::*;
 
     #[test]
@@ -370,5 +370,14 @@ mod tests {
     #[test]
     fn invalid_promotion_position() {
       assert_eq!(San::from(&"f10f6q".to_string()), Err("invalid promotion position: f6".to_string()));
+    }
+
+    #[test]
+    fn test_display_string_format() {
+        assert_eq!(s!("a1a2").to_string(), "a1a2".to_string());
+        assert_eq!(s!("f10f11q").to_string(), "f10f11q".to_string());
+        assert_eq!(s!("f10f11r").to_string(), "f10f11r".to_string());
+        assert_eq!(s!("f10f11b").to_string(), "f10f11b".to_string());
+        assert_eq!(s!("f10f11n").to_string(), "f10f11n".to_string());
     }
 }
