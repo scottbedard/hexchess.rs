@@ -34,12 +34,12 @@ pub struct Hexchess {
 
 impl Hexchess {
     /// apply move
-    pub fn apply_move(&mut self, san: &San) {
-        self.apply_move_unsafe(san);
+    pub fn apply_move(&mut self, san: &San) -> &Self {
+        self.apply_move_unsafe(san)
     }
 
     /// apply move, regardless of legality
-    pub fn apply_move_unsafe(&mut self, san: &San) {
+    pub fn apply_move_unsafe(&mut self, san: &San) -> &Self {
         let piece = match self.board[san.from as usize] {
             Some(piece) => piece,
             None => panic!("cannot apply move from empty position: {}", san.from),
@@ -115,11 +115,35 @@ impl Hexchess {
             },
             _ => None,
         };
+
+        self
     }
 
-    /// get moves a position
+    /// get legal moves for current turn
+    pub fn current_moves(&self) -> Vec<San> {
+        let result: Vec<San> = vec![];
+
+        // ...
+
+        result
+    }
+
+    /// get legal moves a position
     pub fn moves_from(&self, from: u8) -> Vec<San> {
+        let piece = match self.board[from as usize] {
+            Some(piece) => piece,
+            None => return vec![],
+        };
+
+        let color = get_color(&piece);
+
         self.moves_from_unsafe(from)
+            .into_iter()
+            .filter(|san| {
+                let c = self.clone();
+                true
+            })
+            .collect()
     }
 
     /// get moves from a position, regardless of turn or legality
@@ -481,7 +505,24 @@ mod tests {
             assert_eq!(hexchess.fullmove, 3);
         }
 
-        // cannot step out of pin
+        #[test]
+        fn cannot_step_out_of_pin() {
+            // let hexchess = Hexchess::from("1/3/5/7/4K4/5R5/5q5/11/11/11/11 w - 0 1").unwrap();
+
+            // let moves = hexchess.moves_from(h!("f6"));
+            // assert_eq!(moves.len(), 0);
+            // assert_eq!(moves[0], s!("f6f5"));
+
+            // const hexchess = new Hexchess()
+            // hexchess.board.f7 = 'K'
+            // hexchess.board.f6 = 'R'
+            // hexchess.board.f5 = 'q'
+
+            // const moves = hexchess.moves('f6')
+
+            // expect(moves.length).toBe(1)
+            // expect(moves[0].to).toBe('f5')
+        }
 
         // cannot self check on opponent's turn
 
