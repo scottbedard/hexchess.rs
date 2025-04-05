@@ -1165,6 +1165,22 @@ mod tests {
         }
     }
 
+    #[test]
+    fn test_to_piece() {
+        assert_eq!(to_piece('b'), Ok(Piece::BlackBishop));
+        assert_eq!(to_piece('B'), Ok(Piece::WhiteBishop));
+        assert_eq!(to_piece('k'), Ok(Piece::BlackKing)); // <- not called during normal board parsing
+        assert_eq!(to_piece('K'), Ok(Piece::WhiteKing)); // <- not called during normal board parsing
+        assert_eq!(to_piece('n'), Ok(Piece::BlackKnight));
+        assert_eq!(to_piece('N'), Ok(Piece::WhiteKnight));
+        assert_eq!(to_piece('p'), Ok(Piece::BlackPawn));
+        assert_eq!(to_piece('P'), Ok(Piece::WhitePawn));
+        assert_eq!(to_piece('q'), Ok(Piece::BlackQueen));
+        assert_eq!(to_piece('Q'), Ok(Piece::WhiteQueen));
+        assert_eq!(to_piece('r'), Ok(Piece::BlackRook));
+        assert_eq!(to_piece('R'), Ok(Piece::WhiteRook));
+    }
+
     mod to_string {
         use super::*;
 
