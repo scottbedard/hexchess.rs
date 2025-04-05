@@ -68,6 +68,7 @@ mod tests {
             .unwrap()
             .moves_from(h!("f6"));
 
+        assert_eq!(result.len(), 11);
         assert_eq!(result[0], San { from: h!("f6"), promotion: None, to: h!("g8") }); // <- g8 is hostile
         assert_eq!(result[1], San { from: h!("f6"), promotion: None, to: h!("h7") });
         assert_eq!(result[2], San { from: h!("f6"), promotion: None, to: h!("i5") });
@@ -88,6 +89,7 @@ mod tests {
             .unwrap()
             .moves_from(h!("f6"));
 
+        assert_eq!(result.len(), 11);
         assert_eq!(result[0], San { from: h!("f6"), promotion: None, to: h!("h7") });
         assert_eq!(result[1], San { from: h!("f6"), promotion: None, to: h!("i5") });
         assert_eq!(result[2], San { from: h!("f6"), promotion: None, to: h!("i4") });

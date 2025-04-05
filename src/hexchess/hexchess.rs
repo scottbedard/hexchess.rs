@@ -147,7 +147,7 @@ impl Hexchess {
                 
                 match clone.find_king(color) {
                     Some(king) => !clone.is_threatened(king),
-                    None => false,
+                    None => true,
                 }
             })
             .collect()
