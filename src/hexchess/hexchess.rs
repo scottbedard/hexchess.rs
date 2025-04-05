@@ -1030,12 +1030,19 @@ mod tests {
         }
 
         #[test]
-        fn en_passant() {
-            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w f6 0 1");
+        fn en_passant_black() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w e6 0 1");
 
-            assert_eq!(hexchess.unwrap().ep, Some(h!("f6")));
+            assert_eq!(hexchess.unwrap().ep, Some(h!("e6")));
         }
 
+        #[test]
+        fn en_passant_white() {
+            let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w g5 0 1");
+
+            assert_eq!(hexchess.unwrap().ep, Some(h!("g5")));
+        }
+    
         #[test]
         fn invalid_en_passant() {
             let hexchess = Hexchess::from("1/3/5/7/9/11/11/11/11/11/11 w x 0 1");
