@@ -16,6 +16,7 @@ use crate::hexchess::utils::{
     get_color,
     is_legal_en_passant,
     to_index,
+    to_position,
 };
 
 #[derive(Clone, Copy, Debug)]
@@ -250,6 +251,24 @@ impl Hexchess {
     pub fn init() -> Self {
         Self::from(INITIAL_POSITION).unwrap()
     }
+
+    /// format as fen string
+    pub fn to_string(&self) -> String {
+        format!(
+            "{} {} {} {} {}",
+            stringify_board(&self.board),
+            match self.turn {
+                Color::Black => 'b',
+                Color::White => 'w',
+            },
+            match self.ep {
+                Some(ep) => to_position(&ep),
+                None => "-",
+            },
+            self.halfmove,
+            self.fullmove,
+        )
+    }
 }
 
 /// parse the board segment of fen
@@ -311,6 +330,62 @@ fn parse_board(source: &String) -> Result<[Option<Piece>; 91], String> {
     Ok(arr)
 }
 
+/// format the board section of a fen
+fn stringify_board(board: &[Option<Piece>; 91]) -> String {
+    let mut blank: u8 = 0;
+    let mut index: u8 = 0;
+    let mut result = String::new();
+
+    for val in board.iter() {
+        match val {
+            None => {
+                blank += 1;
+            },
+            Some(piece) => {
+                if blank > 0 {
+                    result.push_str(&blank.to_string());
+                    blank = 0;
+                }
+
+                result.push(match piece {
+                    Piece::BlackBishop => 'b',
+                    Piece::BlackKing => 'k',
+                    Piece::BlackKnight => 'n',
+                    Piece::BlackPawn => 'p',
+                    Piece::BlackQueen => 'q',
+                    Piece::BlackRook => 'r',
+                    Piece::WhiteBishop => 'B',
+                    Piece::WhiteKing => 'K',
+                    Piece::WhiteKnight => 'N',
+                    Piece::WhitePawn => 'P',
+                    Piece::WhiteQueen => 'Q',
+                    Piece::WhiteRook => 'R',
+                });
+            },
+        };
+
+        match index {
+            0 | 3 | 8 | 15 | 24 | 35 | 46 | 57 | 68 | 79 => {
+                if blank > 0 {
+                    result.push_str(&blank.to_string());
+                }
+
+                result.push('/');
+                blank = 0;
+            },
+            _ => {}
+        };
+
+        index += 1;
+    }
+
+    if blank > 0 {
+        result.push_str(&blank.to_string());
+    }
+
+    result
+}
+
 /// convert character to piece
 fn to_piece(source: char) -> Result<Piece, &'static str> {
     match source {
@@ -332,7 +407,96 @@ fn to_piece(source: char) -> Result<Piece, &'static str> {
 
 #[cfg(test)]
 mod tests {
+    use crate::{h, s};
     use super::*;
+
+    mod apply_move {
+        use super::*;
+
+        #[test]
+        fn sets_to_and_from_positions() {
+            let mut hexchess = Hexchess::init();
+
+            hexchess.apply_move(&s!("g4g5"));
+            hexchess.apply_move(&s!("e7e6"));
+
+            assert_eq!(hexchess.board[h!("g5")], Some(Piece::WhitePawn));
+            assert_eq!(hexchess.board[h!("g4")], None);
+            assert_eq!(hexchess.board[h!("e6")], Some(Piece::BlackPawn));
+            assert_eq!(hexchess.board[h!("e7")], None);
+        }
+
+        #[test]
+        fn alternate_color_back_and_forth() {
+            let mut hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.turn, Color::White);
+            hexchess.apply_move(&s!("g4g5"));
+            assert_eq!(hexchess.turn, Color::Black);
+            hexchess.apply_move(&s!("e7e6"));
+            assert_eq!(hexchess.turn, Color::White);
+            hexchess.apply_move(&s!("f5f6"));
+            assert_eq!(hexchess.turn, Color::Black);
+        }
+
+        #[test]
+        fn sets_and_unsets_en_passant() {
+            let mut hexchess = Hexchess::init();
+
+            hexchess.apply_move(&s!("g4g6"));
+            assert_eq!(hexchess.ep, Some(h!("g5")));
+
+            hexchess.apply_move(&s!("e7e5"));
+            assert_eq!(hexchess.ep, Some(h!("e6")));
+
+            hexchess.apply_move(&s!("b1b2"));
+            assert_eq!(hexchess.ep, None);
+        }
+
+        #[test]
+        fn sets_halfmove_and_fullmove() {
+            let mut hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.fullmove, 1);
+
+            hexchess.apply_move(&s!("c2c4"));
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.fullmove, 1);
+
+            hexchess.apply_move(&s!("b7b5"));
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.fullmove, 2);
+
+            hexchess.apply_move(&s!("c1c3"));
+            assert_eq!(hexchess.halfmove, 1);
+            assert_eq!(hexchess.fullmove, 2);
+
+            hexchess.apply_move(&s!("i8i6"));
+            assert_eq!(hexchess.halfmove, 2);
+            assert_eq!(hexchess.fullmove, 3);
+
+            hexchess.apply_move(&s!("c3i6"));
+            assert_eq!(hexchess.halfmove, 0);
+            assert_eq!(hexchess.fullmove, 3);
+        }
+
+        // cannot step out of pin
+
+        // cannot self check on opponent's turn
+
+        // king cannot step into check
+
+        // promote white pieces
+
+        // promote black pieces
+
+        // white cannot promote on black's promotion positions
+
+        // black cannot promote on white's promotion positions
+
+        // out of turn error
+    }
 
     mod parsing {
         use crate::h;
@@ -644,100 +808,38 @@ mod tests {
 
     }
 
-    mod apply_move {
-        use crate::{h, s};
-        use super::*;
-
-        #[test]
-        fn sets_to_and_from_positions() {
-            let mut hexchess = Hexchess::init();
-
-            hexchess.apply_move(&s!("g4g5"));
-            hexchess.apply_move(&s!("e7e6"));
-
-            assert_eq!(hexchess.board[h!("g5")], Some(Piece::WhitePawn));
-            assert_eq!(hexchess.board[h!("g4")], None);
-            assert_eq!(hexchess.board[h!("e6")], Some(Piece::BlackPawn));
-            assert_eq!(hexchess.board[h!("e7")], None);
-        }
-
-        #[test]
-        fn alternate_color_back_and_forth() {
-            let mut hexchess = Hexchess::init();
-
-            assert_eq!(hexchess.turn, Color::White);
-            hexchess.apply_move(&s!("g4g5"));
-            assert_eq!(hexchess.turn, Color::Black);
-            hexchess.apply_move(&s!("e7e6"));
-            assert_eq!(hexchess.turn, Color::White);
-            hexchess.apply_move(&s!("f5f6"));
-            assert_eq!(hexchess.turn, Color::Black);
-        }
-
-        #[test]
-        fn sets_and_unsets_en_passant() {
-            let mut hexchess = Hexchess::init();
-
-            hexchess.apply_move(&s!("g4g6"));
-            assert_eq!(hexchess.ep, Some(h!("g5")));
-
-            hexchess.apply_move(&s!("e7e5"));
-            assert_eq!(hexchess.ep, Some(h!("e6")));
-
-            hexchess.apply_move(&s!("b1b2"));
-            assert_eq!(hexchess.ep, None);
-        }
-
-        #[test]
-        fn sets_halfmove_and_fullmove() {
-            let mut hexchess = Hexchess::init();
-
-            assert_eq!(hexchess.halfmove, 0);
-            assert_eq!(hexchess.fullmove, 1);
-
-            hexchess.apply_move(&s!("c2c4"));
-            assert_eq!(hexchess.halfmove, 0);
-            assert_eq!(hexchess.fullmove, 1);
-
-            hexchess.apply_move(&s!("b7b5"));
-            assert_eq!(hexchess.halfmove, 0);
-            assert_eq!(hexchess.fullmove, 2);
-
-            hexchess.apply_move(&s!("c1c3"));
-            assert_eq!(hexchess.halfmove, 1);
-            assert_eq!(hexchess.fullmove, 2);
-
-            hexchess.apply_move(&s!("i8i6"));
-            assert_eq!(hexchess.halfmove, 2);
-            assert_eq!(hexchess.fullmove, 3);
-
-            hexchess.apply_move(&s!("c3i6"));
-            assert_eq!(hexchess.halfmove, 0);
-            assert_eq!(hexchess.fullmove, 3);
-        }
-
-        // cannot step out of pin
-
-        // cannot self check on opponent's turn
-
-        // king cannot step into check
-
-        // promote white pieces
-
-        // promote black pieces
-
-        // white cannot promote on black's promotion positions
-
-        // black cannot promote on white's promotion positions
-
-        // out of turn error
-    }
-
     #[test]
     fn find_kings_by_color() {
         let hexchess = Hexchess::init();
 
         assert_eq!(hexchess.find_king(Color::Black), Some(h!("g10")));
         assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
+    }
+
+    mod to_string {
+        use super::*;
+
+        #[test]
+        fn empty_position() {
+            let hexchess = Hexchess::new();
+
+            assert_eq!(hexchess.to_string(), "1/3/5/7/9/11/11/11/11/11/11 w - 0 1");
+        }
+
+        #[test]
+        fn initial_position() {
+            let hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.to_string(), "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1");
+        }
+
+        #[test]
+        fn with_en_passant() {
+            let mut hexchess = Hexchess::init();
+
+            hexchess.apply_move(&s!("g4g6"));
+
+            assert_eq!(hexchess.to_string(), "b/qbk/n1b1n/r5r/ppppppppp/6P4/5P5/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 b g5 0 1");
+        }
     }
 }
