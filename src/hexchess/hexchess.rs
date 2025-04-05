@@ -33,12 +33,18 @@ pub struct Hexchess {
 }
 
 impl Hexchess {
-    /// apply move
-    pub fn apply_move(&mut self, san: &San) -> &Self {
-        self.apply_move_unsafe(san)
+    /// apply legal move
+    pub fn apply_move(&mut self, san: &San) -> Result<(), String> {
+        if !self.is_legal(san) {
+            return Err(format!("illegal move: {:?}", san));
+        }
+
+        self.apply_move_unsafe(san);
+
+        Ok(())
     }
 
-    /// apply move, regardless of legality
+    /// apply move, regardless of turn or legality
     pub fn apply_move_unsafe(&mut self, san: &San) -> &Self {
         let piece = match self.board[san.from as usize] {
             Some(piece) => piece,
@@ -283,6 +289,22 @@ impl Hexchess {
         Self::from(INITIAL_POSITION).unwrap()
     }
 
+    /// test if a move is legal
+    pub fn is_legal(&self, san: &San) -> bool {
+        let piece = match self.board[san.from as usize] {
+            Some(piece) => piece,
+            None => return false,
+        };
+        
+        if get_color(&piece) != self.turn {
+            return false;
+        }
+
+        self.moves_from(san.from)
+            .iter()
+            .any(|move_san| move_san == san)
+    }
+
     /// test of a position is threatened
     pub fn is_threatened(&self, position: u8) -> bool {
         let threatened_piece = match self.board[position as usize] {
@@ -475,10 +497,8 @@ mod tests {
         #[test]
         fn sets_to_and_from_positions() {
             let mut hexchess = Hexchess::init();
-
-            hexchess.apply_move(&s!("g4g5"));
-            hexchess.apply_move(&s!("e7e6"));
-
+            let _ = hexchess.apply_move(&s!("g4g5"));
+            let _ = hexchess.apply_move(&s!("e7e6"));
             assert_eq!(hexchess.board[h!("g5")], Some(Piece::WhitePawn));
             assert_eq!(hexchess.board[h!("g4")], None);
             assert_eq!(hexchess.board[h!("e6")], Some(Piece::BlackPawn));
@@ -502,13 +522,13 @@ mod tests {
         fn sets_and_unsets_en_passant() {
             let mut hexchess = Hexchess::init();
 
-            hexchess.apply_move(&s!("g4g6"));
+            let _ = hexchess.apply_move(&s!("g4g6"));
             assert_eq!(hexchess.ep, Some(h!("g5")));
 
-            hexchess.apply_move(&s!("e7e5"));
+            let _ = hexchess.apply_move(&s!("e7e5"));
             assert_eq!(hexchess.ep, Some(h!("e6")));
 
-            hexchess.apply_move(&s!("b1b2"));
+            let _ = hexchess.apply_move(&s!("b1b2"));
             assert_eq!(hexchess.ep, None);
         }
 
@@ -519,23 +539,23 @@ mod tests {
             assert_eq!(hexchess.halfmove, 0);
             assert_eq!(hexchess.fullmove, 1);
 
-            hexchess.apply_move(&s!("c2c4"));
+            let _ = hexchess.apply_move(&s!("e4e5"));
             assert_eq!(hexchess.halfmove, 0);
             assert_eq!(hexchess.fullmove, 1);
 
-            hexchess.apply_move(&s!("b7b5"));
+            let _ = hexchess.apply_move(&s!("f7f6"));
             assert_eq!(hexchess.halfmove, 0);
             assert_eq!(hexchess.fullmove, 2);
 
-            hexchess.apply_move(&s!("c1c3"));
+            let _ = hexchess.apply_move(&s!("f3c6"));
             assert_eq!(hexchess.halfmove, 1);
             assert_eq!(hexchess.fullmove, 2);
 
-            hexchess.apply_move(&s!("i8i6"));
+            let _ = hexchess.apply_move(&s!("i8h8"));
             assert_eq!(hexchess.halfmove, 2);
             assert_eq!(hexchess.fullmove, 3);
 
-            hexchess.apply_move(&s!("c3i6"));
+            let _ = hexchess.apply_move(&s!("c6e10"));
             assert_eq!(hexchess.halfmove, 0);
             assert_eq!(hexchess.fullmove, 3);
         }
@@ -570,12 +590,6 @@ mod tests {
             hexchess.apply_move(&s!("i2i1n"));
             assert_eq!(hexchess.board[h!("i1")], Some(Piece::BlackKnight));
         }
-
-        // white cannot promote on black's promotion positions
-
-        // black cannot promote on white's promotion positions
-
-        // out of turn error
     }
 
     #[test]
@@ -584,6 +598,65 @@ mod tests {
 
         assert_eq!(hexchess.find_king(Color::Black), Some(h!("g10")));
         assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
+    }
+
+    mod is_legal {
+        use super::*;
+
+        #[test]
+        fn legal_move() {
+            let hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.is_legal(&s!("g4g5")), true);
+        }
+
+        #[test]
+        fn illegal_move() {
+            let hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.is_legal(&s!("b1b4")), false);
+        }
+
+        #[test]
+        fn illegal_move_out_of_turn() {
+            let mut hexchess = Hexchess::init();
+
+            assert_eq!(hexchess.is_legal(&s!("g7g6")), false);
+
+            hexchess.turn = Color::Black;
+
+            assert_eq!(hexchess.is_legal(&s!("g7g6")), true);
+        }
+
+        #[test]
+        fn white_cannot_promote_on_blacks_positions() {
+            let hexchess = Hexchess::from("1/3/5/7/p7p/R9R/11/11/11/11/rP7Pr w - 0 1").unwrap();
+
+            let b1b2 = San { from: h!("b1"), to: h!("b2"), promotion: None };
+            let b1b2q = San { from: h!("b1"), to: h!("b2"), promotion: Some(PromotionPiece::Queen) };
+            assert_eq!(hexchess.is_legal(&b1b2), true);
+            assert_eq!(hexchess.is_legal(&b1b2q), false);
+
+            let k1l1 = San { from: h!("k1"), to: h!("l1"), promotion: None };
+            let k1l1q = San { from: h!("k1"), to: h!("l1"), promotion: Some(PromotionPiece::Queen) };
+            assert_eq!(hexchess.is_legal(&k1l1), true);
+            assert_eq!(hexchess.is_legal(&k1l1q), false);
+        }
+
+        #[test]
+        fn black_cannot_promote_on_whites_positions() {
+            let hexchess = Hexchess::from("1/3/5/7/p7p/R9R/11/11/11/11/rP7Pr b - 0 1").unwrap();
+
+            let b7a6 = San { from: h!("b7"), to: h!("a6"), promotion: None };
+            let b7a6q = San { from: h!("b7"), to: h!("a6"), promotion: Some(PromotionPiece::Queen) };
+            assert_eq!(hexchess.is_legal(&b7a6), true);
+            assert_eq!(hexchess.is_legal(&b7a6q), false);
+
+            let k7l6 = San { from: h!("k7"), to: h!("l6"), promotion: None };
+            let k7l6q = San { from: h!("k7"), to: h!("l6"), promotion: Some(PromotionPiece::Queen) };
+            assert_eq!(hexchess.is_legal(&k7l6), true);
+            assert_eq!(hexchess.is_legal(&k7l6q), false);
+        }
     }
 
     mod is_threatened {
