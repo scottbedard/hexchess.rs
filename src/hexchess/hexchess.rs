@@ -54,7 +54,7 @@ impl Hexchess {
             let san = match San::from(&part.to_string()) {
                 Ok(san) => san,
                 Err(_) => {
-                    return Err(format!("invalid san notation at index {}: {}", i, part));
+                    return Err(format!("invalid san at index {}: {}", i, part));
                 },
             };
 
@@ -709,6 +709,22 @@ mod tests {
             let _ = hexchess.apply_sequence("g4g6 f7g6 f5f7 g6f6");
 
             assert_eq!(hexchess.to_string(), "b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3");
+        }
+
+        #[test]
+        fn test_apply_sequence_with_invalid_san() {
+            let mut hexchess = Hexchess::init();
+            let result = hexchess.apply_sequence("whoops");
+
+            assert_eq!(result, Err("invalid san at index 0: whoops".to_string()));
+        }
+
+        #[test]
+        fn test_apply_sequence_with_illegal_move() {
+            let mut hexchess = Hexchess::init();
+            let result = hexchess.apply_sequence("g4g5 a6a5");
+
+            assert_eq!(result, Err("illegal move at index 1: a6a5".to_string()));
         }
     }
 
