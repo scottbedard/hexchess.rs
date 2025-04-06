@@ -4,6 +4,10 @@ use crate::hexchess::pieces::knight::knight_moves_unsafe;
 use crate::hexchess::pieces::pawn::pawn_moves_unsafe;
 use crate::hexchess::pieces::straight_line::straight_line_moves_unsafe;
 use crate::hexchess::san::San;
+use serde_with::serde_as;
+use serde::{Deserialize, Serialize};
+use tsify_next::Tsify;
+use wasm_bindgen::prelude::*;
 
 use crate::constants::{
     Color,
@@ -20,8 +24,11 @@ use crate::hexchess::utils::{
     to_position,
 };
 
-#[derive(Clone, Copy, Debug)]
+#[serde_as]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub struct Hexchess {
+    #[serde_as(as = "[_; 91]")]
     pub board: [Option<Piece>; 91],
 
     pub ep: Option<u8>,

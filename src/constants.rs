@@ -1,4 +1,6 @@
 use crate::h;
+use serde::{Deserialize, Serialize};
+use tsify_next::Tsify;
 
 /// Initial game position
 pub const INITIAL_POSITION: &str = "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1";
@@ -1381,26 +1383,53 @@ pub const HEXBOARD_GRAPH: [[Option<u8>; 12]; 91] = [
 ];
 
 /// Piece color
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub enum Color {
+    #[serde(rename(deserialize = "b", serialize = "b"))]
     Black,
+    #[serde(rename(deserialize = "w", serialize = "w"))]
     White,
 }
 
 /// Piece symbols
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub enum Piece {
+    #[serde(rename(deserialize = "P", serialize = "P"))]
     WhitePawn,
+
+    #[serde(rename(deserialize = "N", serialize = "N"))]
     WhiteKnight,
+
+    #[serde(rename(deserialize = "B", serialize = "B"))]
     WhiteBishop,
+
+    #[serde(rename(deserialize = "R", serialize = "R"))]
     WhiteRook,
+
+    #[serde(rename(deserialize = "Q", serialize = "Q"))]
     WhiteQueen,
+
+    #[serde(rename(deserialize = "K", serialize = "K"))]
     WhiteKing,
+
+    #[serde(rename(deserialize = "p", serialize = "p"))]
     BlackPawn,
+
+    #[serde(rename(deserialize = "n", serialize = "n"))]
     BlackKnight,
+
+    #[serde(rename(deserialize = "b", serialize = "b"))]
     BlackBishop,
+
+    #[serde(rename(deserialize = "r", serialize = "r"))]
     BlackRook,
+
+    #[serde(rename(deserialize = "q", serialize = "q"))]
     BlackQueen,
+
+    #[serde(rename(deserialize = "k", serialize = "k"))]
     BlackKing,
 }
 
