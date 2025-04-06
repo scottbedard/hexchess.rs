@@ -15,6 +15,7 @@ use crate::constants::{
 use crate::hexchess::utils::{
     get_color,
     is_legal_en_passant,
+    step,
     to_index,
     to_position,
 };
@@ -40,6 +41,35 @@ impl Hexchess {
         }
 
         self.apply_move_unsafe(san);
+
+        Ok(())
+    }
+
+    /// apply a whitespace separated sequence of moves
+    pub fn apply_sequence(&mut self, sequence: &str) -> Result<(), String> {
+        let mut clone = self.clone();
+        let mut i: u32 = 0;
+
+        for part in sequence.split_whitespace() {
+            let san = match San::from(&part.to_string()) {
+                Ok(san) => san,
+                Err(_) => {
+                    return Err(format!("invalid san notation at index {}: {}", i, part));
+                },
+            };
+
+            if clone.apply_move(&san).is_err() {
+                return Err(format!("illegal move at index {}: {}", i, part));
+            }
+
+            i += 1;
+        }
+
+        self.board = clone.board;
+        self.turn = clone.turn;
+        self.ep = clone.ep;
+        self.fullmove = clone.fullmove;
+        self.halfmove = clone.halfmove;
 
         Ok(())
     }
@@ -94,6 +124,20 @@ impl Hexchess {
                 },
             }
         );
+
+        // clear captured en passant
+        if Some(san.to) == self.ep {
+            let captured = match piece {
+                Piece::BlackPawn => step(san.to, 0),
+                Piece::WhitePawn => step(san.to, 6),
+                _ => None,
+            };
+
+            match captured {
+                Some(position) => self.board[position as usize] = None,
+                None => {},
+            };
+        }
 
         // set en passsant
         self.ep = match piece {
@@ -532,6 +576,30 @@ mod tests {
         }
 
         #[test]
+        fn clears_en_pasant_capture_white() {
+            let mut hexchess = Hexchess::from("b/qbk/n1b1n/r5r/ppppp1ppp/5P5/6p4/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w g6 0 2").unwrap();
+            let _ = hexchess.apply_move(&s!("f6g6"));
+
+            assert_eq!(hexchess.get("g5"), None);
+        }
+
+        #[test]
+        fn clears_en_passant_capture_black() {
+            let mut hexchess = Hexchess::from("b/qbk/n1b1n/r5r/pppp1pppp/5pP4/4PP5/11/3P1B1P3/2P2B2P2/1PRNQBKNRP1 b g5 0 2").unwrap();
+            let _ = hexchess.apply_move(&s!("f6g5"));
+
+            assert_eq!(hexchess.get("g6"), None);
+        }
+
+        #[test]
+        fn only_pawns_capture_en_passant() {
+            let mut hexchess = Hexchess::from("b/qbk/n1b1n/r5r/ppppp1ppp/11/5Pp4/4P1PB3/3P1B1P3/2P5P2/1PRNQBKNRP1 w g6 0 2").unwrap();
+            let _ = hexchess.apply_move(&s!("h4g6")); // <- bishop to en passant
+            
+            assert_eq!(hexchess.get("g5"), Some(Piece::BlackPawn));
+        }
+
+        #[test]
         fn alternate_color_back_and_forth() {
             let mut hexchess = Hexchess::init();
 
@@ -586,7 +654,6 @@ mod tests {
             assert_eq!(hexchess.fullmove, 3);
         }
 
-
         // promote white pieces
         #[test]
         fn white_and_black_promotions() {
@@ -630,6 +697,18 @@ mod tests {
             let mut hexchess = Hexchess::init();
 
             hexchess.apply_move_unsafe(&s!("a4a5"));
+        }
+    }
+
+    mod apply_sequence {
+        use super::*;
+
+        #[test]
+        fn test_applying_a_sequence_of_moves() {
+            let mut hexchess = Hexchess::init();
+            let _ = hexchess.apply_sequence("g4g6 f7g6 f5f7 g6f6");
+
+            assert_eq!(hexchess.to_string(), "b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3");
         }
     }
 
