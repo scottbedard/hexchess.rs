@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { createHexchess } from '../pkg/hexchess'
 
 describe('createHexchess', () => {
-  it('creates a blank hexchess object', () => {
+  it('creates object', () => {
     expect(createHexchess()).toEqual({
       board: [
         null, null, null, null, null, null, null, null, null,

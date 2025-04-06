@@ -45,7 +45,7 @@ mod tests {
 
     #[test]
     fn white_king() {
-        let result = Hexchess::from("1/3/5/7/3P5/5K5/11/6p4/11/11/11 w - 0 1")
+        let result = Hexchess::parse("1/3/5/7/3P5/5K5/11/6p4/11/11/11 w - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 
@@ -65,7 +65,7 @@ mod tests {
 
     #[test]
     fn black_king() {
-        let result = Hexchess::from("1/3/5/7/3P5/5k5/11/6p4/11/11/11 b - 0 1")
+        let result = Hexchess::parse("1/3/5/7/3P5/5k5/11/6p4/11/11/11 b - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 

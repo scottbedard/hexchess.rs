@@ -458,7 +458,7 @@ mod tests {
 
         #[test]
         fn stop_before_friendly_piece() {
-            let hexchess = Hexchess::from("1/3/2P2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
+            let hexchess = Hexchess::parse("1/3/2P2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
 
             assert_eq!(
                 walk(&hexchess, h!("f6"), 0, &Color::White),
@@ -472,7 +472,7 @@ mod tests {
 
         #[test]
         fn stop_on_hostile_piece() {
-            let hexchess = Hexchess::from("1/3/2p2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
+            let hexchess = Hexchess::parse("1/3/2p2/7/9/5R5/11/11/11/11/11 w - 0 1").unwrap();
 
             assert_eq!(
                 walk(&hexchess, h!("f6"), 0, &Color::White),
