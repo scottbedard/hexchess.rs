@@ -35,11 +35,38 @@ yarn add @bedard/hexchess
 
 ## Basic usage
 
-The command line interface has not been migrated yet. Check back later.
+The `Hexchess` object is a deserialized version of [Forsyth–Edwards Notation](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation). It contains the board state, current turn, en passant position, and move numbers. Note that since castling is not a part of hexagonal chess, that section is omitted from the notation.
 
-## TypeScript
+```ts
+import { initHexchess } from '@bedard/hexchess'
 
-A collection of wasm bindings available via `@bedard/hexchess`, listed below are the available methods.
+const hexchess = initHexchess()
+```
+
+The board positions coorelate to their position in a FEN string, `null` represents an unoccupied position.
+
+```json
+{
+  "board": [
+    "b",  "q",  "b",  "k",  "n",  null, "b",  null, "n",  "r",
+    null, null, null, null, null, "r",  "p",  "p",  "p",  "p",
+    "p",  "p",  "p",  "p",  "p",  null, null, null, null, null,
+    null, null, null, null, null, null, null, null, null, null,
+    null, "P",  null, null, null, null, null, null, null, null,
+    null, "P",  null, "P",  null, null, null, null, null, null,
+    null, "P",  null, "B",  null, "P",  null, null, null, null,
+    null, "P",  null, null, "B",  null, null, "P",  null, null,
+    null, "P",  "R",  "N",  "Q",  "B",  "K",  "N",  "R",  "P",
+    null
+  ],
+  "turn": "w",
+  "ep": null,
+  "halfmove": 0,
+  "fullmove": 1
+}
+```
+
+Below are the available functions to interact with these objects.
 
 #### `applyMove`
 
