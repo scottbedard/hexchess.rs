@@ -16,7 +16,68 @@ A Rust / TypeScript library for [Gliński's hexagonal chess](https://en.wikipedi
   </a>
 </p>
 
-Documentation coming soon
+## Installation
+
+Depending on your bundler, you may also need plugins for [Web Assembly](https://developer.mozilla.org/en-US/docs/WebAssembly) and [top-level await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#top_level_await).
+
+```
+# npm
+npm install @bedard/hexchess
+
+# pnpm
+pnpm install @bedard/hexchess
+
+# yarn
+yarn add @bedard/hexchess
+```
+
+## Basic usage
+
+The command line interface has not been migrated yet. Check back later.
+
+## TypeScript
+
+A collection of wasm bindings available via `@bedard/hexchess`, listed below are the available methods.
+
+#### `applySequence`
+
+Apply a whitespace separated sequence of move to a `Hexchess` object.
+
+```ts
+import { applySequence } from '@bedard/hexchess'
+
+applySequence(hexchess, 'g4g6 f7g6 f5f7 g6f6') // { board: [ ... ], ep, turn, fullmove, halfmove }
+```
+
+#### `createHexchess`
+
+Create a blank `Hexchess` object.
+
+```ts
+import { createHexchess } from '@bedard/hexchess'
+
+createHexchess() // { board: [ ... ], ep, turn, fullmove, halfmove }
+```
+
+#### `initHexchess`
+
+Create `Hexchess` object at the initial position.
+
+```ts
+import { initHexchess } from '@bedard/hexchess'
+
+initHexchess() // { board: [ ... ], ep, turn, fullmove, halfmove }
+```
+
+#### `stringifyHexchess`
+
+Convert `Hexchess` object to a string in [Forsyth–Edwards Notation](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation)
+
+```ts
+import { stringifyHexchess } from '@bedard/hexchess'
+
+stringifyHexchess(hexchess) // 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
+```
 
 ## License
 
