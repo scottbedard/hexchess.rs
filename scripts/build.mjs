@@ -1,17 +1,4 @@
-import { fileURLToPath } from 'url'
-import fs from 'fs'
-import path from 'path'
-
-const read = file => fs.readFileSync(resolve(file), 'utf-8')
-
-const resolve = file => {
-  const __filename = fileURLToPath(import.meta.url)
-  const __dirname = path.dirname(__filename)
-
-  return path.resolve(__dirname, '..', file)
-}
-
-const write = (file, content) => fs.writeFileSync(resolve(file), content)
+import { read, resolve, write } from './utils.mjs'
 
 function run() {
   const file = resolve('pkg/package.json')

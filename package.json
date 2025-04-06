@@ -9,6 +9,7 @@
     "url": "git+https://github.com/scottbedard/hexchess.rs.git"
   },
   "scripts": {
+    "check-version": "node ./scripts/check-version.mjs",
     "build": "wasm-pack build --release && node scripts/build.mjs",
     "lint:fix": "eslint --fix",
     "lint": "eslint",

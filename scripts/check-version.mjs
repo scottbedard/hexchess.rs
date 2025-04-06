@@ -1,22 +1,17 @@
-import { fileURLToPath } from 'url'
-import fs from 'fs'
-import path from 'path'
+import { read } from './utils.mjs'
 import toml from 'smol-toml'
 
 function run() {
-  const __filename = fileURLToPath(import.meta.url)
-  const __dirname = path.dirname(__filename)
-
-  const cargo = toml.parse(fs.readFileSync(path.resolve(__dirname, '../Cargo.toml'), 'utf-8'))
-  const npm = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../package.json')), 'utf-8')
+  const cargo = toml.parse(read('Cargo.toml'))
+  const pkg = JSON.parse(read('package.json'))
 
   console.log('Checking versions...')
   console.log()
   console.log(`Cargo:   ${cargo.package.version}`)
-  console.log(`NPM:     ${npm.version}`)
+  console.log(`NPM:     ${pkg.version}`)
 
-  if (cargo.package.version !== npm.version) {
-    throw new Error(`Version mismatch [npm: ${npm.version}, cargo: ${cargo.package.version}]`)
+  if (cargo.package.version !== pkg.version) {
+    throw new Error(`Version mismatch [npm: ${pkg.version}, cargo: ${cargo.package.version}]`)
   }
 
   let releasing = false
@@ -25,7 +20,7 @@ function run() {
     if (arg.startsWith('release=')) {
       const release = arg.slice(8)
 
-      if (release !== npm.version) {
+      if (release !== pkg.version) {
         throw new Error(`Release version mismatch [${release}]`)
       }
 
