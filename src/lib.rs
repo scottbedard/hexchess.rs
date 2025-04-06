@@ -3,6 +3,7 @@ pub mod hexchess;
 pub mod macros;
 
 use hexchess::hexchess::Hexchess;
+use hexchess::san::San;
 use wasm_bindgen::prelude::*;
 
 // pub fn set_panic_hook() {
@@ -16,7 +17,7 @@ use wasm_bindgen::prelude::*;
 //     console_error_panic_hook::set_once();
 // }
 
-/// Apply a whitespace separated sequence of moves to hexchess instance
+/// Apply a whitespace separated sequence of move to `Hexchess` object.
 #[wasm_bindgen(js_name = applySequence)]
 pub fn apply_sequence(hexchess: Hexchess, sequence: String) -> Hexchess {
     let mut clone = hexchess.clone();
@@ -27,19 +28,25 @@ pub fn apply_sequence(hexchess: Hexchess, sequence: String) -> Hexchess {
     }
 }
 
-/// Create blank hexchess instance
+/// Create a blank `Hexchess` object.
 #[wasm_bindgen(js_name = createHexchess)]
 pub fn create_hexchess() -> Hexchess {
     Hexchess::new()
 }
 
-/// Create hexchess instance at the initial position
+/// Get current legal moves.
+#[wasm_bindgen(js_name = currentMoves)]
+pub fn current_moves(hexchess: Hexchess) -> Vec<San> {
+    hexchess.current_moves()
+}
+
+/// Create `Hexchess` object at the initial position.
 #[wasm_bindgen(js_name = initHexchess)]
 pub fn init_hexchess() -> Hexchess {
     Hexchess::init()
 }
 
-/// Create hexchess instance from FEN string
+/// Convert `Hexchess` object to string using Forsyth–Edwards Notation.
 #[wasm_bindgen(js_name = parseHexchess)]
 pub fn parse_hexchess(source: String) -> Hexchess {
     match Hexchess::parse(source.as_str()) {

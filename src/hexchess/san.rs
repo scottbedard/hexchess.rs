@@ -1,5 +1,7 @@
 use crate::constants::PromotionPiece;
+use serde::{Deserialize, Serialize};
 use std::fmt;
+use tsify_next::Tsify;
 
 use crate::hexchess::utils::{
     is_promotion_position,
@@ -8,7 +10,8 @@ use crate::hexchess::utils::{
 
 use super::utils::to_position;
 
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub struct San {
     pub from: u8,
 

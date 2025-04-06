@@ -1435,10 +1435,18 @@ pub enum Piece {
 }
 
 /// Promotion pieces
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
+#[tsify(into_wasm_abi, from_wasm_abi)]
 pub enum PromotionPiece {
+    #[serde(rename(deserialize = "b", serialize = "b"))]
     Bishop,
+
+    #[serde(rename(deserialize = "n", serialize = "n"))]
     Knight,
+
+    #[serde(rename(deserialize = "q", serialize = "q"))]
     Queen,
+
+    #[serde(rename(deserialize = "r", serialize = "q"))]
     Rook,
 }

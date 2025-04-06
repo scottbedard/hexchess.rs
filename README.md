@@ -18,7 +18,9 @@ A Rust / TypeScript library for [Gliński's hexagonal chess](https://en.wikipedi
 
 ## Installation
 
-Depending on your bundler, you may also need plugins for [Web Assembly](https://developer.mozilla.org/en-US/docs/WebAssembly) and [top-level await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#top_level_await).
+Install this package via NPM.
+
+Depending on your bundler, you may need plugins for [Web Assembly](https://developer.mozilla.org/en-US/docs/WebAssembly) and [top-level await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await#top_level_await).
 
 ```
 # npm
@@ -59,6 +61,16 @@ import { createHexchess } from '@bedard/hexchess'
 createHexchess() // { board: [ ... ], ep, turn, fullmove, halfmove }
 ```
 
+#### `currentMoves`
+
+Get current legal moves.
+
+```ts
+import { currentMoves } from '@bedard/hexchess'
+
+currentMoves(hexchess) // [{ from, to, promotion }, ...]
+```
+
 #### `initHexchess`
 
 Create `Hexchess` object at the initial position.
@@ -71,7 +83,7 @@ initHexchess() // { board: [ ... ], ep, turn, fullmove, halfmove }
 
 #### `stringifyHexchess`
 
-Convert `Hexchess` object to a string in [Forsyth–Edwards Notation](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation)
+Convert `Hexchess` object to string using [Forsyth–Edwards Notation](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation).
 
 ```ts
 import { stringifyHexchess } from '@bedard/hexchess'
