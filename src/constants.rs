@@ -1447,6 +1447,6 @@ pub enum PromotionPiece {
     #[serde(rename(deserialize = "q", serialize = "q"))]
     Queen,
 
-    #[serde(rename(deserialize = "r", serialize = "q"))]
+    #[serde(rename(deserialize = "r", serialize = "r"))]
     Rook,
 }

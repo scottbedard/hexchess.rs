@@ -1,26 +1,24 @@
-import { describe, it, expect } from 'vitest'
+import { expect, test } from 'vitest'
 import { createHexchess } from '../pkg/hexchess'
 
-describe('createHexchess', () => {
-  it('creates object', () => {
-    expect(createHexchess()).toEqual({
-      board: [
-        null, null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null, null,
-        null, null, null, null, null, null, null, null, null,
-        null
-      ],
-      ep: null,
-      fullmove: 1,
-      halfmove: 0,
-      turn: 'w'
-    })
+test('createHexchess', () => {
+  expect(createHexchess()).toEqual({
+    board: [
+      null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null,
+      null, null, null, null, null, null, null, null, null,
+      null
+    ],
+    ep: null,
+    fullmove: 1,
+    halfmove: 0,
+    turn: 'w'
   })
 })

@@ -10,18 +10,24 @@ use crate::hexchess::utils::{
 
 use super::utils::to_position;
 
+/// Struct representing a single move.
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
 #[tsify(into_wasm_abi, from_wasm_abi)]
 pub struct San {
+    /// From position index, 0..91
+    #[tsify(type = "PositionIndex")]
     pub from: u8,
 
+    /// Promotion piece
     pub promotion: Option<PromotionPiece>,
 
+    /// Target position index, 0..91
+    #[tsify(type = "PositionIndex")]
     pub to: u8,
 }
 
 impl San {
-    pub fn from(source: &String) -> Result<Self, String> {
+    pub fn from(source: &str) -> Result<Self, String> {
         let mut chars = source.chars();
 
         // first file

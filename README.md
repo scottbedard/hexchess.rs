@@ -101,6 +101,16 @@ import { stringifyHexchess } from '@bedard/hexchess'
 stringifyHexchess(hexchess) // 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
 ```
 
+### `stringifySan`
+
+Convert `San` object to string.
+
+```ts
+import { stringifySan } from '@bedard/hexchess'
+
+stringifySan({ from: 53, to: 42, promotion: null }) // 'g4g5'
+```
+
 ## License
 
 [MIT](https://github.com/scottbedard/hexchess.rs/blob/main/LICENSE)
