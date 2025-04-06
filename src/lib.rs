@@ -23,7 +23,7 @@ pub fn apply_sequence(hexchess: Hexchess, sequence: String) -> Hexchess {
 
     match clone.apply_sequence(sequence.as_str()) {
         Ok(_) => clone,
-        Err(err) => panic!("[hexchess] {:?}", err),
+        Err(err) => panic!("hexchess error: {:?}", err),
     }
 }
 
@@ -44,7 +44,7 @@ pub fn init_hexchess() -> Hexchess {
 pub fn parse_hexchess(source: String) -> Hexchess {
     match Hexchess::parse(source.as_str()) {
         Ok(hexchess) => hexchess,
-        Err(err) => panic!("[hexchess] {:?}", err),
+        Err(err) => panic!("hexchess error: {:?}", err),
     }
 }
 
