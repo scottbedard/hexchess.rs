@@ -6,7 +6,7 @@ license = "MIT"
 name = "hexchess"
 readme = "README.md"
 repository = "https://github.com/scottbedard/hexchess.rs"
-version = "2.0.0-alpha.1"
+version = "2.0.0-alpha.2"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
