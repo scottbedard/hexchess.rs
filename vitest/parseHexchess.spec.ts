@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { initialPosition, parseHexchess } from '../pkg/hexchess'
 
-describe('createHexchess', () => {
+describe('parseHexchess', () => {
   it('initial state', () => {
     const hexchess = parseHexchess(initialPosition)
 
