@@ -43,24 +43,24 @@ const hexchess = initHexchess()
 
 The board positions coorelate to their position in a FEN string, `null` represents an unoccupied position.
 
-```json
+```js
 {
-  "board": [
-    "b",  "q",  "b",  "k",  "n",  null, "b",  null, "n",  "r",
-    null, null, null, null, null, "r",  "p",  "p",  "p",  "p",
-    "p",  "p",  "p",  "p",  "p",  null, null, null, null, null,
+  board: [
+    'b',  'q',  'b',  'k',  'n',  null, 'b',  null, 'n',  'r',
+    null, null, null, null, null, 'r',  'p',  'p',  'p',  'p',
+    'p',  'p',  'p',  'p',  'p',  null, null, null, null, null,
     null, null, null, null, null, null, null, null, null, null,
-    null, "P",  null, null, null, null, null, null, null, null,
-    null, "P",  null, "P",  null, null, null, null, null, null,
-    null, "P",  null, "B",  null, "P",  null, null, null, null,
-    null, "P",  null, null, "B",  null, null, "P",  null, null,
-    null, "P",  "R",  "N",  "Q",  "B",  "K",  "N",  "R",  "P",
+    null, 'P',  null, null, null, null, null, null, null, null,
+    null, 'P',  null, 'P',  null, null, null, null, null, null,
+    null, 'P',  null, 'B',  null, 'P',  null, null, null, null,
+    null, 'P',  null, null, 'B',  null, null, 'P',  null, null,
+    null, 'P',  'R',  'N',  'Q',  'B',  'K',  'N',  'R',  'P',
     null
   ],
-  "turn": "w",
-  "ep": null,
-  "halfmove": 0,
-  "fullmove": 1
+  turn: 'w',
+  ep: null,
+  halfmove: 0,
+  fullmove: 1
 }
 ```
 
