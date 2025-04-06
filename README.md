@@ -1,4 +1,4 @@
-# [`hexchess.rs`](https://github.com/scottbedard/hexchess.rs)
+# [`@bedard/hexchess`](https://github.com/scottbedard/hexchess.rs)
 
 [![Build](https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml/badge.svg)](https://github.com/scottbedard/hexchess.rs/actions/workflows/build.yml)
 [![Coverage](https://codecov.io/gh/scottbedard/hexchess.rs/graph/badge.svg?token=uHmFqhQDps)](https://codecov.io/gh/scottbedard/hexchess.rs)
