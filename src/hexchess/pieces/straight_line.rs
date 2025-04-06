@@ -33,7 +33,7 @@ mod tests {
 
     #[test]
     fn white_queen() {
-        let result = Hexchess::from("p/3/5/7/9/P4Q5/11/11/11/11/11 w - 0 1")
+        let result = Hexchess::parse("p/3/5/7/9/P4Q5/11/11/11/11/11 w - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 
@@ -83,7 +83,7 @@ mod tests {
 
     #[test]
     fn black_queen() {
-        let result = Hexchess::from("p/3/5/7/9/P4q5/11/11/11/11/11 b - 0 1")
+        let result = Hexchess::parse("p/3/5/7/9/P4q5/11/11/11/11/11 b - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 
@@ -133,7 +133,7 @@ mod tests {
 
     #[test]
     fn white_bishop() {
-        let result = Hexchess::from("1/3/5/1p3P1/9/5B5/11/11/11/11/11 w - 0 1")
+        let result = Hexchess::parse("1/3/5/1p3P1/9/5B5/11/11/11/11/11 w - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 
@@ -153,7 +153,7 @@ mod tests {
 
     #[test]
     fn black_bishop() {
-        let result = Hexchess::from("1/3/5/1p3P1/9/5b5/11/11/11/11/11 b - 0 1")
+        let result = Hexchess::parse("1/3/5/1p3P1/9/5b5/11/11/11/11/11 b - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 
@@ -173,7 +173,7 @@ mod tests {
 
     #[test]
     fn white_rook() {
-        let result = Hexchess::from("p/3/5/7/9/P4R5/11/11/11/11/11 w - 0 1")
+        let result = Hexchess::parse("p/3/5/7/9/P4R5/11/11/11/11/11 w - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 
@@ -211,7 +211,7 @@ mod tests {
 
     #[test]
     fn black_rook() {
-        let result = Hexchess::from("p/3/5/7/9/P4r5/11/11/11/11/11 b - 0 1")
+        let result = Hexchess::parse("p/3/5/7/9/P4r5/11/11/11/11/11 b - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 

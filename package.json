@@ -9,7 +9,7 @@
     "url": "git+https://github.com/scottbedard/hexchess.rs.git"
   },
   "scripts": {
-    "build": "wasm-pack build",
+    "build": "wasm-pack build --release && node scripts/build.mjs",
     "test": "cargo test && vitest --run",
     "vitest": "vitest"
   },

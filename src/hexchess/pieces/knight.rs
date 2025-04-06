@@ -64,7 +64,7 @@ mod tests {
 
     #[test]
     fn white_knight() {
-        let result = Hexchess::from("1/3/5/2P1p2/9/5N5/11/11/11/11/11 w - 0 1")
+        let result = Hexchess::parse("1/3/5/2P1p2/9/5N5/11/11/11/11/11 w - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 
@@ -85,7 +85,7 @@ mod tests {
 
     #[test]
     fn black_knight() {
-        let result = Hexchess::from("1/3/5/2P1p2/9/5n5/11/11/11/11/11 b - 0 1")
+        let result = Hexchess::parse("1/3/5/2P1p2/9/5n5/11/11/11/11/11 b - 0 1")
             .unwrap()
             .moves_from(h!("f6"));
 
@@ -105,7 +105,7 @@ mod tests {
 
     #[test]
     fn near_edge_of_board() {
-        let result = Hexchess::from("1/1N1/5/7/9/11/11/11/11/11/11 w - 0 1")
+        let result = Hexchess::parse("1/1N1/5/7/9/11/11/11/11/11/11 w - 0 1")
             .unwrap()
             .moves_from(h!("f10"));
 
