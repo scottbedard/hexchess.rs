@@ -41,6 +41,16 @@ The command line interface has not been migrated yet. Check back later.
 
 A collection of wasm bindings available via `@bedard/hexchess`, listed below are the available methods.
 
+#### `applyMove`
+
+Apply `San` object to a `Hexchess` object.
+
+```ts
+import { applyMove } from '@bedard/hexchess'
+
+applyMove(hexchess, { from: 53, to: 42, promotion: null })  // { board: [ ... ], ep, turn, fullmove, halfmove }
+```
+
 #### `applySequence`
 
 Apply a whitespace separated sequence of move to a `Hexchess` object.
@@ -81,6 +91,16 @@ import { initHexchess } from '@bedard/hexchess'
 initHexchess() // { board: [ ... ], ep, turn, fullmove, halfmove }
 ```
 
+#### `movesFrom`
+
+Get legal moves from a position index.
+
+```ts
+import { movesFrom } from '@bedard/hexchess'
+
+movesFrom(53) // [{ from, to, promotion }, ...]
+```
+
 #### `parseHexchess`
 
 Parse `Hexchess` object from [Forsyth–Edwards Notation](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation).
@@ -111,7 +131,7 @@ import { stringifyHexchess } from '@bedard/hexchess'
 stringifyHexchess(hexchess) // 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
 ```
 
-### `stringifySan`
+#### `stringifySan`
 
 Convert `San` object to string.
 

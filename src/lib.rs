@@ -17,6 +17,17 @@ use wasm_bindgen::prelude::*;
 //     console_error_panic_hook::set_once();
 // }
 
+/// Apply `San` object to a `Hexchess` object.
+#[wasm_bindgen(js_name = applyMove)]
+pub fn apply_move(hexchess: Hexchess, san: San) -> Hexchess {
+    let mut clone = hexchess.clone();
+
+    match clone.apply_move(&san) {
+        Ok(_) => clone,
+        Err(err) => panic!("hexchess error: {:?}", err),
+    }
+}
+
 /// Apply a whitespace separated sequence of move to `Hexchess` object.
 #[wasm_bindgen(js_name = applySequence)]
 pub fn apply_sequence(hexchess: Hexchess, sequence: String) -> Hexchess {
@@ -44,6 +55,12 @@ pub fn current_moves(hexchess: Hexchess) -> Vec<San> {
 #[wasm_bindgen(js_name = initHexchess)]
 pub fn init_hexchess() -> Hexchess {
     Hexchess::init()
+}
+
+/// Get legal moves from a position index.
+#[wasm_bindgen(js_name = movesFrom)]
+pub fn moves_from(hexchess: Hexchess, index: u8) -> Vec<San> {
+    hexchess.moves_from(index)
 }
 
 /// Parse `Hexchess` object from Forsyth–Edwards Notation.
