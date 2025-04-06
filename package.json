@@ -10,10 +10,16 @@
   },
   "scripts": {
     "build": "wasm-pack build",
-    "test": "cargo test"
+    "test": "cargo test && vitest --run",
+    "vitest": "vitest"
   },
   "version": "2.0.0-alpha.0",
   "devDependencies": {
-    "smol-toml": "^1.3.1"
+    "smol-toml": "^1.3.1",
+    "vite": "^6.2.5",
+    "vite-plugin-top-level-await": "^1.5.0",
+    "vite-plugin-wasm": "^3.4.1",
+    "vitest": "^3.1.1",
+    "wasm-pack": "^0.13.1"
   }
 }
