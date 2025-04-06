@@ -46,7 +46,7 @@ pub fn init_hexchess() -> Hexchess {
     Hexchess::init()
 }
 
-/// Convert `Hexchess` object to string using Forsyth–Edwards Notation.
+/// Parse `Hexchess` object from Forsyth–Edwards Notation.
 #[wasm_bindgen(js_name = parseHexchess)]
 pub fn parse_hexchess(source: String) -> Hexchess {
     match Hexchess::parse(source.as_str()) {
@@ -55,7 +55,7 @@ pub fn parse_hexchess(source: String) -> Hexchess {
     }
 }
 
-/// convert hexchess instance to FEN string
+/// Convert `Hexchess` object to string using Forsyth–Edwards Notation.
 #[wasm_bindgen(js_name = stringifyHexchess)]
 pub fn stringify_hexchess(hexchess: Hexchess) -> String {
     hexchess.to_string()
