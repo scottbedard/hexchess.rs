@@ -6,6 +6,30 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  node:
+    name: Node
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build package
+        run: pnpm build
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Vitest
+        run: pnpm vitest
+
   rust:
     name: Rust
     runs-on: ubuntu-latest
@@ -24,27 +48,6 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-    
-  wasm:
-    name: Wasm
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
-        with:
-          version: 9
-          run_install: false
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build package
-        run: pnpm build
-
-      - name: Vitest
-        run: pnpm vitest
 
   # versions:
   #   name: Check versions
