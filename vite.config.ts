@@ -6,10 +6,10 @@ import wasm from 'vite-plugin-wasm'
 export default defineConfig({
   plugins: [
     wasm(),
-    topLevelAwait()
+    topLevelAwait(),
   ],
   resolve: {
-    mainFields: ['module']
+    mainFields: ['module'],
   },
   test: {
     typecheck: {

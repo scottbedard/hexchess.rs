@@ -14,7 +14,7 @@ function run() {
   console.log()
   console.log(`Cargo:   ${cargo.package.version}`)
   console.log(`NPM:     ${npm.version}`)
-  
+
   if (cargo.package.version !== npm.version) {
     throw new Error(`Version mismatch [npm: ${npm.version}, cargo: ${cargo.package.version}]`)
   }

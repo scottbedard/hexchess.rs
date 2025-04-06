@@ -2,9 +2,9 @@ import { fileURLToPath } from 'url'
 import fs from 'fs'
 import path from 'path'
 
-const read = (file) => fs.readFileSync(resolve(file), 'utf-8')
+const read = file => fs.readFileSync(resolve(file), 'utf-8')
 
-const resolve  = (file) => {
+const resolve = file => {
   const __filename = fileURLToPath(import.meta.url)
   const __dirname = path.dirname(__filename)
 

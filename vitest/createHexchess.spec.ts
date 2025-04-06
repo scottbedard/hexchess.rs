@@ -14,11 +14,11 @@ test('createHexchess', () => {
       null, null, null, null, null, null, null, null, null,
       null, null, null, null, null, null, null, null, null,
       null, null, null, null, null, null, null, null, null,
-      null
+      null,
     ],
     ep: null,
     fullmove: 1,
     halfmove: 0,
-    turn: 'w'
+    turn: 'w',
   })
 })
