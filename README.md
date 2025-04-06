@@ -91,6 +91,16 @@ import { parseHexchess } from '@bedard/hexchess'
 parseHexchess('b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1') // { board, turn, ep, halfmove, fullmove }
 ```
 
+#### `parseSan`
+
+Parse `San` object from string.
+
+```ts
+import { parseSan } from '@bedard/hexchess'
+
+parseSan('g4g5') // { from: 53, to: 42, promotion: null }
+```
+
 #### `stringifyHexchess`
 
 Convert `Hexchess` object to string using [Forsyth–Edwards Notation](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation).
