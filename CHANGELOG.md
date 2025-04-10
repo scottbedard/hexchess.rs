@@ -2,7 +2,9 @@
 
 ## 2.x
 
-Soon...
+## 2.0.0-alpha.3
+
+- Rename `PositionName` type to `Position`
 
 ## 1.x
 
