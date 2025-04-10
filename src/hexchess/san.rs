@@ -12,13 +12,14 @@ use super::utils::to_position;
 
 /// Struct representing a single move.
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
-#[tsify(into_wasm_abi, from_wasm_abi)]
+#[tsify(into_wasm_abi, from_wasm_abi, type_suffix = "Struct")]
 pub struct San {
     /// From position index, 0..91
     #[tsify(type = "PositionIndex")]
     pub from: u8,
 
     /// Promotion piece
+    #[tsify(type = "PromotionPiece")]
     pub promotion: Option<PromotionPiece>,
 
     /// Target position index, 0..91

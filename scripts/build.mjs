@@ -10,9 +10,11 @@ function run() {
   pkg.version = base.version
   write(file, JSON.stringify(pkg, null, 2) + '\n')
 
-  const append = read('src/append.ts').replace('x.y.z', base.version)
-  write('pkg/hexchess.js', read('pkg/hexchess.js') + '\n' + append)
-  write('pkg/hexchess.d.ts', read('pkg/hexchess.d.ts') + '\n' + append)
+  const bundle = read('src/bundle.mjs')
+    .replace('x.y.z', base.version)
+    .replace('// @wasm-bindgen', read('pkg/hexchess.js'))
+
+  write('pkg/hexchess.js', bundle)
 }
 
 run()

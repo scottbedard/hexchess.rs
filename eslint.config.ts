@@ -55,5 +55,13 @@ export default tseslint.config(
       '@stylistic/quotes': ['error', 'single'],
       '@stylistic/semi': ['error', 'never'],
     },
+  },
+
+  {
+    files: ['src/bundle.mjs'],
+    rules: {
+      '@stylistic/quotes': ['error', 'double'],
+      '@stylistic/semi': ['error', 'always'],
+    },
   }
 )

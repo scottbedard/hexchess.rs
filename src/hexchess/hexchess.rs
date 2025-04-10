@@ -27,7 +27,7 @@ use crate::hexchess::utils::{
 /// Hexchess game state
 #[serde_as]
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
-#[tsify(into_wasm_abi, from_wasm_abi)]
+#[tsify(into_wasm_abi, from_wasm_abi, type_suffix = "Struct")]
 pub struct Hexchess {
     #[tsify(type = "BoardArray")]
     #[serde_as(as = "[_; 91]")]
@@ -39,6 +39,7 @@ pub struct Hexchess {
 
     pub halfmove: u8,
 
+    #[tsify(type = "Color")]
     pub turn: Color,
 }
 
