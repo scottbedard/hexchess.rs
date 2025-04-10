@@ -12,7 +12,7 @@ export const initialPosition = "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2
 export const version = "x.y.z";
 
 function update(hexchess, data = {}) {
-  if (data.board) hexchess.board = data.board;
+  if (data.board) hexchess.board.splice(0, 91, ...data.board);
   if (data.ep) hexchess.ep = data.ep;
   if (data.turn) hexchess.turn = data.turn;
   if (data.halfmove) hexchess.halfmove = data.halfmove;
@@ -29,6 +29,11 @@ export class Hexchess {
     this.fullmove = 1;
   }
 
+  applySequence(source) {
+    const data = bg.applySequence(this, source);
+    return update(this, data);
+  }
+
   currentMoves() {
     return bg.currentMoves(this);
   }
@@ -39,5 +44,9 @@ export class Hexchess {
 
   static parse(source) {
     return update(new Hexchess, bg.parseHexchess(source));
+  }
+
+  toString() {
+    return bg.stringifyHexchess(this);
   }
 }

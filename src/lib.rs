@@ -98,6 +98,32 @@ const TS_APPEND_CONTENT: &'static str = r#"
 export const initialPosition = "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1";
 
 /**
+ * Hexchess
+ */
+export class Hexchess {
+  board: BoardArray;
+  ep: Position | null;
+  turn: Color;
+  halfmove: number;
+  fullmove: number;
+
+  applySequence(source: string): Hexchess;
+  currentMoves(): San[];
+  static init(): Hexchess;
+  static parse(source: string): Hexchess;
+  toString(): string;
+}
+
+/**
+ * San
+ */
+export class San {
+  from: number;
+  to: number;
+  promotion: PromotionPiece;
+}
+
+/**
  * Board array
  */
 export type BoardArray = [
@@ -385,22 +411,4 @@ export type PositionIndex =
   | 88
   | 89
   | 90;
-
-export class Hexchess {
-  board: BoardArray;
-  ep: Position | null;
-  turn: Color;
-  halfmove: number;
-  fullmove: number;
-
-  currentMoves(): San[];
-  static init(): Hexchess;
-  static parse(source: string): Hexchess;
-}
-
-export class San {
-  from: Position;
-  to: Position;
-  promotion: PromotionPiece;
-}
 "#;
