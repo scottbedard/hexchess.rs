@@ -93,9 +93,23 @@ pub fn stringify_san(san: San) -> String {
     san.to_string()
 }
 
+/// Convert position string to index
+#[wasm_bindgen(js_name = toIndex)]
+pub fn to_index(source: String) -> u8 {
+    crate::hexchess::utils::to_index(source.as_str()).unwrap()
+}
+
 #[wasm_bindgen(typescript_custom_section)]
 const TS_APPEND_CONTENT: &'static str = r#"
-export const initialPosition = "b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1";
+/**
+ * Initial game position
+ */
+export const initialPosition = 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
+
+/**
+ * https://github.com/scottbedard/hexchess.rs
+ */
+export const version = 'x.y.z'
 
 /**
  * Hexchess
@@ -107,8 +121,10 @@ export class Hexchess {
   halfmove: number;
   fullmove: number;
 
+  applyMove(san: San | string): Hexchess;
   applySequence(source: string): Hexchess;
   currentMoves(): San[];
+  movesFrom(from: Position | number): San[];
   static init(): Hexchess;
   static parse(source: string): Hexchess;
   toString(): string;
@@ -120,7 +136,11 @@ export class Hexchess {
 export class San {
   from: number;
   to: number;
-  promotion: PromotionPiece;
+  promotion: PromotionPiece | null;
+
+  constructor(source: Partial<SanStruct> | undefined);
+  static parse(source: string): San;
+  toString(): string;
 }
 
 /**

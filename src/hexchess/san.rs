@@ -19,7 +19,7 @@ pub struct San {
     pub from: u8,
 
     /// Promotion piece
-    #[tsify(type = "PromotionPiece")]
+    #[tsify(type = "PromotionPiece | null")]
     pub promotion: Option<PromotionPiece>,
 
     /// Target position index, 0..91

@@ -5,16 +5,16 @@ function run() {
   const pkg = JSON.parse(read(file))
   const base = JSON.parse(read('package.json'))
 
-  pkg.main = 'hexchess.js'
+  pkg.files.push('index.js')
+  pkg.main = 'index.js'
   pkg.name = '@bedard/hexchess'
+  pkg.sideEffects.push('./index.js')
   pkg.version = base.version
   write(file, JSON.stringify(pkg, null, 2) + '\n')
 
-  const bundle = read('src/bundle.mjs')
-    .replace('x.y.z', base.version)
-    .replace('// @wasm-bindgen', read('pkg/hexchess.js'))
-
-  write('pkg/hexchess.js', bundle)
+  // write module files
+  write('pkg/index.js', read('src/pkg.mjs').replace('x.y.z', base.version))
+  write('pkg/hexchess.d.ts', read('pkg/hexchess.d.ts').replace('x.y.z', base.version))
 }
 
 run()
