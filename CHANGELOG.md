@@ -4,6 +4,7 @@
 
 ## 2.0.0-alpha.3
 
+- Begin implementing class API
 - Rename `PositionName` type to `Position`
 
 ## 1.x
