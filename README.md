@@ -91,14 +91,14 @@ const moves = hexchess.currentMoves()
 moves.map(String) // ['f5f6, 'f5f7', ...]
 ```
 
-#### `moves`
+#### `movesFrom`
 
 Get all legal moves from a position.
 
 ```js
 const hexchess = Hexchess.init()
 
-const moves = hexchess.moves('f6')
+const moves = hexchess.movesFrom('f6')
 
 moves.map(String) // ['f6f7']
 ```
@@ -114,6 +114,10 @@ const moves = hexchess.movesUnsafe()
 
 moves.map(String) // ['f6f7', 'f6g7' ...]
 ```
+
+#### `movesFromUnsafe`
+
+Get all moves from a position, including ones that result in self-check.
 
 #### `toString`
 
