@@ -36,9 +36,8 @@ export class Hexchess {
     this.fullmove = 1
   }
 
-  applyMove(source) {
-    const data = typeof source === 'string' ? San.parse(source) : source
-    return updateHexchess(this, bg.applyMove(this, data))
+  apply(source) {
+    return this.applySequence(typeof source === 'object' ? bg.stringifySan(source) : source)
   }
 
   applySequence(source) {
@@ -56,6 +55,11 @@ export class Hexchess {
   movesFrom(from) {
     const data = typeof from === 'string' ? bg.toIndex(from) : from
     return bg.movesFrom(this, data).map(obj => new San(obj))
+  }
+
+  movesFromUnsafe(from) {
+    const data = typeof from === 'string' ? bg.toIndex(from) : from
+    return bg.movesFromUnsafe(this, data).map(obj => new San(obj))
   }
 
   static parse(source) {
