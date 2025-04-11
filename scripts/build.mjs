@@ -1,6 +1,9 @@
 import { read, resolve, write } from './utils.mjs'
 
 function run() {
+  console.log()
+  console.log('Running post-build...')
+
   const pkg = resolve('pkg/package.json')
   const json = JSON.parse(read(pkg))
   const base = JSON.parse(read('package.json'))
@@ -27,6 +30,8 @@ function run() {
     .replace('x.y.z', base.version)
 
   write('pkg/hexchess.d.ts', `${dts}\n${types}`)
+
+  console.log('\x1b[32mDone')
 }
 
 run()
