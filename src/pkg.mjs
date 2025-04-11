@@ -1,4 +1,5 @@
 import * as bg from './hexchess.js'
+export * from './hexchess.js'
 
 /**
  * Initial game position
