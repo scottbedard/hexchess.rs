@@ -103,9 +103,9 @@ const moves = hexchess.movesFrom('f6')
 moves.map(String) // ['f6f7']
 ```
 
-#### `movesUnsafe`
+#### `movesFromUnsafe`
 
-Get all possible moves, including ones that result in self-check.
+Get all moves from a position, including ones that result in self-check.
 
 ```ts
 const hexchess = Hexchess.parse('1/3/5/7/4r4/5K5/11/11/11/11/11 w - 0 1')
@@ -114,10 +114,6 @@ const moves = hexchess.movesUnsafe()
 
 moves.map(String) // ['f6f7', 'f6g7' ...]
 ```
-
-#### `movesFromUnsafe`
-
-Get all moves from a position, including ones that result in self-check.
 
 #### `toString`
 
