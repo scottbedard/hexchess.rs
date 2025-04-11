@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0-beta.2
+
+- Export `initialPositions` and `positions` constants
+
 ## 2.0.0-beta.0
 
 - Export wasm bindings API
