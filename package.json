@@ -1,12 +1,12 @@
 {
   "author": "Scott Bedard",
   "bugs": {
-    "url": "https://github.com/scottbedard/hexchess.rs/issues"
+    "url": "https://github.com/scottbedard/hexchess/issues"
   },
   "name": "@bedard/hexchess",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/scottbedard/hexchess.rs.git"
+    "url": "git+https://github.com/scottbedard/hexchess.git"
   },
   "scripts": {
     "check-version": "node ./scripts/check-version.mjs",
