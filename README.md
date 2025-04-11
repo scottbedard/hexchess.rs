@@ -63,7 +63,7 @@ const hexchess = Hexchess.init()
 }
 ```
 
-The following methods are available for interacting with the game.
+The following methods are available for interacting with the game. A pair of constants named `initialPosition` and `positions` are available as well.
 
 #### `apply`
 
