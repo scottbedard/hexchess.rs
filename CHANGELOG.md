@@ -1,6 +1,14 @@
 # Changelog
 
-## 2.x
+## 2.0.0-beta.0
+
+- Export wasm bindings API
+- Add many essential methods to `Hexchess` class
+  - [`apply`](https://github.com/scottbedard/hexchess?tab=readme-ov-file#apply)
+  - [`currentMoves`](https://github.com/scottbedard/hexchess?tab=readme-ov-file#currentmoves)
+  - [`movesFrom`](https://github.com/scottbedard/hexchess?tab=readme-ov-file#movesfrom)
+  - [`movesFromUnsafe`](https://github.com/scottbedard/hexchess?tab=readme-ov-file#movesfromunsafe)
+  - [`toString`](https://github.com/scottbedard/hexchess?tab=readme-ov-file#tostring)
 
 ## 2.0.0-alpha.3
 
