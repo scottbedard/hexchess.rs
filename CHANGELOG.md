@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.0-beta.3
+
+- Fix module compatibility
+
 ## 2.0.0-beta.2
 
 - Export `initialPositions` and `positions` constants
