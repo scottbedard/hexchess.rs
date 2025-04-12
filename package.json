@@ -16,7 +16,7 @@
     "test": "cargo test && vitest --run",
     "vitest": "vitest"
   },
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0-beta.3",
   "devDependencies": {
     "@eslint/js": "^9.24.0",
     "@stylistic/eslint-plugin": "^4.2.0",
