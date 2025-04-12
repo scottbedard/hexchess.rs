@@ -11,6 +11,7 @@ function run() {
   // write module
   json.files.push('index.js')
   json.main = 'index.js'
+  json.module = 'index.js'
   json.name = '@bedard/hexchess'
   json.sideEffects.push('./index.js')
   json.version = base.version
