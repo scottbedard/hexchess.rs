@@ -10,11 +10,9 @@
   },
   "scripts": {
     "check-version": "node ./scripts/check-version.mjs",
-    "build": "wasm-pack build --release && node scripts/build.mjs",
     "lint:fix": "eslint --fix",
     "lint": "eslint",
-    "test": "cargo test && vitest --run",
-    "vitest": "vitest"
+    "test": "vitest"
   },
   "version": "2.0.0-beta.3",
   "devDependencies": {
@@ -26,9 +24,6 @@
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.1",
     "vite": "^6.2.6",
-    "vite-plugin-top-level-await": "^1.5.0",
-    "vite-plugin-wasm": "^3.4.1",
-    "vitest": "^3.1.1",
-    "wasm-pack": "^0.13.1"
+    "vitest": "^3.1.1"
   }
 }
