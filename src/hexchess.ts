@@ -25,7 +25,8 @@ export class Hexchess {
   /**  full moves, starting at 1 and incremented after black moves */
   fullmove: number = 1
 
-  constructor(fen: string) {
+  /** create hexchess from fen */
+  constructor(fen: string = '') {
     if (!fen) {
       return
     }
@@ -67,16 +68,23 @@ export class Hexchess {
     return new Hexchess(initialPosition)
   }
 
-  /** parse hexchess from fen string */
-  static parse(source: string): Hexchess {
-    return new Hexchess(source)
+  /** create hexchess from fen */
+  static parse(fen: string): Hexchess {
+    return new Hexchess(fen)
+  }
+
+  /** format hexchess as fen */
+  toString(): string {
+    return `${stringifyBoard(this.board)} ${this.turn} ${this.ep ?? '-'} ${this.halfmove} ${this.fullmove}`
   }
 }
 
+/** create an empty board object */
 function createBoard(): Board {
   return new Array(91).fill(null) as Board
 }
 
+/** parse the board section of a fen */
 function parseBoard(source: string) {
   const board = createBoard()
 
@@ -155,4 +163,41 @@ function parseBoard(source: string) {
   }
 
   return board
+}
+
+/** format the board section of a fen */
+function stringifyBoard(board: Board): string {
+  let blank = 0
+  let index = 0
+  let result = ''
+
+  for (const piece of board) {
+    if (piece === null) {
+      blank += 1
+    } else {
+      if (blank > 0) {
+        result += blank.toString()
+        blank = 0
+      }
+
+      result += piece
+    }
+
+    if ([0, 3, 8, 15, 24, 35, 46, 57, 68, 79].includes(index)) {
+      if (blank > 0) {
+        result += blank.toString()
+      }
+
+      result += '/'
+      blank = 0
+    }
+
+    index += 1
+  }
+
+  if (blank > 0) {
+    result += blank.toString()
+  }
+
+  return result
 }
