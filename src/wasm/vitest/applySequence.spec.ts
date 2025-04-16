@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { applySequence, initHexchess, stringifyHexchess } from '../pkg'
+import { applySequence, initHexchess, stringifyHexchess } from '../../../pkg/hexchess'
 
 test('applySequence', () => {
   const hexchess = applySequence(initHexchess(), 'g4g6 f7g6 f5f7 g6f6')
