@@ -1,6 +1,8 @@
 import * as bg from './hexchess.js'
 export * from './hexchess.js'
 
+// ^^^ @delete-header - everything above this line is excluded from
+
 /**
  * Initial game position
  */
