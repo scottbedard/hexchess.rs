@@ -1374,7 +1374,10 @@ export const graph = [
     78, // k2
     67, // k3
   ],
-]
+] as const
+
+/** initial position */
+export const initialPosition = 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
 
 /** named positions in fen order */
 export const positions = [
@@ -1469,4 +1472,4 @@ export const positions = [
   'i1',
   'k1',
   'l1',
-]
+] as const

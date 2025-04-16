@@ -12,6 +12,7 @@ export default defineConfig({
     mainFields: ['module'],
   },
   test: {
+    exclude: ['src'],
     typecheck: {
       enabled: true,
     },
