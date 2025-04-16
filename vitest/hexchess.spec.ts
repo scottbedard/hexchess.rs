@@ -26,3 +26,14 @@ test('parse', () => {
   expect(hexchess.fullmove).toBe(1)
 })
 
+test('empty_position', () => {
+  const hexchess = new Hexchess()
+
+  expect(hexchess.toString()).toBe('1/3/5/7/9/11/11/11/11/11/11 w - 0 1')
+})
+
+test('initial_position', () => {
+  const hexchess = Hexchess.init()
+
+  expect(hexchess.toString()).toBe('b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1')
+})

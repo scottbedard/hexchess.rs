@@ -1,5 +1,5 @@
 /**
- * This graph represents the positions on a hexboard, and their relationship
+ * This graph represents the positions of a hexboard, and their relationship
  * to one another. Each child array represents a position by it's fen-order,
  * surrounded by it's neighbors starting from the position directly above it.
  *
