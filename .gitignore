@@ -2,6 +2,7 @@
 **/*.rs.bk
 bin
 Cargo.lock
+dist
 node_modules
 pkg
 target
