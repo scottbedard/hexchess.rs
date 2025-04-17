@@ -1,38 +1,25 @@
-import { read, resolve, write } from './utils.mjs'
+import { dim, green, resolve } from './utils.mjs'
+import { execSync } from 'child_process'
 
 function run() {
+  const startAt = Date.now()
+
+  // cleanup
+  execSync(`rm -rf ${resolve('dist')}`)
+
+  // generate types
+  execSync('tsc --project ./tsconfig.json --emitDeclarationOnly')
+
+  // build npm package
+  execSync('rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript')
+
+  // build wasm package
+  execSync('wasm-pack build ./src/wasm --out-dir ../../dist/wasm --out-name index')
+  execSync(`rm ${resolve('dist/wasm/.gitignore')}`)
+  execSync(`rm ${resolve('dist/wasm/package.json')}`)
+
   console.log()
-  console.log('Running post-build...')
-
-  const pkg = resolve('pkg/package.json')
-  const json = JSON.parse(read(pkg))
-  const base = JSON.parse(read('package.json'))
-
-  // write module
-  json.files.push('index.js')
-  json.main = 'index.js'
-  json.module = 'index.js'
-  json.name = '@bedard/hexchess'
-  json.sideEffects.push('./index.js')
-  json.version = base.version
-  write(pkg, JSON.stringify(json, null, 2) + '\n')
-  write('pkg/index.js', read('src/pkg.mjs').replace('x.y.z', base.version))
-
-  // append types
-  const dts = read('pkg/hexchess.d.ts')
-  const types = read('src/types.d.ts')
-    .split('\n')
-    .slice(
-      read('src/types.d.ts')
-        .split('\n')
-        .findIndex(line => line.startsWith('// @append-types-start')) + 1
-    )
-    .join('\n')
-    .replace('x.y.z', base.version)
-
-  write('pkg/hexchess.d.ts', `${dts}\n${types}`)
-
-  console.log('\x1b[32mDone')
+  console.log(`${green('Done')} ${dim(`${(Date.now() - startAt) / 1000}s`)}`)
 }
 
 run()
