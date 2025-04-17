@@ -4,13 +4,14 @@ import type {
   Position
 } from './types'
 
-import { initialPosition } from './constants'
-
 import {
   error,
   index,
   isPosition
 } from './utils'
+
+import { initialPosition } from './constants'
+import { San } from './san'
 
 export interface HexchessStruct {
   board: Board
@@ -80,6 +81,22 @@ export class Hexchess implements HexchessStruct {
   /** initialize hexchess from starting position */
   static init(): Hexchess {
     return new Hexchess(initialPosition)
+  }
+
+  /** get moves from a position, regardless of turn or legality */
+  movesFromUnsafe(from: number): San[] {
+    const piece = this.board[from]
+
+    switch (piece) {
+      case 'k': case 'K': return [] // kingMovesUnsafe(this, from)
+      case 'n': case 'N': return [] // knightMovesUnsafe(this, from)
+      case 'p': case 'P': return [] // pawnMovesUnsafe(this, from)
+      case 'b': case 'B': return [] // bishopMovesUnsafe(this, from)
+      case 'r': case 'R': return [] // rookMovesUnsafe(this, from)
+      case 'q': case 'Q': return [] // queenMovesUnsafe(this, from)
+    }
+
+    return []
   }
 
   /** create hexchess from fen */
