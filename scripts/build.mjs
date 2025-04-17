@@ -14,7 +14,7 @@ function run() {
   execSync('rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript')
 
   // build wasm package
-  execSync(`wasm-pack build ${resolve('src/wasm')} --out-dir ${resolve('dist/wasm')} --out-name index`)
+  execSync(`${resolve('node_modules/.bin/wasm-pack')} build ${resolve('src/wasm')} --out-dir ${resolve('dist/wasm')} --out-name index`)
   execSync(`rm ${resolve('dist/wasm/.gitignore')}`)
   execSync(`rm ${resolve('dist/wasm/package.json')}`)
 

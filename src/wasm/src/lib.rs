@@ -13,5 +13,7 @@ fn set_panic_hook() {
 
 #[wasm_bindgen]
 pub fn add(a: u32, b: u32) -> u32 {
+    set_panic_hook();
+
     a + b
 }
