@@ -26,6 +26,9 @@ importers:
       globals:
         specifier: ^16.0.0
         version: 16.0.0
+      jiti:
+        specifier: ^2.4.2
+        version: 2.4.2
       rollup:
         specifier: ^4.40.0
         version: 4.40.0
@@ -2261,8 +2264,7 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  jiti@2.4.2:
-    optional: true
+  jiti@2.4.2: {}
 
   js-yaml@4.1.0:
     dependencies:
