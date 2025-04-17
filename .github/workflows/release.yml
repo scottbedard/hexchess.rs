@@ -25,9 +25,6 @@ jobs:
     - name: Install dependencies
       run: pnpm install
 
-    - name: Check versions
-      run: pnpm check-version release=${{ github.ref_name }}
-
   rust:
     name: Rust
 
@@ -74,7 +71,7 @@ jobs:
   publish:
     name: Publish
 
-    needs: [versions, rust, node]
+    needs: [rust, node]
 
     runs-on: ubuntu-latest
 

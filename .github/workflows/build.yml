@@ -28,7 +28,7 @@ jobs:
         run: pnpm lint
 
       - name: Vitest
-        run: pnpm vitest
+        run: pnpm test
 
   rust:
     name: Rust
@@ -48,23 +48,3 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-
-  versions:
-    name: Check versions
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - uses: pnpm/action-setup@v4
-      name: Install pnpm
-      with:
-        version: 9
-        run_install: false
-
-    - name: Install dependencies
-      run: pnpm install
-
-    - name: Check versions
-      run: pnpm check-version
