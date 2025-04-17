@@ -10,6 +10,10 @@ import {
   isPosition
 } from './utils'
 
+import {
+  straightLineMovesUnsafe
+} from './pieces/straight-line'
+
 import { initialPosition } from './constants'
 import { San } from './san'
 
@@ -83,17 +87,23 @@ export class Hexchess implements HexchessStruct {
     return new Hexchess(initialPosition)
   }
 
+  /** get legal moves from a position */
+  movesFrom(from: number | Position): San[] {
+    return this.movesFromUnsafe(from)
+  }
+
   /** get moves from a position, regardless of turn or legality */
-  movesFromUnsafe(from: number): San[] {
-    const piece = this.board[from]
+  movesFromUnsafe(from: number | Position): San[] {
+    const i = typeof from === 'string' ? index(from) : from
+    const piece = this.board[i]
 
     switch (piece) {
       case 'k': case 'K': return [] // kingMovesUnsafe(this, from)
       case 'n': case 'N': return [] // knightMovesUnsafe(this, from)
       case 'p': case 'P': return [] // pawnMovesUnsafe(this, from)
-      case 'b': case 'B': return [] // bishopMovesUnsafe(this, from)
-      case 'r': case 'R': return [] // rookMovesUnsafe(this, from)
-      case 'q': case 'Q': return [] // queenMovesUnsafe(this, from)
+      case 'b': case 'B': return straightLineMovesUnsafe(this, i, this.turn, [1, 3, 5, 7, 9, 11])
+      case 'r': case 'R': return straightLineMovesUnsafe(this, i, this.turn, [0, 2, 4, 6, 8, 10])
+      case 'q': case 'Q': return straightLineMovesUnsafe(this, i, this.turn, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
     }
 
     return []
