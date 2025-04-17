@@ -14,11 +14,16 @@ function run() {
   execSync('rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript')
 
   // build wasm package
-  execSync(`${resolve('node_modules/.bin/wasm-pack')} build ${resolve('src/wasm')} --out-dir ${resolve('dist/wasm')} --out-name index`)
-  execSync(`rm ${resolve('dist/wasm/.gitignore')}`)
-  execSync(`rm ${resolve('dist/wasm/package.json')}`)
+  execSync(`${resolve('node_modules/.bin/wasm-pack')} build --out-dir ${resolve('dist/wasm')} --out-name index`);
 
-  // update version numbers
+  [
+    'dist/wasm/README.md',
+    'dist/wasm/.gitignore',
+    'dist/wasm/LICENSE',
+    'dist/wasm/package.json',
+  ].forEach(file => execSync(`rm ${resolve(file)}`))
+
+  // set version numbers
   const pkg = JSON.parse(read('package.json'))
   write('dist/index.mjs', read('dist/index.mjs').replace('x.y.z', pkg.version))
 
