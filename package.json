@@ -26,9 +26,6 @@
   },
   "scripts": {
     "build": "node ./scripts/build.mjs",
-    "build:old": "tsc --project ./tsconfig.json --emitDeclarationOnly && rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript",
-    "build:wasm": "wasm-pack build ./src/wasm --out-dir ../../dist/wasm --out-name index",
-    "check-version": "node ./scripts/check-version.mjs",
     "lint:fix": "eslint --fix",
     "lint": "eslint",
     "test": "vitest"
