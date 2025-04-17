@@ -1395,7 +1395,7 @@ pub enum Color {
 
 /// Piece symbols
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
-#[tsify(into_wasm_abi, from_wasm_abi)]
+#[wasm_bindgen(js_name = Bar)]
 pub enum Piece {
     #[serde(rename(deserialize = "P", serialize = "P"))]
     WhitePawn,
