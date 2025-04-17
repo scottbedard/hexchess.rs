@@ -18,6 +18,11 @@ export function getColor(piece: Piece): Color {
     : 'w'
 }
 
+/** get the index of a position */
+export function index(position: Position): number {
+  return positions.indexOf(position)
+}
+
 /** test if string is a position name */
 export function isPosition(source: string): source is Position {
   return (positions as readonly string[]).includes(source)
