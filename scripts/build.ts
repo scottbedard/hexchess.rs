@@ -1,4 +1,4 @@
-import { dim, green, read, resolve, write } from './utils.mjs'
+import { dim, green, read, resolve, write } from './utils'
 import { execSync } from 'child_process'
 
 function run() {
