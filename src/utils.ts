@@ -1,5 +1,4 @@
 import type {
-  Board,
   Color,
   Piece,
   Position
