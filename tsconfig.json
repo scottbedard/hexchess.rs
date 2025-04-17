@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["src/*"],
+    },
+    "rootDir": "src",
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "es2016",
+  },
+  "include": [
+    "src/**/*",
+  ]
+}
