@@ -10,7 +10,15 @@ import {
   isPosition
 } from './utils'
 
-export class Hexchess {
+export interface HexchessStruct {
+  board: Board
+  ep: Position | null
+  turn: 'w' | 'b'
+  halfmove: number
+  fullmove: number
+}
+
+export class Hexchess implements HexchessStruct {
   board: Board = createBoard()
 
   /** index eligible for en passant capture */
