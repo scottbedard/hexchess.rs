@@ -2,6 +2,14 @@ import { fileURLToPath } from 'url'
 import fs from 'node:fs'
 import path from 'node:path'
 
+export function dim(text) {
+  return `\x1b[2m${text}\x1b[0m`
+}
+
+export function green(text) {
+  return `\x1b[32m${text}\x1b[0m`
+}
+
 export function read(file) {
   return fs.readFileSync(resolve(file), 'utf-8')
 }
