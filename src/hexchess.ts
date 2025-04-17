@@ -1,5 +1,6 @@
 import type {
   Board,
+  Piece,
   Position
 } from './types'
 
@@ -7,6 +8,7 @@ import { initialPosition } from './constants'
 
 import {
   error,
+  index,
   isPosition
 } from './utils'
 
@@ -69,6 +71,10 @@ export class Hexchess implements HexchessStruct {
     this.halfmove = Math.max(0, parseInt(halfmove, 10))
 
     this.fullmove = Math.max(1, parseInt(fullmove, 10))
+  }
+
+  get(position: Position): Piece | null {
+    return this.board[index(position)] ?? null
   }
 
   /** initialize hexchess from starting position */

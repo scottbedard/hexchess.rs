@@ -43,24 +43,6 @@ pub struct Hexchess {
     pub turn: Color,
 }
 
-// impl wasm_bindgen::convert::RefFromWasmAbi for Hexchess {
-//     type Abi = u32;
-//     type Anchor = Box<Hexchess>;
-
-//     unsafe fn ref_from_abi(js: Self::Abi) -> Self::Anchor {
-//         Box::from_raw(js as *mut Hexchess)
-//     }
-// }
-
-// impl wasm_bindgen::convert::RefMutFromWasmAbi for Hexchess {
-//     type Abi = u32;
-//     type Anchor = Box<Hexchess>;
-
-//     unsafe fn ref_mut_from_abi(js: Self::Abi) -> Self::Anchor {
-//         Box::from_raw(js as *mut Hexchess)
-//     }
-// }
-
 impl Hexchess {
     /// apply legal move
     pub fn apply_move(&mut self, san: &San) -> Result<(), String> {

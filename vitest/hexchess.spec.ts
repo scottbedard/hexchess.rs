@@ -2,6 +2,16 @@ import { describe, expect, test } from 'vitest'
 import { Hexchess, initialPosition } from '../src'
 
 describe('Hexchess', () => {
+  test('get', () => {
+    const hexchess = Hexchess.init()
+
+    expect(hexchess.get('g10')).toBe('k')
+    expect(hexchess.get('g1')).toBe('K')
+    expect(hexchess.get('a4')).toBe(null)
+    // @ts-expect-error - invalid position
+    expect(hexchess.get('whoops')).toBe(null)
+  })
+
   test('parse', () => {
     const hexchess = Hexchess.parse(initialPosition)
 
