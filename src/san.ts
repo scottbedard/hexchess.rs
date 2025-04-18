@@ -1,4 +1,4 @@
-import { index } from './index'
+import { index, positions } from './index'
 import { Position, PromotionPiece } from './types'
 
 export class San {
@@ -17,5 +17,10 @@ export class San {
     this.from = typeof obj.from === 'string' ? index(obj.from) : obj.from
     this.to = typeof obj.to === 'string' ? index(obj.to) : obj.to
     this.promotion = obj.promotion ?? null
+  }
+
+  /** convert san to string */
+  toString() {
+    return `${positions[this.from]}${positions[this.to]}${this.promotion ?? ''}`
   }
 }

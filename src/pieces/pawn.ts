@@ -1,6 +1,6 @@
+import { getColor, step } from '../utils'
 import { Hexchess } from '../hexchess'
 import { San } from '../san'
-import { getColor, step } from '../utils'
 import type { Color, Direction } from '../types'
 
 export function pawnMovesUnsafe(
@@ -18,14 +18,14 @@ export function pawnMovesUnsafe(
   const advance1 = advance(hexchess, from, from, forward)
 
   if (advance1) {
-    result.push(advance1)
+    pushMoves(result, advance1, color)
 
     // if starting position, advance forward another position
     if (isStartingPosition(from, color)) {
       const advance2 = advance(hexchess, from, advance1.to, forward)
 
       if (advance2) {
-        pushMoves(result, advance2, color)
+        result.push(advance2)
       }
     }
   }
