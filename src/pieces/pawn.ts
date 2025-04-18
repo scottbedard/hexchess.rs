@@ -89,6 +89,7 @@ const capture = (
   return null
 }
 
+/** check if position is a promotion position */
 const isPromotionPosition = (position: number, color: Color) => color === 'b'
   ? [
     80, // a1

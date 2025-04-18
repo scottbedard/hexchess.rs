@@ -30,6 +30,37 @@ export function isPosition(source: string): source is Position {
   return (positions as readonly string[]).includes(source)
 }
 
+/** test if position is a promotion position */
+export function isPromotionPosition(position: number, color: Color) {
+  return color === 'b'
+    ? [
+      80, // a1
+      81, // b1
+      82, // c1
+      83, // d1
+      84, // e1
+      85, // f1
+      86, // g1
+      87, // h1
+      88, // i1
+      89, // k1
+      90, // l1
+    ].includes(position)
+    : [
+      25, // a6
+      16, // b7
+      9, // c8
+      4, // d9
+      1, // e10
+      0, // f11
+      3, // g10
+      8, // h9
+      15, // i8
+      24, // k7
+      35, // l6
+    ].includes(position)
+}
+
 /** test if position is unnocupied or hostile */
 export function isTarget(hexchess: Hexchess, position: number | undefined, color: Color): position is number {
   return typeof position === 'number' && (
