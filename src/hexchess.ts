@@ -8,6 +8,7 @@ import type { San } from './san'
 
 import {
   error,
+  getColor,
   index,
   isPosition
 } from './utils'
@@ -98,19 +99,25 @@ export class Hexchess implements HexchessStruct {
     const i = typeof from === 'string' ? index(from) : from
     const piece = this.board[i]
 
+    if (piece === null) {
+      return []
+    }
+
+    const color = getColor(piece)
+
     switch (piece) {
       case 'b':
-      case 'B': return straightLineMovesUnsafe(this, i, this.turn, [1, 3, 5, 7, 9, 11])
+      case 'B': return straightLineMovesUnsafe(this, i, color, [1, 3, 5, 7, 9, 11])
       case 'k':
-      case 'K': return kingMovesUnsafe(this, i, this.turn)
+      case 'K': return kingMovesUnsafe(this, i, color)
       case 'n':
-      case 'N': return knightMovesUnsafe(this, i, this.turn)
+      case 'N': return knightMovesUnsafe(this, i, color)
       case 'p':
-      case 'P': return pawnMovesUnsafe(this, i, this.turn)
+      case 'P': return pawnMovesUnsafe(this, i, color)
       case 'q':
-      case 'Q': return straightLineMovesUnsafe(this, i, this.turn, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+      case 'Q': return straightLineMovesUnsafe(this, i, color, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
       case 'r':
-      case 'R': return straightLineMovesUnsafe(this, i, this.turn, [0, 2, 4, 6, 8, 10])
+      case 'R': return straightLineMovesUnsafe(this, i, color, [0, 2, 4, 6, 8, 10])
     }
 
     return []
