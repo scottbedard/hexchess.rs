@@ -30,6 +30,13 @@ export function isPosition(source: string): source is Position {
   return (positions as readonly string[]).includes(source)
 }
 
+/** test if position is unnocupied or hostile */
+export function isTarget(hexchess: Hexchess, position: number | undefined, color: Color): position is number {
+  return typeof position === 'number' && (
+    !hexchess.board[position] || getColor(hexchess.board[position]) !== color
+  )
+}
+
 /** step along the hexboard graph */
 export function step(from: number, direction: Direction): number | undefined {
   return graph[from][direction]
