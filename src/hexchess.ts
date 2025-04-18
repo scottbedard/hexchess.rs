@@ -4,22 +4,23 @@ import type {
   Position
 } from './types'
 
+import type { San } from './san'
+
 import {
   error,
   index,
   isPosition
 } from './utils'
 
-import {
-  straightLineMovesUnsafe
-} from './pieces/straight-line'
-
 import { initialPosition } from './constants'
-import { San } from './san'
+import { kingMovesUnsafe } from './pieces/king'
+import { knightMovesUnsafe } from './pieces/knight'
+import { pawnMovesUnsafe } from './pieces/pawn'
+import { straightLineMovesUnsafe } from './pieces/straight-line'
 
 export interface HexchessStruct {
   board: Board
-  ep: Position | null
+  ep: number | null
   turn: 'w' | 'b'
   halfmove: number
   fullmove: number
@@ -29,7 +30,7 @@ export class Hexchess implements HexchessStruct {
   board: Board = createBoard()
 
   /** index eligible for en passant capture */
-  ep: Position | null = null
+  ep: number | null = null
 
   /** current turn color */
   turn: 'w' | 'b' = 'w'
@@ -68,7 +69,7 @@ export class Hexchess implements HexchessStruct {
     if (ep === '-') {
       this.ep = null
     } else if (isPosition(ep)) {
-      this.ep = ep
+      this.ep = index(ep)
     } else {
       error('parse failed: invalid en passant')
     }
@@ -98,12 +99,18 @@ export class Hexchess implements HexchessStruct {
     const piece = this.board[i]
 
     switch (piece) {
-      case 'k': case 'K': return [] // kingMovesUnsafe(this, from)
-      case 'n': case 'N': return [] // knightMovesUnsafe(this, from)
-      case 'p': case 'P': return [] // pawnMovesUnsafe(this, from)
-      case 'b': case 'B': return straightLineMovesUnsafe(this, i, this.turn, [1, 3, 5, 7, 9, 11])
-      case 'r': case 'R': return straightLineMovesUnsafe(this, i, this.turn, [0, 2, 4, 6, 8, 10])
-      case 'q': case 'Q': return straightLineMovesUnsafe(this, i, this.turn, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+      case 'b':
+      case 'B': return straightLineMovesUnsafe(this, i, this.turn, [1, 3, 5, 7, 9, 11])
+      case 'k':
+      case 'K': return kingMovesUnsafe(this, i, this.turn)
+      case 'n':
+      case 'N': return knightMovesUnsafe(this, i, this.turn)
+      case 'p':
+      case 'P': return pawnMovesUnsafe(this, i, this.turn)
+      case 'q':
+      case 'Q': return straightLineMovesUnsafe(this, i, this.turn, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+      case 'r':
+      case 'R': return straightLineMovesUnsafe(this, i, this.turn, [0, 2, 4, 6, 8, 10])
     }
 
     return []
