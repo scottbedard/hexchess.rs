@@ -4,15 +4,15 @@ import type {
   Position
 } from './types'
 
-import type { San } from './san'
-
 import {
   error,
   getColor,
   index,
-  isPosition
+  isPosition,
+  step
 } from './utils'
 
+import { San } from './san'
 import { initialPosition } from './constants'
 import { kingMovesUnsafe } from './pieces/king'
 import { knightMovesUnsafe } from './pieces/knight'
@@ -80,6 +80,80 @@ export class Hexchess implements HexchessStruct {
     this.fullmove = Math.max(1, parseInt(fullmove, 10))
   }
 
+  /** apply move, regardless of turn or legality */
+  applyMoveUnsafe(san: San | string) {
+    const { from, to, promotion } = typeof san === 'string' ? San.from(san) : san
+    const piece = this.board[from]
+
+    if (piece === null) {
+      error(`cannot apply move from empty position: ${from}`)
+    }
+
+    // update halfmove
+    if (this.board[to] !== null || piece === 'p' || piece === 'P') {
+      this.halfmove = 0
+    } else {
+      this.halfmove += 1
+    }
+
+    // update fullmove and turn color
+    const color = getColor(piece)
+
+    if (color === 'b') {
+      this.fullmove += 1
+      this.turn = 'w'
+    } else {
+      this.turn = 'b'
+    }
+
+    // set from positions
+    this.board[from] = null
+
+    // set to position
+    if (promotion) {
+      this.board[to] = color === 'b' ? promotion : promotion.toUpperCase() as Piece
+    } else {
+      this.board[to] = piece
+    }
+
+    // clear captured en passant
+    if (to === this.ep) {
+      const captured = piece === 'p' ? step(to, 0) : step(to, 6)
+
+      if (typeof captured === 'number') {
+        this.board[captured] = null
+      }
+    }
+
+    // set en passsant
+    if (piece === 'p') {
+      if (from === 17 && to === 38) this.ep = 27 // c7 -> c5, c6
+      else if (from === 18 && to === 39) this.ep = 28 // d7 -> d5, d6
+      else if (from === 19 && to === 40) this.ep = 29 // e7 -> e5, e6
+      else if (from === 20 && to === 41) this.ep = 30 // f7 -> f5, f6
+      else if (from === 21 && to === 42) this.ep = 31 // g7 -> g5, g6
+      else if (from === 22 && to === 43) this.ep = 32 // h7 -> h5, h6
+      else if (from === 23 && to === 44) this.ep = 33 // i7 -> i5, i6
+      else if (from === 24 && to === 45) this.ep = 34 // k7 -> k5, k6
+      else this.ep = null
+    } else if (piece === 'P') {
+      if (from === 71 && to === 49) this.ep = 60 // c2 -> c4, c3
+      else if (from === 61 && to === 39) this.ep = 50 // d3 -> d5, d4
+      else if (from === 51 && to === 29) this.ep = 40 // e4 -> e6, e5
+      else if (from === 41 && to === 20) this.ep = 30 // f5 -> f7, f6
+      else if (from === 53 && to === 31) this.ep = 42 // g4 -> g6, g5
+      else if (from === 65 && to === 43) this.ep = 54 // h3 -> h5, h4
+      else if (from === 77 && to === 55) this.ep = 66 // i2 -> i4, i3
+      else if (from === 89 && to === 67) this.ep = 78 // k1 -> k3, k2
+      else this.ep = null
+    } else {
+      this.ep = null
+    }
+
+    return this
+  }
+
+  /** get piece at position */
   get(position: Position): Piece | null {
     return this.board[index(position)] ?? null
   }
@@ -91,6 +165,8 @@ export class Hexchess implements HexchessStruct {
 
   /** get legal moves from a position */
   movesFrom(from: number | Position): San[] {
+    // ...
+
     return this.movesFromUnsafe(from)
   }
 
@@ -119,8 +195,6 @@ export class Hexchess implements HexchessStruct {
       case 'r':
       case 'R': return straightLineMovesUnsafe(this, i, color, [0, 2, 4, 6, 8, 10])
     }
-
-    return []
   }
 
   /** create hexchess from fen */
