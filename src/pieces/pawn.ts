@@ -1,4 +1,4 @@
-import { getColor, step } from '../utils'
+import { getColor, isPromotionPosition, step } from '../utils'
 import { Hexchess } from '../hexchess'
 import { San } from '../san'
 import type { Color, Direction } from '../types'
@@ -88,35 +88,6 @@ const capture = (
 
   return null
 }
-
-/** check if position is a promotion position */
-const isPromotionPosition = (position: number, color: Color) => color === 'b'
-  ? [
-    80, // a1
-    81, // b1
-    82, // c1
-    83, // d1
-    84, // e1
-    85, // f1
-    86, // g1
-    87, // h1
-    88, // i1
-    89, // k1
-    90, // l1
-  ].includes(position)
-  : [
-    25, // a6
-    16, // b7
-    9, // c8
-    4, // d9
-    1, // e10
-    0, // f11
-    3, // g10
-    8, // h9
-    15, // i8
-    24, // k7
-    35, // l6
-  ].includes(position)
 
 /** check if position is a starting position */
 const isStartingPosition = (position: number, color: Color) => color === 'b'

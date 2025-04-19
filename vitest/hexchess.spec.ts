@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { assert, describe, expect, test } from 'vitest'
 import {
   Hexchess,
   index,
@@ -361,29 +361,191 @@ describe('Hexchess', () => {
     })
   })
 
-  test('parse', () => {
-    const hexchess = Hexchess.parse(initialPosition)
+  describe('movesFrom', () => {
+    test('returns empty array for empty position', () => {
+      const hexchess = Hexchess.init()
 
-    expect(hexchess.board).toEqual([
-      'b', 'q', 'b', 'k', 'n', null, 'b', null, 'n', 'r',
-      null, null, null, null, null, 'r', 'p', 'p', 'p', 'p',
-      'p', 'p', 'p', 'p', 'p', null, null, null, null, null,
-      null, null, null, null, null, null, null, null, null, null,
-      null, 'P', null, null, null, null, null, null, null, null,
-      null, 'P', null, 'P', null, null, null, null, null, null,
-      null, 'P', null, 'B', null, 'P', null, null, null, null,
-      null, 'P', null, null, 'B', null, null, 'P', null, null,
-      null, 'P', 'R', 'N', 'Q', 'B', 'K', 'N', 'R', 'P',
-      null,
-    ])
+      expect(hexchess.movesFrom('a4').length).toBe(0)
+      expect(hexchess.movesFromUnsafe('a4').length).toBe(0)
+    })
+  })
 
-    expect(hexchess.ep).toBeNull()
+  describe('parsing', () => {
+    test('empty state', () => {
+      const hexchess = new Hexchess()
 
-    expect(hexchess.turn).toBe('w')
+      expect(hexchess.board).toEqual(new Array(91).fill(null))
+      expect(hexchess.ep).toBeNull()
+      expect(hexchess.fullmove).toBe(1)
+      expect(hexchess.halfmove).toBe(0)
+      expect(hexchess.turn).toBe('w')
+    })
 
-    expect(hexchess.halfmove).toBe(0)
+    test('initial state', () => {
+      const hexchess = Hexchess.init()
 
-    expect(hexchess.fullmove).toBe(1)
+      expect(hexchess.board).toEqual([
+        'b', 'q', 'b', 'k', 'n', null, 'b', null, 'n', 'r',
+        null, null, null, null, null, 'r', 'p', 'p', 'p', 'p',
+        'p', 'p', 'p', 'p', 'p', null, null, null, null, null,
+        null, null, null, null, null, null, null, null, null, null,
+        null, 'P', null, null, null, null, null, null, null, null,
+        null, 'P', null, 'P', null, null, null, null, null, null,
+        null, 'P', null, 'B', null, 'P', null, null, null, null,
+        null, 'P', null, null, 'B', null, null, 'P', null, null,
+        null, 'P', 'R', 'N', 'Q', 'B', 'K', 'N', 'R', 'P',
+        null,
+      ])
+
+      expect(hexchess.ep).toBeNull()
+      expect(hexchess.turn).toBe('w')
+      expect(hexchess.halfmove).toBe(0)
+      expect(hexchess.fullmove).toBe(1)
+    })
+
+    test('empty string', () => {
+      expect(() => Hexchess.parse('')).toThrow()
+    })
+
+    test('invalid', () => {
+      expect(() => Hexchess.parse('whoops')).toThrow()
+    })
+
+    test('turn color', () => {
+      expect(Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w - 0 1').turn).toBe('w')
+      expect(Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 b - 0 1').turn).toBe('b')
+    })
+
+    test('invalid turn color', () => {
+      expect(() => Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 x - 0 1')).toThrow()
+    })
+
+    test('missing turn color', () => {
+      expect(Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11').turn).toBe('w')
+    })
+
+    test('en passant black', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w e6 0 1')
+
+      expect(hexchess.ep).toBe(index('e6'))
+    })
+
+    test('en passant white', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w g5 0 1')
+
+      expect(hexchess.ep).toBe(index('g5'))
+    })
+
+    test('invalid en passant', () => {
+      expect(() => Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w x 0 1')).toThrow()
+    })
+
+    test('missing en passant', () => {
+      expect(Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w - 0 1').ep).toBeNull()
+    })
+
+    test('illegal en passant', () => {
+      expect(() => Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w a1 0 1')).toThrow()
+    })
+
+    test('missing halfmove', () => {
+      expect(Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w -').halfmove).toBe(0)
+    })
+
+    test('invalid halfmove', () => {
+      expect(() => Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w - x 1')).toThrow()
+    })
+
+    test('multiple black kings', () => {
+      expect(() => Hexchess.parse('1/k1k/5/7/9/11/11/11/11/11/11 w - 0 1')).toThrow()
+    })
+
+    test('multiple white kings', () => {
+      expect(() => Hexchess.parse('1/K1K/5/7/9/11/11/11/11/11/11 w - 0 1')).toThrow()
+    })
+
+    test('invalid character', () => {
+      expect(() => Hexchess.parse('x/3/5/7/9/11/11/11/11/11/11 w - 0 1')).toThrow()
+    })
+
+    test('board overflow', () => {
+      expect(() => Hexchess.parse('2/3/5/7/9/11/11/11/11/11/11 w - 0 1')).toThrow()
+    })
+
+    test('invalid fullmove', () => {
+      expect(() => Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w - 0 x')).toThrow()
+      expect(() => Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w - 0 0')).toThrow()
+    })
+
+    test('missing fullmove', () => {
+      expect(Hexchess.parse('1/3/5/7/9/11/11/11/11/11/11 w - 0').fullmove).toBe(1)
+    })
+
+    test('fen with skip 1', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/1p9/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('b6')]).toBe('p')
+    })
+
+    test('fen with skip 2', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/2p8/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('c6')]).toBe('p')
+    })
+
+    test('fen with skip 3', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/3p7/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('d6')]).toBe('p')
+    })
+
+    test('fen with skip 4', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/4p6/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('e6')]).toBe('p')
+    })
+
+    test('fen with skip 5', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/5p5/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('f6')]).toBe('p')
+    })
+
+    test('fen with skip 6', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/6p4/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('g6')]).toBe('p')
+    })
+
+    test('fen with skip 7', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/7p3/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('h6')]).toBe('p')
+    })
+
+    test('fen with skip 8', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/8p2/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('i6')]).toBe('p')
+    })
+
+    test('fen with skip 9', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/9p1/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('k6')]).toBe('p')
+    })
+
+    test('fen with skip 10', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/10p/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('l6')]).toBe('p')
+    })
+
+    test('fen with skip 11', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/9/11/p10/11/11/11/11 w - 0 1')
+
+      expect(hexchess.board[index('a5')]).toBe('p')
+    })
   })
 
   describe('toString', () => {
@@ -400,384 +562,6 @@ describe('Hexchess', () => {
     })
   })
 })
-
-//     #[test]
-//     fn test_get() {
-//         let hexchess = Hexchess::init();
-
-//         assert_eq!(hexchess.get("g10"), Some(Piece::BlackKing));
-//         assert_eq!(hexchess.get("g1"), Some(Piece::WhiteKing));
-//         assert_eq!(hexchess.get("a4"), None);
-//         assert_eq!(hexchess.get("whoops"), None);
-//     }
-
-//     mod moves_from {
-//         use super::*;
-
-//         #[test]
-//         fn returns_empty_vector_for_empty_position() {
-//             let hexchess = Hexchess::init();
-
-//             assert_eq!(hexchess.moves_from(h!("a4")).len(), 0);
-//             assert_eq!(hexchess.moves_from_unsafe(h!("a4")).len(), 0);
-//         }
-//     }
-
-//     mod parsing {
-//         use crate::h;
-//         use super::*;
-
-//         #[test]
-//         fn empty_state() {
-//             let hexchess = Hexchess::new();
-
-//             assert!(hexchess.board.iter().all(|&square| square.is_none()));
-//             assert_eq!(hexchess.ep, None);
-//             assert_eq!(hexchess.fullmove, 1);
-//             assert_eq!(hexchess.halfmove, 0);
-//             assert_eq!(hexchess.turn, Color::White);
-//         }
-
-//         #[test]
-//         fn initial_state() {
-//             let hexchess = Hexchess::init();
-
-//             assert!(hexchess.board.iter().eq([
-//                 Some(Piece::BlackBishop),
-//                 Some(Piece::BlackQueen),
-//                 Some(Piece::BlackBishop),
-//                 Some(Piece::BlackKing),
-//                 Some(Piece::BlackKnight),
-//                 None,
-//                 Some(Piece::BlackBishop),
-//                 None,
-//                 Some(Piece::BlackKnight),
-//                 Some(Piece::BlackRook),
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 Some(Piece::BlackRook),
-//                 Some(Piece::BlackPawn),
-//                 Some(Piece::BlackPawn),
-//                 Some(Piece::BlackPawn),
-//                 Some(Piece::BlackPawn),
-//                 Some(Piece::BlackPawn),
-//                 Some(Piece::BlackPawn),
-//                 Some(Piece::BlackPawn),
-//                 Some(Piece::BlackPawn),
-//                 Some(Piece::BlackPawn),
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 Some(Piece::WhitePawn),
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 Some(Piece::WhitePawn),
-//                 None,
-//                 Some(Piece::WhitePawn),
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 Some(Piece::WhitePawn),
-//                 None,
-//                 Some(Piece::WhiteBishop),
-//                 None,
-//                 Some(Piece::WhitePawn),
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 None,
-//                 Some(Piece::WhitePawn),
-//                 None,
-//                 None,
-//                 Some(Piece::WhiteBishop),
-//                 None,
-//                 None,
-//                 Some(Piece::WhitePawn),
-//                 None,
-//                 None,
-//                 None,
-//                 Some(Piece::WhitePawn),
-//                 Some(Piece::WhiteRook),
-//                 Some(Piece::WhiteKnight),
-//                 Some(Piece::WhiteQueen),
-//                 Some(Piece::WhiteBishop),
-//                 Some(Piece::WhiteKing),
-//                 Some(Piece::WhiteKnight),
-//                 Some(Piece::WhiteRook),
-//                 Some(Piece::WhitePawn),
-//                 None,
-//             ].iter()));
-
-//             assert_eq!(hexchess.turn, Color::White);
-//             assert_eq!(hexchess.ep, None);
-//             assert_eq!(hexchess.halfmove, 0);
-//             assert_eq!(hexchess.fullmove, 1);
-//         }
-
-//         #[test]
-//         fn empty_string() {
-//             let hexchess = Hexchess::parse("");
-
-//             assert!(hexchess.is_err());
-//             assert_eq!(
-//                 hexchess.unwrap_err(),
-//                 "board not found"
-//             );
-//         }
-
-//         #[test]
-//         fn invalid() {
-//             let hexchess = Hexchess::parse("whoops");
-
-//             assert!(hexchess.is_err());
-//         }
-
-//         #[test]
-//         fn turn_color() {
-//             let white = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
-
-//             assert_eq!(white.turn, Color::White);
-
-//             let black = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 b - 0 1").unwrap();
-
-//             assert_eq!(black.turn, Color::Black);
-//         }
-
-//         #[test]
-//         fn invalid_turn_color() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 x - 0 1");
-
-//             assert!(hexchess.is_err());
-//             assert_eq!(
-//                 hexchess.unwrap_err(),
-//                 "invalid turn color: x"
-//             );
-//         }
-
-//         #[test]
-//         fn missing_turn_color() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11").unwrap();
-
-//             assert_eq!(hexchess.turn, Color::White);
-//         }
-
-//         #[test]
-//         fn en_passant_black() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w e6 0 1");
-
-//             assert_eq!(hexchess.unwrap().ep, Some(h!("e6")));
-//         }
-
-//         #[test]
-//         fn en_passant_white() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w g5 0 1");
-
-//             assert_eq!(hexchess.unwrap().ep, Some(h!("g5")));
-//         }
-
-//         #[test]
-//         fn invalid_en_passant() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w x 0 1");
-
-//             assert!(hexchess.is_err());
-//             assert_eq!(
-//                 hexchess.unwrap_err(),
-//                 "invalid en passant position: x"
-//             );
-//         }
-
-//         #[test]
-//         fn missing_en_passant() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w").unwrap();
-
-//             assert_eq!(hexchess.ep, None);
-//         }
-
-//         #[test]
-//         fn illegal_en_passant() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w a1 0 1");
-
-//             assert!(hexchess.is_err());
-//             assert_eq!(
-//                 hexchess.unwrap_err(),
-//                 "illegal en passant position: a1"
-//             );
-//         }
-
-//         #[test]
-//         fn invalid_halfmove() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - x 1");
-
-//             assert!(hexchess.is_err());
-//             assert_eq!(
-//                 hexchess.unwrap_err(),
-//                 "invalid halfmove: x"
-//             );
-//         }
-
-//         #[test]
-//         fn multiple_black_kings() {
-//             let hexchess = Hexchess::parse("1/k1k/5/7/9/11/11/11/11/11/11 w - 0 1");
-
-//             assert!(hexchess.is_err());
-//             assert_eq!(hexchess.unwrap_err(), "multiple black kings");
-//         }
-
-//         #[test]
-//         fn multiple_white_kings() {
-//             let hexchess = Hexchess::parse("1/K1K/5/7/9/11/11/11/11/11/11 w - 0 1");
-
-//             assert!(hexchess.is_err());
-//             assert_eq!(hexchess.unwrap_err(), "multiple white kings");
-//         }
-
-//         #[test]
-//         fn invalid_character() {
-//             let hexchess = Hexchess::parse("x/3/5/7/9/11/11/11/11/11/11 w - 0 1");
-
-//             assert!(hexchess.is_err());
-//             assert_eq!(hexchess.unwrap_err(), "invalid character at index 0: x");
-//         }
-
-//         #[test]
-//         fn board_overflow() {
-//             let hexchess = Hexchess::parse("2/3/5/7/9/11/11/11/11/11/11 w - 0 1");
-
-//             assert!(hexchess.is_err());
-//             assert_eq!(hexchess.unwrap_err(), "board overflow");
-//         }
-
-//         #[test]
-//         fn missing_halfmove() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w -").unwrap();
-
-//             assert_eq!(hexchess.halfmove, 0);
-//         }
-
-//         #[test]
-//         fn invalid_fullmove() {
-//             let invalid1 = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - 0 x");
-//             assert!(invalid1.is_err());
-//             assert_eq!(invalid1.unwrap_err(), "invalid fullmove: x");
-
-//             let invalid2 = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - 0 0");
-//             assert!(invalid2.is_err());
-//             assert_eq!(invalid2.unwrap_err(), "invalid fullmove: 0");
-//         }
-
-//         #[test]
-//         fn missing_fullmove() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - 0").unwrap();
-
-//             assert_eq!(hexchess.fullmove, 1);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_1() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/1p9/11/11/11/11/11 w - 0 1").unwrap();
-
-//             assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("b6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_2() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/2p8/11/11/11/11/11 w - 0 1").unwrap();
-
-//             assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("c6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_3() {
-//         let hexchess = Hexchess::parse("1/3/5/7/9/3p7/11/11/11/11/11 w - 0 1").unwrap();
-
-//         assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("d6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_4() {
-//         let hexchess = Hexchess::parse("1/3/5/7/9/4p6/11/11/11/11/11 w - 0 1").unwrap();
-
-//         assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("e6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_5() {
-//         let hexchess = Hexchess::parse("1/3/5/7/9/5p5/11/11/11/11/11 w - 0 1").unwrap();
-
-//         assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("f6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_6() {
-//         let hexchess = Hexchess::parse("1/3/5/7/9/6p4/11/11/11/11/11 w - 0 1").unwrap();
-
-//         assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("g6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_7() {
-//         let hexchess = Hexchess::parse("1/3/5/7/9/7p3/11/11/11/11/11 w - 0 1").unwrap();
-
-//         assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("h6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_8() {
-//         let hexchess = Hexchess::parse("1/3/5/7/9/8p2/11/11/11/11/11 w - 0 1").unwrap();
-
-//         assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("i6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_9() {
-//         let hexchess = Hexchess::parse("1/3/5/7/9/9p1/11/11/11/11/11 w - 0 1").unwrap();
-
-//         assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("k6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_10() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/p10/11/11/11/11/11 w - 0 1").unwrap();
-
-//             assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("a6")]);
-//         }
-
-//         #[test]
-//         fn fen_with_skip_11() {
-//             let hexchess = Hexchess::parse("1/3/5/7/9/11/p10/11/11/11/11 w - 0 1").unwrap();
-
-//             assert_eq!(Some(Piece::BlackPawn), hexchess.board[h!("a5")]);
-//         }
-
-//     }
 
 //     mod self_check {
 //         use super::*;
