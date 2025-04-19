@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 import {
   index,
+  initialPosition,
   San
 } from '../src'
 
@@ -137,17 +138,25 @@ test('movesFromUnsafe', () => {
 })
 
 test('parseHexchess', () => {
-  const hexchess = initHexchess()
+  const hexchess = parseHexchess(initialPosition)
+
+  expect(hexchess).toEqual(initHexchess())
 })
 
 test('parseSan', () => {
+  const san = parseSan('g4g6')
 
+  expect(san).toEqual({ from: 53, promotion: null, to: 31 })
 })
 
 test('stringifyHexchess', () => {
+  const hexchess = initHexchess()
 
+  expect(stringifyHexchess(hexchess)).toEqual(initialPosition)
 })
 
 test('stringifySan', () => {
+  const san = parseSan('g4g6')
 
+  expect(stringifySan(san)).toEqual('g4g6')
 })
