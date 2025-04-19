@@ -2,8 +2,11 @@ pub mod constants;
 pub mod hexchess;
 pub mod macros;
 
-use hexchess::hexchess::Hexchess;
+use constants::Piece;
+use hexchess::hexchess::{Hexchess};
 use hexchess::san::San;
+use hexchess::utils::index;
+use serde::Serialize;
 use wasm_bindgen::prelude::*;
 
 fn set_panic_hook() {
@@ -67,6 +70,17 @@ pub fn init_hexchess() -> Hexchess {
     Hexchess::init()
 }
 
+/// Get piece at position
+#[wasm_bindgen(js_name = get)]
+pub fn get(hexchess: Hexchess, position: String) -> JsValue {
+    set_panic_hook();
+
+    match hexchess.get(position.as_str()) {
+        Some(piece) => JsValue::from_str(&piece.to_string()),
+        None => JsValue::NULL,
+    }
+}
+
 /// Test if the board is in check.
 #[wasm_bindgen(js_name = isCheck)]
 pub fn is_check(hexchess: Hexchess) -> bool {
@@ -74,6 +88,7 @@ pub fn is_check(hexchess: Hexchess) -> bool {
 
     hexchess.is_check()
 }
+
 
 /// Test if the board is in checkmate.
 #[wasm_bindgen(js_name = isCheckmate)]
@@ -93,18 +108,24 @@ pub fn is_stalemate(hexchess: Hexchess) -> bool {
 
 /// Get legal moves from a position index.
 #[wasm_bindgen(js_name = movesFrom)]
-pub fn moves_from(hexchess: Hexchess, index: u8) -> Vec<San> {
+pub fn moves_from(hexchess: Hexchess, position: &str) -> Vec<San> {
     set_panic_hook();
 
-    hexchess.moves_from(index)
+    match index(position) {
+        Ok(n) => hexchess.moves_from(n),
+        Err(_) => panic!("invalid position: {}", position),
+    }
 }
 
 /// Get all possible moves, including ones that result in self-check.
 #[wasm_bindgen(js_name = movesFromUnsafe)]
-pub fn moves_from_unsafe(hexchess: Hexchess, index: u8) -> Vec<San> {
+pub fn moves_from_unsafe(hexchess: Hexchess, position: &str) -> Vec<San> {
     set_panic_hook();
 
-    hexchess.moves_from_unsafe(index)
+    match index(position) {
+        Ok(n) => hexchess.moves_from_unsafe(n),
+        Err(_) => panic!("invalid position: {}", position),
+    }
 }
 
 /// Parse `Hexchess` object from Forsyth–Edwards Notation.

@@ -44,17 +44,6 @@ pub struct Hexchess {
 }
 
 impl Hexchess {
-    /// apply legal move
-    pub fn apply_move(&mut self, san: &San) -> Result<(), String> {
-        if !self.is_legal(san) {
-            return Err(format!("illegal move: {:?}", san));
-        }
-
-        self.apply_move_unsafe(san);
-
-        Ok(())
-    }
-
     /// apply a whitespace separated sequence of moves
     pub fn apply(&mut self, sequence: &str) -> Result<(), String> {
         let mut clone = self.clone();
@@ -80,6 +69,17 @@ impl Hexchess {
         self.ep = clone.ep;
         self.fullmove = clone.fullmove;
         self.halfmove = clone.halfmove;
+
+        Ok(())
+    }
+
+    /// apply legal move
+    pub fn apply_move(&mut self, san: &San) -> Result<(), String> {
+        if !self.is_legal(san) {
+            return Err(format!("illegal move: {:?}", san));
+        }
+
+        self.apply_move_unsafe(san);
 
         Ok(())
     }

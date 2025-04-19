@@ -435,6 +435,12 @@ describe('Hexchess', () => {
     })
   })
 
+  test('movesFromUnsafe', () => {
+    const hexchess = Hexchess.init()
+
+    expect(hexchess.movesFromUnsafe('a1')).toEqual([])
+  })
+
   describe('parsing', () => {
     test('empty state', () => {
       const hexchess = new Hexchess()
