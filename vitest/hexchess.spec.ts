@@ -368,6 +368,28 @@ describe('Hexchess', () => {
       expect(hexchess.movesFrom('a4').length).toBe(0)
       expect(hexchess.movesFromUnsafe('a4').length).toBe(0)
     })
+
+    test('cannot step out of a pin', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/4K4/5R5/5q5/11/11/11/11 w - 0 1')
+      const moves = hexchess.movesFrom('f6')
+      expect(moves.length).toBe(1)
+      expect(moves[0].toString()).toBe('f6f5')
+    })
+
+    test('cannot self check on opponent\'s turn', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/4K4/5R5/5q5/11/11/11/11 b - 0 1')
+      const moves = hexchess.movesFrom('f6')
+
+      expect(moves.length).toBe(1)
+      expect(moves[0].toString()).toBe('f6f5')
+    })
+
+    test('king cannot step into check', () => {
+      const hexchess = Hexchess.parse('K/3/2q2/7/9/11/11/11/11/11/11 w - 0 1')
+      const moves = hexchess.movesFrom('f11')
+
+      expect(moves.length).toBe(0)
+    })
   })
 
   describe('parsing', () => {
@@ -562,38 +584,6 @@ describe('Hexchess', () => {
     })
   })
 })
-
-//     mod self_check {
-//         use super::*;
-
-//         #[test]
-//         fn cannot_step_out_of_a_pin() {
-//             let hexchess = Hexchess::parse("1/3/5/7/4K4/5R5/5q5/11/11/11/11 w - 0 1").unwrap();
-
-//             let moves = hexchess.moves_from(h!("f6"));
-//             assert_eq!(moves.len(), 1);
-//             assert_eq!(moves[0], s!("f6f5"));
-//         }
-
-//         // cannot self check on opponent's turn
-//         #[test]
-//         fn cannot_self_check_on_opponents_turn() {
-//             let hexchess    = Hexchess::parse("1/3/5/7/4K4/5R5/5q5/11/11/11/11 b - 0 1").unwrap();
-//             let moves = hexchess.moves_from(h!("f6"));
-
-//             assert_eq!(moves.len(), 1);
-//             assert_eq!(moves[0], s!("f6f5"));
-//         }
-
-//         // king cannot step into check
-//         #[test]
-//         fn king_cannot_step_into_check() {
-//             let hexchess = Hexchess::parse("K/3/2q2/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
-//             let moves = hexchess.moves_from(h!("f11"));
-
-//             assert_eq!(moves.len(), 0);
-//         }
-//     }
 
 //     #[test]
 //     fn test_to_piece() {
