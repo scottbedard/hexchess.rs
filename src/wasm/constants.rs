@@ -1,5 +1,6 @@
 use crate::h;
 use serde::{Deserialize, Serialize};
+use std::fmt;
 use wasm_bindgen::prelude::*;
 
 /// Initial game position
@@ -1431,6 +1432,26 @@ pub enum Piece {
 
     #[serde(rename(deserialize = "k", serialize = "k"))]
     BlackKing,
+}
+
+impl fmt::Display for Piece {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let printable = match *self {
+            Piece::BlackBishop => 'b',
+            Piece::BlackKing => 'k',
+            Piece::BlackKnight => 'n',
+            Piece::BlackPawn => 'p',
+            Piece::BlackQueen => 'q',
+            Piece::BlackRook => 'r',
+            Piece::WhiteBishop => 'B',
+            Piece::WhiteKing => 'K',
+            Piece::WhiteKnight => 'N',
+            Piece::WhitePawn => 'P',
+            Piece::WhiteQueen => 'Q',
+            Piece::WhiteRook => 'R',
+        };
+        write!(f, "{}", printable)
+    }
 }
 
 /// Promotion pieces
