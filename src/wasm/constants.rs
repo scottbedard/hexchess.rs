@@ -1470,3 +1470,24 @@ pub enum PromotionPiece {
     #[serde(rename(deserialize = "r", serialize = "r"))]
     Rook,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_piece_display() {
+        assert_eq!(format!("{}", Piece::BlackBishop), "b");
+        assert_eq!(format!("{}", Piece::BlackKing), "k");
+        assert_eq!(format!("{}", Piece::BlackKnight), "n");
+        assert_eq!(format!("{}", Piece::BlackPawn), "p");
+        assert_eq!(format!("{}", Piece::BlackQueen), "q");
+        assert_eq!(format!("{}", Piece::BlackRook), "r");
+        assert_eq!(format!("{}", Piece::WhiteBishop), "B");
+        assert_eq!(format!("{}", Piece::WhiteKing), "K");
+        assert_eq!(format!("{}", Piece::WhiteKnight), "N");
+        assert_eq!(format!("{}", Piece::WhitePawn), "P");
+        assert_eq!(format!("{}", Piece::WhiteQueen), "Q");
+        assert_eq!(format!("{}", Piece::WhiteRook), "R");
+    }
+}
