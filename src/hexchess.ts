@@ -14,7 +14,7 @@ import {
 } from './utils'
 
 import { San } from './san'
-import { emptyPosition, initialPosition } from './constants'
+import { emptyPosition, initialPosition, positions } from './constants'
 import { kingMovesUnsafe } from './pieces/king'
 import { knightMovesUnsafe } from './pieces/knight'
 import { pawnMovesUnsafe } from './pieces/pawn'
@@ -371,7 +371,7 @@ export class Hexchess implements HexchessStruct {
 
   /** format hexchess as fen */
   toString(): string {
-    return `${stringifyBoard(this.board)} ${this.turn} ${this.ep ?? '-'} ${this.halfmove} ${this.fullmove}`
+    return `${stringifyBoard(this.board)} ${this.turn} ${this.ep === null ? '-' : positions[this.ep]} ${this.halfmove} ${this.fullmove}`
   }
 }
 
@@ -381,7 +381,7 @@ function createBoard(): Board {
 }
 
 /** test if position is legal en passant */
-function isLegalEnPassant(position) {
+function isLegalEnPassant(position: number) {
   return [
     26, // b6
     27, // c6
