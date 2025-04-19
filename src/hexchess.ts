@@ -14,7 +14,7 @@ import {
 } from './utils'
 
 import { San } from './san'
-import { initialPosition } from './constants'
+import { emptyPosition, initialPosition } from './constants'
 import { kingMovesUnsafe } from './pieces/king'
 import { knightMovesUnsafe } from './pieces/knight'
 import { pawnMovesUnsafe } from './pieces/pawn'
@@ -44,9 +44,9 @@ export class Hexchess implements HexchessStruct {
   fullmove: number = 1
 
   /** create hexchess from fen */
-  constructor(fen: string = '') {
+  constructor(fen: string = emptyPosition) {
     if (!fen) {
-      return
+      error('parse failed: board not found')
     }
 
     const [
@@ -65,20 +65,38 @@ export class Hexchess implements HexchessStruct {
     if (turn === 'w' || turn === 'b') {
       this.turn = turn
     } else {
-      error('parse failed: invalid turn color')
+      error(`invalid turn color: ${turn}`)
     }
 
     if (ep === '-') {
       this.ep = null
     } else if (isPosition(ep)) {
-      this.ep = index(ep)
+      const i = index(ep)
+
+      if (isLegalEnPassant(i)) {
+        this.ep = i
+      } else {
+        error(`illegal en passant: ${ep}`)
+      }
     } else {
-      error('parse failed: invalid en passant')
+      error(`invalid en passant: ${ep}`)
     }
 
-    this.halfmove = Math.max(0, parseInt(halfmove, 10))
+    const half = parseInt(halfmove, 10)
 
-    this.fullmove = Math.max(1, parseInt(fullmove, 10))
+    if (isNaN(half)) {
+      error(`invalid halfmove: ${halfmove}`)
+    } else {
+      this.halfmove = Math.max(0, half)
+    }
+
+    const full = parseInt(fullmove, 10)
+
+    if (isNaN(full) || full === 0) {
+      error(`invalid fullmove: ${fullmove}`)
+    } else {
+      this.fullmove = full
+    }
   }
 
   /** apply legal move */
@@ -360,6 +378,30 @@ export class Hexchess implements HexchessStruct {
 /** create an empty board object */
 function createBoard(): Board {
   return new Array(91).fill(null) as Board
+}
+
+/** test if position is legal en passant */
+function isLegalEnPassant(position) {
+  return [
+    26, // b6
+    27, // c6
+    28, // d6
+    29, // e6
+    30, // f6
+    31, // g6
+    32, // h6
+    33, // i6
+    34, // k6
+    70, // b2
+    60, // c3
+    50, // d4
+    40, // e5
+    30, // f6
+    42, // g5
+    54, // h4
+    66, // i3
+    78, // k2
+  ].includes(position)
 }
 
 /** parse the board section of a fen */
