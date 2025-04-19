@@ -1,5 +1,6 @@
 import type {
   Board,
+  Color,
   Piece,
   Position
 } from './types'
@@ -13,7 +14,7 @@ import {
 } from './utils'
 
 import { San } from './san'
-import { initialPosition } from './constants'
+import { initialPosition, positions } from './constants'
 import { kingMovesUnsafe } from './pieces/king'
 import { knightMovesUnsafe } from './pieces/knight'
 import { pawnMovesUnsafe } from './pieces/pawn'
@@ -153,6 +154,24 @@ export class Hexchess implements HexchessStruct {
     return this
   }
 
+  /** clone hexchess */
+  clone() {
+    const clone = new Hexchess()
+    clone.board.splice(0, 91, ...this.board.slice())
+    clone.ep = this.ep
+    clone.turn = this.turn
+    clone.halfmove = this.halfmove
+    clone.fullmove = this.fullmove
+    return clone
+  }
+
+  /** find king by color */
+  findKing(color: Color): number | null {
+    const result = this.board.indexOf(color === 'b' ? 'k' : 'K')
+
+    return result >= 0 ? result : null
+  }
+
   /** get piece at position */
   get(position: Position): Piece | null {
     return this.board[index(position)] ?? null
@@ -163,11 +182,52 @@ export class Hexchess implements HexchessStruct {
     return new Hexchess(initialPosition)
   }
 
+  // test if a position is threatened
+  isThreatened(position: Position | number): boolean {
+    const p = typeof position === 'string' ? index(position) : position
+
+    const threatenedPiece = this.board[p]
+
+    if (!threatenedPiece) {
+      return false
+    }
+
+    const color = getColor(threatenedPiece)
+
+    for (let i = 0; i < 91; i++) {
+      const piece = this.board[i]
+
+      if (piece && color !== getColor(piece)) {
+        for (const san of this.movesFromUnsafe(i)) {
+          if (san.to === p) {
+            return true
+          }
+        }
+      }
+    }
+
+    return false
+  }
+
   /** get legal moves from a position */
   movesFrom(from: number | Position): San[] {
-    // ...
+    const i = typeof from === 'string' ? index(from) : from
+    const piece = this.board[i]
 
-    return this.movesFromUnsafe(from)
+    if (!piece) {
+      return []
+    }
+
+    const color = getColor(piece)
+
+    return this.movesFromUnsafe(i).filter(san => {
+      const clone = this.clone().applyMoveUnsafe(san)
+      const king = clone.findKing(color)
+
+      return king
+        ? !clone.isThreatened(king)
+        : true
+    })
   }
 
   /** get moves from a position, regardless of turn or legality */
