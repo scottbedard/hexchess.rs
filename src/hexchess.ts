@@ -112,7 +112,7 @@ export class Hexchess implements HexchessStruct {
           const san = San.from(part)
 
           try {
-            clone.applyMoveUnsafe(san)
+            clone.applyMove(san)
           } catch {
             error(`illegal move at index ${i}: ${part}`)
           }
