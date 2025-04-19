@@ -292,6 +292,11 @@ export class Hexchess implements HexchessStruct {
     return false
   }
 
+  /** test if the board is in checkmate */
+  isCheckmate(): boolean {
+    return this.isCheck() && this.currentMoves().length === 0
+  }
+
   /** test if move is legal */
   isLegal(san: San | string): boolean {
     const { from, promotion, to } = typeof san === 'string' ? San.from(san) : san
@@ -308,7 +313,12 @@ export class Hexchess implements HexchessStruct {
     return this.movesFrom(from).some(s => s.from === from && s.to === to && s.promotion === promotion)
   }
 
-  // test if position is threatened
+  /** test if the board is in stalemate */
+  isStalemate(): boolean {
+    return !this.isCheck() && this.currentMoves().length === 0
+  }
+
+  /** test if position is threatened */
   isThreatened(position: Position | number): boolean {
     const p = typeof position === 'string' ? index(position) : position
 

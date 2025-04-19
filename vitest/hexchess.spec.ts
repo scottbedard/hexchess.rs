@@ -342,6 +342,30 @@ describe('Hexchess', () => {
     })
   })
 
+  describe('isCheckmate', () => {
+    test('checkmate', () => {
+      const hexchess = Hexchess.parse('K/3/5/3q3/2q6/11/11/11/11/11/11 b - 0 1')
+
+      expect(hexchess.isCheckmate()).toBe(false)
+
+      hexchess.applyMove('d7f9')
+
+      expect(hexchess.isCheckmate()).toBe(true)
+    })
+  })
+
+  describe('isStalemate', () => {
+    test('stalemate', () => {
+      const hexchess = Hexchess.parse('k/1P1/5/3K3/9/11/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.isStalemate()).toBe(false)
+
+      hexchess.applyMove('f8f9')
+
+      expect(hexchess.isStalemate()).toBe(true)
+    })
+  })
+
   describe('isThreatened', () => {
     test('unattacked position is not threatened', () => {
       const hexchess = Hexchess.parse('1/2K/5/7/9/11/11/11/11/11/11 w - 0 1')

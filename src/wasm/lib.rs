@@ -75,6 +75,22 @@ pub fn is_check(hexchess: Hexchess) -> bool {
     hexchess.is_check()
 }
 
+/// Test if the board is in checkmate.
+#[wasm_bindgen(js_name = isCheckmate)]
+pub fn is_checkmate(hexchess: Hexchess) -> bool {
+    set_panic_hook();
+
+    hexchess.is_checkmate()
+}
+
+/// Test if the board is in stalemate.
+#[wasm_bindgen(js_name = isStalemate)]
+pub fn is_stalemate(hexchess: Hexchess) -> bool {
+    set_panic_hook();
+
+    hexchess.is_stalemate()
+}
+
 /// Get legal moves from a position index.
 #[wasm_bindgen(js_name = movesFrom)]
 pub fn moves_from(hexchess: Hexchess, index: u8) -> Vec<San> {
