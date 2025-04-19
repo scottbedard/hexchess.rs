@@ -1,0 +1,6 @@
+import type { Board, Color, PromotionPiece } from '../types';
+
+/**
+ * Find the king of a given color
+ */
+export function findKing(hexchess: HexchessStruct, color: Color): number;

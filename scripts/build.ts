@@ -18,7 +18,7 @@ function run() {
 
   write(
     'dist/wasm/index.d.ts',
-    `${read('src/wasm/prepend.d.ts')}\n${read('dist/wasm/index.d.ts')}`
+    `${read('src/wasm/prepend.post-build')}\n${read('dist/wasm/index.d.ts')}`
   )
 
   ;[
