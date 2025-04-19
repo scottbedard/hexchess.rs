@@ -63,5 +63,12 @@ export default tseslint.config(
       '@stylistic/quotes': ['error', 'double'],
       '@stylistic/semi': ['error', 'always'],
     },
+  },
+
+  {
+    files: ['src/wasm/prepend.d.ts'],
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
   }
 )
