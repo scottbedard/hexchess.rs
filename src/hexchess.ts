@@ -212,6 +212,17 @@ export class Hexchess implements HexchessStruct {
     return clone
   }
 
+  /** get legal moves for current turn */
+  currentMoves(): San[] {
+    const result: San[] = []
+
+    for (const n of this.getColor(this.turn)) {
+      result.push(...this.movesFrom(n))
+    }
+
+    return result
+  }
+
   /** find king by color */
   findKing(color: Color): number | null {
     const result = this.board.indexOf(color === 'b' ? 'k' : 'K')
@@ -222,6 +233,21 @@ export class Hexchess implements HexchessStruct {
   /** get piece at position */
   get(position: Position): Piece | null {
     return this.board[index(position)] ?? null
+  }
+
+  /** get positions occupied by a color */
+  getColor(color: Color): number[] {
+    const result: number[] = []
+
+    for (let i = 0; i < 91; i++) {
+      const piece = this.board[i]
+
+      if (piece && getColor(piece) === color) {
+        result.push(i)
+      }
+    }
+
+    return result
   }
 
   /** initialize hexchess from starting position */

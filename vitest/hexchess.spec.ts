@@ -167,6 +167,64 @@ describe('Hexchess', () => {
     expect(clone).not.toBe(hexchess)
   })
 
+  test('currentMoves', () => {
+    const hexchess = Hexchess.init()
+    const result = hexchess.currentMoves().map(san => san.toString())
+
+    expect(result.length).toBe(51)
+    expect(result[0]).toBe('f5f6')
+    expect(result[1]).toBe('e4e5')
+    expect(result[2]).toBe('e4e6')
+    expect(result[3]).toBe('g4g5')
+    expect(result[4]).toBe('g4g6')
+    expect(result[5]).toBe('d3d4')
+    expect(result[6]).toBe('d3d5')
+    expect(result[7]).toBe('f3h2')
+    expect(result[8]).toBe('f3d2')
+    expect(result[9]).toBe('h3h4')
+    expect(result[10]).toBe('h3h5')
+    expect(result[11]).toBe('c2c3')
+    expect(result[12]).toBe('c2c4')
+    expect(result[13]).toBe('f2g3')
+    expect(result[14]).toBe('f2h4')
+    expect(result[15]).toBe('f2i5')
+    expect(result[16]).toBe('f2k6')
+    expect(result[17]).toBe('f2e3')
+    expect(result[18]).toBe('f2d4')
+    expect(result[19]).toBe('f2c5')
+    expect(result[20]).toBe('f2b6')
+    expect(result[21]).toBe('i2i3')
+    expect(result[22]).toBe('i2i4')
+    expect(result[23]).toBe('b1b2')
+    expect(result[24]).toBe('b1b3')
+    expect(result[25]).toBe('c1d2')
+    expect(result[26]).toBe('c1e3')
+    expect(result[27]).toBe('c1f4')
+    expect(result[28]).toBe('d1f4')
+    expect(result[29]).toBe('d1g2')
+    expect(result[30]).toBe('d1b2')
+    expect(result[31]).toBe('d1c3')
+    expect(result[32]).toBe('e1e2')
+    expect(result[33]).toBe('e1e3')
+    expect(result[34]).toBe('e1d2')
+    expect(result[35]).toBe('e1c3')
+    expect(result[36]).toBe('e1b4')
+    expect(result[37]).toBe('e1a5')
+    expect(result[38]).toBe('f1g2')
+    expect(result[39]).toBe('f1e2')
+    expect(result[40]).toBe('g1g2')
+    expect(result[41]).toBe('g1h2')
+    expect(result[42]).toBe('h1i3')
+    expect(result[43]).toBe('h1k2')
+    expect(result[44]).toBe('h1e2')
+    expect(result[45]).toBe('h1f4')
+    expect(result[46]).toBe('i1h2')
+    expect(result[47]).toBe('i1g3')
+    expect(result[48]).toBe('i1f4')
+    expect(result[49]).toBe('k1k2')
+    expect(result[50]).toBe('k1k3')
+  })
+
   test('findKing', () => {
     const hexchess = Hexchess.init()
 
@@ -182,6 +240,31 @@ describe('Hexchess', () => {
     expect(hexchess.get('a4')).toBe(null)
     // @ts-expect-error - invalid position
     expect(hexchess.get('whoops')).toBe(null)
+  })
+
+  test('getColor', () => {
+    const hexchess = Hexchess.init()
+    const results = hexchess.getColor('b')
+
+    expect(results.length).toBe(18)
+    expect(results[0]).toBe(index('f11'))
+    expect(results[1]).toBe(index('e10'))
+    expect(results[2]).toBe(index('f10'))
+    expect(results[3]).toBe(index('g10'))
+    expect(results[4]).toBe(index('d9'))
+    expect(results[5]).toBe(index('f9'))
+    expect(results[6]).toBe(index('h9'))
+    expect(results[7]).toBe(index('c8'))
+    expect(results[8]).toBe(index('i8'))
+    expect(results[9]).toBe(index('b7'))
+    expect(results[10]).toBe(index('c7'))
+    expect(results[11]).toBe(index('d7'))
+    expect(results[12]).toBe(index('e7'))
+    expect(results[13]).toBe(index('f7'))
+    expect(results[14]).toBe(index('g7'))
+    expect(results[15]).toBe(index('h7'))
+    expect(results[16]).toBe(index('i7'))
+    expect(results[17]).toBe(index('k7'))
   })
 
   describe('isLegal', () => {
@@ -318,68 +401,6 @@ describe('Hexchess', () => {
   })
 })
 
-// #[cfg(test)]
-// mod tests {
-
-//     #[test]
-//     fn test_current_moves() {
-//         let hexchess = Hexchess::init();
-//         let result = hexchess.current_moves().iter().map(|s| s.to_string()).collect::<Vec<String>>();
-
-//         assert_eq!(result.len(), 51);
-//         assert_eq!(result[0], "f5f6");
-//         assert_eq!(result[1], "e4e5");
-//         assert_eq!(result[2], "e4e6");
-//         assert_eq!(result[3], "g4g5");
-//         assert_eq!(result[4], "g4g6");
-//         assert_eq!(result[5], "d3d4");
-//         assert_eq!(result[6], "d3d5");
-//         assert_eq!(result[7], "f3h2");
-//         assert_eq!(result[8], "f3d2");
-//         assert_eq!(result[9], "h3h4");
-//         assert_eq!(result[10], "h3h5");
-//         assert_eq!(result[11], "c2c3");
-//         assert_eq!(result[12], "c2c4");
-//         assert_eq!(result[13], "f2g3");
-//         assert_eq!(result[14], "f2h4");
-//         assert_eq!(result[15], "f2i5");
-//         assert_eq!(result[16], "f2k6");
-//         assert_eq!(result[17], "f2e3");
-//         assert_eq!(result[18], "f2d4");
-//         assert_eq!(result[19], "f2c5");
-//         assert_eq!(result[20], "f2b6");
-//         assert_eq!(result[21], "i2i3");
-//         assert_eq!(result[22], "i2i4");
-//         assert_eq!(result[23], "b1b2");
-//         assert_eq!(result[24], "b1b3");
-//         assert_eq!(result[25], "c1d2");
-//         assert_eq!(result[26], "c1e3");
-//         assert_eq!(result[27], "c1f4");
-//         assert_eq!(result[28], "d1f4");
-//         assert_eq!(result[29], "d1g2");
-//         assert_eq!(result[30], "d1b2");
-//         assert_eq!(result[31], "d1c3");
-//         assert_eq!(result[32], "e1e2");
-//         assert_eq!(result[33], "e1e3");
-//         assert_eq!(result[34], "e1d2");
-//         assert_eq!(result[35], "e1c3");
-//         assert_eq!(result[36], "e1b4");
-//         assert_eq!(result[37], "e1a5");
-//         assert_eq!(result[38], "f1g2");
-//         assert_eq!(result[39], "f1e2");
-//         assert_eq!(result[40], "g1g2");
-//         assert_eq!(result[41], "g1h2");
-//         assert_eq!(result[42], "h1i3");
-//         assert_eq!(result[43], "h1k2");
-//         assert_eq!(result[44], "h1e2");
-//         assert_eq!(result[45], "h1f4");
-//         assert_eq!(result[46], "i1h2");
-//         assert_eq!(result[47], "i1g3");
-//         assert_eq!(result[48], "i1f4");
-//         assert_eq!(result[49], "k1k2");
-//         assert_eq!(result[50], "k1k3");
-//     }
-
 //     #[test]
 //     fn test_get() {
 //         let hexchess = Hexchess::init();
@@ -388,32 +409,6 @@ describe('Hexchess', () => {
 //         assert_eq!(hexchess.get("g1"), Some(Piece::WhiteKing));
 //         assert_eq!(hexchess.get("a4"), None);
 //         assert_eq!(hexchess.get("whoops"), None);
-//     }
-
-//     #[test]
-//     fn get_color() {
-//         let hexchess = Hexchess::init();
-//         let results = hexchess.get_color(Color::Black);
-
-//         assert_eq!(results.len(), 18);
-//         assert_eq!(results[0], h!("f11"));
-//         assert_eq!(results[1], h!("e10"));
-//         assert_eq!(results[2], h!("f10"));
-//         assert_eq!(results[3], h!("g10"));
-//         assert_eq!(results[4], h!("d9"));
-//         assert_eq!(results[5], h!("f9"));
-//         assert_eq!(results[6], h!("h9"));
-//         assert_eq!(results[7], h!("c8"));
-//         assert_eq!(results[8], h!("i8"));
-//         assert_eq!(results[9], h!("b7"));
-//         assert_eq!(results[10], h!("c7"));
-//         assert_eq!(results[11], h!("d7"));
-//         assert_eq!(results[12], h!("e7"));
-//         assert_eq!(results[13], h!("f7"));
-//         assert_eq!(results[14], h!("g7"));
-//         assert_eq!(results[15], h!("h7"));
-//         assert_eq!(results[16], h!("i7"));
-//         assert_eq!(results[17], h!("k7"));
 //     }
 
 //     mod moves_from {
