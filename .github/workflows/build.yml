@@ -28,7 +28,13 @@ jobs:
         run: pnpm lint
 
       - name: Vitest
-        run: pnpm test
+        run: pnpm test:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
 
   rust:
     name: Rust
@@ -43,8 +49,8 @@ jobs:
       - name: Test
         run:  cargo +nightly tarpaulin --verbose --all-features --workspace --timeout 120 --out xml
 
-      # - name: Upload coverage reports to Codecov
-      #   uses: codecov/codecov-action@v5
-      #   with:
-      #     token: ${{ secrets.CODECOV_TOKEN }}
-      #     fail_ci_if_error: true
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
