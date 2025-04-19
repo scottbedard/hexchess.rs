@@ -220,14 +220,37 @@ const hexchess = Hexchess.init()
 hexchess.toString() // 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
 ```
 
-## Functional API
+## Wasm Bindings
 
-The raw WASM bindings are available for advanced use cases. These work with objects matching the `Hexchess` and `San` structs. The API of these functions matches the Rust library API, [see here for more info &rarr;](https://github.com/scottbedard/hexchess/blob/main/src/lib.rs)
+The Rust crate for this library is exposed via WebAssembly. If your environment permits it, these are the functions you should use when writing engines or evaluators.
+
+All APIs are the same as above, but with a functional syntax that accepts a `Hexchess` as the first argument, and returns a new `Hexchess` instance. The following methods are available to create and serialize objects.
+
+```ts
+import {
+  apply,
+  initHexchess,
+  stringifyHexchess,
+} from '@bedard/hexchess/wasm' // <- note the import path
+
+const hexchess = apply(initHexchess(), 'g4g6 f7g6 f5f7 g6f6')
+
+stringifyHexchess(hexchess) // 'b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3'
+```
+
+Below is a list of the available bindings.
 
 - `apply`
+- `applyMove`
+- `applyMoveUnsafe`
 - `createHexchess`
 - `currentMoves`
+- `findKing`
+- `get`
 - `initHexchess`
+- `isCheck`
+- `isCheckmate`
+- `isStalemate`
 - `movesFrom`
 - `movesFromUnsafe`
 - `parseHexchess`
