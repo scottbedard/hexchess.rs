@@ -20,7 +20,7 @@ use crate::hexchess::utils::{
     get_color,
     is_legal_en_passant,
     step,
-    to_index,
+    index,
     to_position,
 };
 
@@ -192,7 +192,7 @@ impl Hexchess {
 
     /// get piece at position
     pub fn get(&self, position: &str) -> Option<Piece> {
-        match to_index(position) {
+        match index(position) {
             Ok(index) => self.board[index as usize],
             Err(_) => None,
         }
@@ -408,7 +408,7 @@ impl Hexchess {
         let ep = match parts.next() {
             Some(part) => match part {
                 "-" => None,
-                _ => match to_index(&part) {
+                _ => match index(&part) {
                     Ok(result) => match is_legal_en_passant(&result) {
                         true => Some(result),
                         false => return Err(format!("illegal en passant position: {}", part)),

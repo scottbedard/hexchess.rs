@@ -144,11 +144,3 @@ pub fn stringify_san(san: San) -> String {
 
     san.to_string()
 }
-
-/// Convert position string to index
-#[wasm_bindgen(js_name = toIndex)]
-pub fn to_index(source: String) -> u8 {
-    set_panic_hook();
-
-    crate::hexchess::utils::to_index(source.as_str()).unwrap()
-}

@@ -105,7 +105,7 @@ pub fn is_promotion_position(position: &u8) -> bool {
 }
 
 /// convert position to index
-pub fn to_index(source: &str) -> Result<u8, ()> {
+pub fn index(source: &str) -> Result<u8, ()> {
     match source {
         "f11" => Ok(0),
         "e10" => Ok(1),
