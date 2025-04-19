@@ -286,7 +286,7 @@ impl Hexchess {
         }
     }
 
-    /// find a king
+    /// find king by color
     pub fn find_king(&self, color: Color) -> Option<u8> {
         let king = match color {
             Color::Black => Piece::BlackKing,
@@ -323,7 +323,7 @@ impl Hexchess {
             .any(|move_san| move_san == san)
     }
 
-    /// test of a position is threatened
+    /// test if a position is threatened
     pub fn is_threatened(&self, position: u8) -> bool {
         let threatened_piece = match self.board[position as usize] {
             Some(piece) => piece,

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { Hexchess, initialPosition } from '../src'
+import { Hexchess, initialPosition, positions } from '../src'
 
 describe('Hexchess', () => {
   test('get', () => {
@@ -10,6 +10,44 @@ describe('Hexchess', () => {
     expect(hexchess.get('a4')).toBe(null)
     // @ts-expect-error - invalid position
     expect(hexchess.get('whoops')).toBe(null)
+  })
+
+  describe('isThreatened', () => {
+    test('unattacked position is not threatened', () => {
+      const hexchess = Hexchess.parse('1/2K/5/7/9/11/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.isThreatened('g10')).toBe(false)
+    })
+
+    test('threatened by enemy piece', () => {
+      const hexchess = Hexchess.parse('1/2K/5/7/9/11/11/11/11/11/6r4 w - 0 1')
+
+      expect(hexchess.isThreatened('g10')).toBe(true)
+    })
+
+    test('not threatened by friendly piece', () => {
+      const hexchess = Hexchess.parse('1/2K/5/7/9/11/11/11/11/11/6R4 w - 0 1')
+
+      expect(hexchess.isThreatened('g10')).toBe(false)
+    })
+
+    test('position is threatened in and out of turn', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/4q4/5K5/11/11/11/11/11 w - 0 1')
+
+      hexchess.turn = 'b'
+      expect(hexchess.isThreatened('f6')).toBe(true)
+
+      hexchess.turn = 'w'
+      expect(hexchess.isThreatened('f6')).toBe(true)
+    })
+
+    test('unoccupied position is not threatened', () => {
+      const hexchess = new Hexchess()
+
+      for (const position of positions) {
+        expect(hexchess.isThreatened(position)).toBe(false)
+      }
+    })
   })
 
   test('parse', () => {
@@ -396,49 +434,6 @@ describe('Hexchess', () => {
 
 //             assert_eq!(hexchess.is_legal(&s!("f2f1")), false);
 //             assert_eq!(hexchess.is_legal(&s!("f2f1q")), true);
-//         }
-//     }
-
-//     mod is_threatened {
-//         use super::*;
-
-//         #[test]
-//         fn unattacked_position_is_not_threatened() {
-//             let hexchess = Hexchess::parse("1/2K/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
-
-//             assert_eq!(hexchess.is_threatened(h!("g10")), false);
-//         }
-
-//         #[test]
-//         fn threatened_by_enemy_piece() {
-//             let hexchess = Hexchess::parse("1/2K/5/7/9/11/11/11/11/11/6r4 w - 0 1").unwrap();
-
-//             assert_eq!(hexchess.is_threatened(h!("g10")), true);
-//         }
-
-//         #[test]
-//         fn not_threatened_by_friendly_piece() {
-//             let hexchess = Hexchess::parse("1/2K/5/7/9/11/11/11/11/11/6R4 w - 0 1").unwrap();
-
-//             assert_eq!(hexchess.is_threatened(h!("g10")), false);
-//         }
-
-//         #[test]
-//         fn  position_is_threatened_in_and_out_of_turn() {
-//             let mut hexchess = Hexchess::parse("1/3/5/7/4q4/5K5/11/11/11/11/11 w - 0 1").unwrap();
-
-//             hexchess.turn = Color::Black;
-//             assert_eq!(hexchess.is_threatened(h!("f6")), true);
-
-//             hexchess.turn = Color::White;
-//             assert_eq!(hexchess.is_threatened(h!("f6")), true);
-//         }
-
-//         #[test]
-//         fn unoccupied_position_is_not_threatened() {
-//             let hexchess = Hexchess::new();
-
-//             assert_eq!(hexchess.is_threatened(h!("f5")), false);
 //         }
 //     }
 
