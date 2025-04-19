@@ -739,6 +739,18 @@ mod tests {
     }
 
     #[test]
+    fn test_clone() {
+        let hexchess = Hexchess::init();
+        let clone = hexchess.clone();
+
+        assert_eq!(clone.board, hexchess.board);
+        assert_eq!(clone.ep, hexchess.ep);
+        assert_eq!(clone.turn, hexchess.turn);
+        assert_eq!(clone.halfmove, hexchess.halfmove);  
+        assert_eq!(clone.fullmove, hexchess.fullmove);
+    }
+
+    #[test]
     fn test_current_moves() {
         let hexchess = Hexchess::init();
         let result = hexchess.current_moves().iter().map(|s| s.to_string()).collect::<Vec<String>>();
