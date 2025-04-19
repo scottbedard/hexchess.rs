@@ -169,14 +169,46 @@ export class Hexchess implements HexchessStruct {
     return this
   }
 
+  /** apply a whitespace separated sequence of moves */
+  applySequence(sequence: string) {
+    const clone = this.clone()
+
+    sequence
+      .split(' ')
+      .map(str => str.trim())
+      .filter(str => str)
+      .forEach((part, i) => {
+        try {
+          const san = San.from(part)
+
+          try {
+            clone.applyMoveUnsafe(san)
+          } catch {
+            error(`illegal move at index ${i}: ${part}`)
+          }
+        } catch {
+          error(`invalid san at index ${i}: ${part}`)
+        }
+      })
+
+    this.board.splice(0, 91, ...clone.board)
+    this.turn = clone.turn
+    this.ep = clone.ep
+    this.fullmove = clone.fullmove
+    this.halfmove = clone.halfmove
+
+    return this
+  }
+
   /** clone hexchess */
   clone() {
     const clone = new Hexchess()
-    clone.board.splice(0, 91, ...this.board.slice())
+    clone.board.splice(0, 91, ...this.board)
     clone.ep = this.ep
     clone.turn = this.turn
     clone.halfmove = this.halfmove
     clone.fullmove = this.fullmove
+
     return clone
   }
 

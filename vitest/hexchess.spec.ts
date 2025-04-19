@@ -129,6 +129,22 @@ describe('Hexchess', () => {
     })
   })
 
+  describe('applySequence', () => {
+    test('applying a sequence of moves', () => {
+      const hexchess = Hexchess.init().applySequence('g4g6 f7g6 f5f7 g6f6')
+
+      expect(hexchess.toString()).toBe('b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3')
+    })
+
+    test('apply sequence with invalid san', () => {
+      expect(() => Hexchess.init().applySequence('whoops')).toThrow()
+    })
+
+    test('apply sequence with illegal move', () => {
+      expect(() => Hexchess.init().applySequence('g4g5 a6a5')).toThrow()
+    })
+  })
+
   describe('applyUnsafe', () => {
     test('errors on empty positions', () => {
       const hexchess = Hexchess.init()
@@ -297,34 +313,6 @@ describe('Hexchess', () => {
 
 // #[cfg(test)]
 // mod tests {
-
-//     mod apply_sequence {
-//         use super::*;
-
-//         #[test]
-//         fn test_applying_a_sequence_of_moves() {
-//             let mut hexchess = Hexchess::init();
-//             let _ = hexchess.apply_sequence("g4g6 f7g6 f5f7 g6f6");
-
-//             assert_eq!(hexchess.to_string(), "b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3");
-//         }
-
-//         #[test]
-//         fn test_apply_sequence_with_invalid_san() {
-//             let mut hexchess = Hexchess::init();
-//             let result = hexchess.apply_sequence("whoops");
-
-//             assert_eq!(result, Err("invalid san at index 0: whoops".to_string()));
-//         }
-
-//         #[test]
-//         fn test_apply_sequence_with_illegal_move() {
-//             let mut hexchess = Hexchess::init();
-//             let result = hexchess.apply_sequence("g4g5 a6a5");
-
-//             assert_eq!(result, Err("illegal move at index 1: a6a5".to_string()));
-//         }
-//     }
 
 //     #[test]
 //     fn test_current_moves() {
