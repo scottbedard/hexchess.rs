@@ -17,6 +17,19 @@ fn set_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
+/// Apply a whitespace separated sequence of move to `Hexchess` object.
+#[wasm_bindgen(js_name = apply)]
+pub fn apply(hexchess: Hexchess, sequence: String) -> Hexchess {
+    set_panic_hook();
+
+    let mut clone = hexchess.clone();
+
+    match clone.apply(sequence.as_str()) {
+        Ok(_) => clone,
+        Err(err) => panic!("hexchess error: {:?}", err),
+    }
+}
+
 /// Apply `San` object to a `Hexchess` object.
 #[wasm_bindgen(js_name = applyMove)]
 pub fn apply_move(hexchess: Hexchess, san: San) -> Hexchess {
@@ -25,19 +38,6 @@ pub fn apply_move(hexchess: Hexchess, san: San) -> Hexchess {
     let mut clone = hexchess.clone();
 
     match clone.apply_move(&san) {
-        Ok(_) => clone,
-        Err(err) => panic!("hexchess error: {:?}", err),
-    }
-}
-
-/// Apply a whitespace separated sequence of move to `Hexchess` object.
-#[wasm_bindgen(js_name = applySequence)]
-pub fn apply_sequence(hexchess: Hexchess, sequence: String) -> Hexchess {
-    set_panic_hook();
-
-    let mut clone = hexchess.clone();
-
-    match clone.apply_sequence(sequence.as_str()) {
         Ok(_) => clone,
         Err(err) => panic!("hexchess error: {:?}", err),
     }

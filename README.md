@@ -127,12 +127,11 @@ const hexchess = Hexchess.init()
 hexchess.toString() // 'b/qbk/n1b1n/r5r/ppppppppp/11/5P5/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 1'
 ```
 
-## Function API
+## Functional API
 
-The raw WASM bindings are available for a more functional API. These work with objects matching the `Hexchess` and `San` structs. The API of these functions matches the Rust library API, [see here for more info &rarr;](https://github.com/scottbedard/hexchess/blob/main/src/lib.rs)
+The raw WASM bindings are available for advanced use cases. These work with objects matching the `Hexchess` and `San` structs. The API of these functions matches the Rust library API, [see here for more info &rarr;](https://github.com/scottbedard/hexchess/blob/main/src/lib.rs)
 
-- `applyMove`
-- `applySequence`
+- `apply`
 - `createHexchess`
 - `currentMoves`
 - `initHexchess`
