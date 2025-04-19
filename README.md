@@ -8,8 +8,6 @@
 
 A Rust / TypeScript library for [Gliński's hexagonal chess](https://en.wikipedia.org/wiki/Hexagonal_chess#Gli%C5%84ski's_hexagonal_chess), and the brain of [hexchess.club](https://hexchess.club).
 
-> **Warning:** This version of the library is deprecated, [see current library here &rarr;](https://github.com/scottbedard/hexchess)
-
 <p align="center">
   <a href="https://hexchess.club">
     <img src="assets/hexchess.svg" width="500" />
