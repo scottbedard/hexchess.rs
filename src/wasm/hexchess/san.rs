@@ -15,7 +15,6 @@ use super::utils::to_position;
 #[tsify(into_wasm_abi, from_wasm_abi, type_suffix = "Struct")]
 pub struct San {
     /// From position index, 0..91
-    #[tsify(type = "PositionIndex")]
     pub from: u8,
 
     /// Promotion piece
@@ -23,7 +22,6 @@ pub struct San {
     pub promotion: Option<PromotionPiece>,
 
     /// Target position index, 0..91
-    #[tsify(type = "PositionIndex")]
     pub to: u8,
 }
 

@@ -14,9 +14,14 @@ function run() {
   execSync('rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript')
 
   // build wasm package
-  execSync(`${resolve('node_modules/.bin/wasm-pack')} build --out-dir ${resolve('dist/wasm')} --out-name index`);
+  execSync(`${resolve('node_modules/.bin/wasm-pack')} build --out-dir ${resolve('dist/wasm')} --out-name index`)
 
-  [
+  write(
+    'dist/wasm/index.d.ts',
+    `${read('src/wasm/prepend.d.ts')}\n${read('dist/wasm/index.d.ts')}`
+  )
+
+  ;[
     'dist/wasm/README.md',
     'dist/wasm/.gitignore',
     'dist/wasm/LICENSE',
