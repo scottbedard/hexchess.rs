@@ -1,5 +1,10 @@
 import { describe, expect, test } from 'vitest'
-import { Hexchess, initialPosition, positions } from '../src'
+import {
+  Hexchess,
+  initialPosition,
+  positions,
+  San
+} from '../src'
 
 describe('Hexchess', () => {
   test('clone', () => {
@@ -24,6 +29,62 @@ describe('Hexchess', () => {
     expect(hexchess.get('a4')).toBe(null)
     // @ts-expect-error - invalid position
     expect(hexchess.get('whoops')).toBe(null)
+  })
+
+  describe('isLegal', () => {
+    test('legal move', () => {
+      const hexchess = Hexchess.init()
+
+      expect(hexchess.isLegal('g4g5')).toBe(true)
+    })
+
+    test('illegal move', () => {
+      const hexchess = Hexchess.init()
+
+      expect(hexchess.isLegal('b1b4')).toBe(false)
+    })
+
+    test('illegal move out of turn', () => {
+      const hexchess = Hexchess.init()
+
+      expect(hexchess.isLegal('g7g6')).toBe(false)
+
+      hexchess.turn = 'b'
+
+      expect(hexchess.isLegal('g7g6')).toBe(true)
+    })
+
+    test('white cannot promote on black positions', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/p7p/R9R/11/11/11/11/rP7Pr w - 0 1')
+
+      expect(hexchess.isLegal(new San({ from: 'b1', to: 'b2' }))).toBe(true)
+      expect(hexchess.isLegal(new San({ from: 'b1', to: 'b2', promotion: 'q' }))).toBe(false)
+
+      expect(hexchess.isLegal(new San({ from: 'k1', to: 'l1' }))).toBe(true)
+      expect(hexchess.isLegal(new San({ from: 'k1', to: 'l1', promotion: 'q' }))).toBe(false)
+    })
+
+    test('black cannot promote on white positions', () => {
+      const hexchess = Hexchess.parse('1/3/5/7/p7p/R9R/11/11/11/11/rP7Pr b - 0 1')
+
+      expect(hexchess.isLegal(new San({ from: 'b7', to: 'a6' }))).toBe(true)
+      expect(hexchess.isLegal(new San({ from: 'b7', to: 'a6', promotion: 'q' }))).toBe(false)
+
+      expect(hexchess.isLegal(new San({ from: 'k7', to: 'l6' }))).toBe(true)
+      expect(hexchess.isLegal(new San({ from: 'k7', to: 'l6', promotion: 'q' }))).toBe(false)
+    })
+
+    test('pawn must promote on final rank', () => {
+      const hexchess = Hexchess.parse('1/1P1/5/7/9/11/11/11/11/5p5/11 w - 0 1')
+
+      expect(hexchess.isLegal(new San({ from: 'f10', to: 'f11' }))).toBe(false)
+      expect(hexchess.isLegal(new San({ from: 'f10', to: 'f11', promotion: 'q' }))).toBe(true)
+
+      hexchess.turn = 'b'
+
+      expect(hexchess.isLegal(new San({ from: 'f2', to: 'f1' }))).toBe(false)
+      expect(hexchess.isLegal(new San({ from: 'f2', to: 'f1', promotion: 'q' }))).toBe(true)
+    })
   })
 
   describe('isThreatened', () => {
@@ -377,78 +438,6 @@ describe('Hexchess', () => {
 //         assert_eq!(results[15], h!("h7"));
 //         assert_eq!(results[16], h!("i7"));
 //         assert_eq!(results[17], h!("k7"));
-//     }
-
-//     mod is_legal {
-//         use super::*;
-
-//         #[test]
-//         fn legal_move() {
-//             let hexchess = Hexchess::init();
-
-//             assert_eq!(hexchess.is_legal(&s!("g4g5")), true);
-//         }
-
-//         #[test]
-//         fn illegal_move() {
-//             let hexchess = Hexchess::init();
-
-//             assert_eq!(hexchess.is_legal(&s!("b1b4")), false);
-//         }
-
-//         #[test]
-//         fn illegal_move_out_of_turn() {
-//             let mut hexchess = Hexchess::init();
-
-//             assert_eq!(hexchess.is_legal(&s!("g7g6")), false);
-
-//             hexchess.turn = Color::Black;
-
-//             assert_eq!(hexchess.is_legal(&s!("g7g6")), true);
-//         }
-
-//         #[test]
-//         fn white_cannot_promote_on_blacks_positions() {
-//             let hexchess = Hexchess::parse("1/3/5/7/p7p/R9R/11/11/11/11/rP7Pr w - 0 1").unwrap();
-
-//             let b1b2 = San { from: h!("b1"), to: h!("b2"), promotion: None };
-//             let b1b2q = San { from: h!("b1"), to: h!("b2"), promotion: Some(PromotionPiece::Queen) };
-//             assert_eq!(hexchess.is_legal(&b1b2), true);
-//             assert_eq!(hexchess.is_legal(&b1b2q), false);
-
-//             let k1l1 = San { from: h!("k1"), to: h!("l1"), promotion: None };
-//             let k1l1q = San { from: h!("k1"), to: h!("l1"), promotion: Some(PromotionPiece::Queen) };
-//             assert_eq!(hexchess.is_legal(&k1l1), true);
-//             assert_eq!(hexchess.is_legal(&k1l1q), false);
-//         }
-
-//         #[test]
-//         fn black_cannot_promote_on_whites_positions() {
-//             let hexchess = Hexchess::parse("1/3/5/7/p7p/R9R/11/11/11/11/rP7Pr b - 0 1").unwrap();
-
-//             let b7a6 = San { from: h!("b7"), to: h!("a6"), promotion: None };
-//             let b7a6q = San { from: h!("b7"), to: h!("a6"), promotion: Some(PromotionPiece::Queen) };
-//             assert_eq!(hexchess.is_legal(&b7a6), true);
-//             assert_eq!(hexchess.is_legal(&b7a6q), false);
-
-//             let k7l6 = San { from: h!("k7"), to: h!("l6"), promotion: None };
-//             let k7l6q = San { from: h!("k7"), to: h!("l6"), promotion: Some(PromotionPiece::Queen) };
-//             assert_eq!(hexchess.is_legal(&k7l6), true);
-//             assert_eq!(hexchess.is_legal(&k7l6q), false);
-//         }
-
-//         #[test]
-//         fn pawn_must_promote_on_final_rank() {
-//             let mut hexchess = Hexchess::parse("1/1P1/5/7/9/11/11/11/11/5p5/11 w - 0 1").unwrap();
-
-//             assert_eq!(hexchess.is_legal(&s!("f10f11")), false);
-//             assert_eq!(hexchess.is_legal(&s!("f10f11q")), true);
-
-//             hexchess.turn = Color::Black;
-
-//             assert_eq!(hexchess.is_legal(&s!("f2f1")), false);
-//             assert_eq!(hexchess.is_legal(&s!("f2f1q")), true);
-//         }
 //     }
 
 //     mod moves_from {
