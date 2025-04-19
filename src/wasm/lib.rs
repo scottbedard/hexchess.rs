@@ -67,6 +67,14 @@ pub fn init_hexchess() -> Hexchess {
     Hexchess::init()
 }
 
+/// Test if the board is in check.
+#[wasm_bindgen(js_name = isCheck)]
+pub fn is_check(hexchess: Hexchess) -> bool {
+    set_panic_hook();
+
+    hexchess.is_check()
+}
+
 /// Get legal moves from a position index.
 #[wasm_bindgen(js_name = movesFrom)]
 pub fn moves_from(hexchess: Hexchess, index: u8) -> Vec<San> {

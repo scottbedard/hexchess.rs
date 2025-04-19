@@ -1,6 +1,11 @@
 import { expect, test } from 'vitest'
 import { index } from '../dist'
-import { applyMove, initHexchess } from '../dist/wasm?init'
+
+import {
+  applyMove,
+  initHexchess,
+  isCheck
+} from '../dist/wasm?init'
 
 test('applyMove', () => {
   const hexchess = applyMove(initHexchess(), {
@@ -10,4 +15,10 @@ test('applyMove', () => {
   })
 
   expect(hexchess.board[index('g5')]).toBe('P')
+})
+
+test('isCheck', () => {
+  const hexchess = initHexchess()
+
+  expect(isCheck(hexchess)).toBe(false)
 })

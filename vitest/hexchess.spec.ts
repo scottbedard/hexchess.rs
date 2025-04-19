@@ -322,6 +322,26 @@ describe('Hexchess', () => {
     })
   })
 
+  describe('isCheck', () => {
+    test('no king', () => {
+      const hexchess = new Hexchess()
+
+      expect(hexchess.isCheck()).toBe(false)
+    })
+
+    test('not in check', () => {
+      const hexchess = Hexchess.init()
+
+      expect(hexchess.isCheck()).toBe(false)
+    })
+
+    test('in check', () => {
+      const hexchess = Hexchess.parse('K/3/5/7/9/5r5/11/11/11/11/11 w - 0 1')
+
+      expect(hexchess.isCheck()).toBe(true)
+    })
+  })
+
   describe('isThreatened', () => {
     test('unattacked position is not threatened', () => {
       const hexchess = Hexchess.parse('1/2K/5/7/9/11/11/11/11/11/11 w - 0 1')

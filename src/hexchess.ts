@@ -273,6 +273,25 @@ export class Hexchess implements HexchessStruct {
     return new Hexchess(initialPosition)
   }
 
+  /** test if the board is in check */
+  isCheck() {
+    const king = this.findKing(this.turn)
+
+    if (king === null) {
+      return false
+    }
+
+    for (const position of this.getColor(this.turn === 'b' ? 'w' : 'b')) {
+      for (const san of this.movesFromUnsafe(position)) {
+        if (san.to === king) {
+          return true
+        }
+      }
+    }
+
+    return false
+  }
+
   /** test if move is legal */
   isLegal(san: San | string): boolean {
     const { from, promotion, to } = typeof san === 'string' ? San.from(san) : san
