@@ -167,6 +167,13 @@ describe('Hexchess', () => {
     expect(clone).not.toBe(hexchess)
   })
 
+  test('findKing', () => {
+    const hexchess = Hexchess.init()
+
+    expect(hexchess.findKing('b')).toBe(index('g10'))
+    expect(hexchess.findKing('w')).toBe(index('g1'))
+  })
+
   test('get', () => {
     const hexchess = Hexchess.init()
 
@@ -371,14 +378,6 @@ describe('Hexchess', () => {
 //         assert_eq!(result[48], "i1f4");
 //         assert_eq!(result[49], "k1k2");
 //         assert_eq!(result[50], "k1k3");
-//     }
-
-//     #[test]
-//     fn find_kings_by_color() {
-//         let hexchess = Hexchess::init();
-
-//         assert_eq!(hexchess.find_king(Color::Black), Some(h!("g10")));
-//         assert_eq!(hexchess.find_king(Color::White), Some(h!("g1")));
 //     }
 
 //     #[test]
