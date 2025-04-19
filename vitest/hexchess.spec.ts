@@ -1,12 +1,142 @@
 import { describe, expect, test } from 'vitest'
 import {
   Hexchess,
+  index,
   initialPosition,
   positions,
   San
 } from '../src'
 
 describe('Hexchess', () => {
+  describe('applyMove', () => {
+    test('sets to and from positions', () => {
+      const hexchess = Hexchess.init()
+
+      hexchess.applyMove('g4g5')
+      hexchess.applyMove('e7e6')
+      expect(hexchess.get('g5')).toBe('P')
+      expect(hexchess.get('g4')).toBe(null)
+      expect(hexchess.get('e6')).toBe('p')
+      expect(hexchess.get('e7')).toBe(null)
+    })
+
+    test('clears en passant capture white', () => {
+      const hexchess = Hexchess.parse('b/qbk/n1b1n/r5r/ppppp1ppp/5P5/6p4/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w g6 0 2')
+
+      hexchess.applyMove('f6g6')
+      expect(hexchess.get('g5')).toBe(null)
+    })
+
+    test('clears en passant capture black', () => {
+      const hexchess = Hexchess.parse('b/qbk/n1b1n/r5r/pppp1pppp/5pP4/4PP5/11/3P1B1P3/2P2B2P2/1PRNQBKNRP1 b g5 0 2')
+
+      hexchess.applyMove('f6g5')
+      expect(hexchess.get('g6')).toBe(null)
+    })
+
+    test('only pawns capture en passant', () => {
+      const hexchess = Hexchess.parse('b/qbk/n1b1n/r5r/ppppp1ppp/11/5Pp4/4P1PB3/3P1B1P3/2P5P2/1PRNQBKNRP1 w g6 0 2')
+
+      hexchess.applyMove('h4g6') // <- bishop to en passant
+      expect(hexchess.get('g5')).toBe('p')
+    })
+
+    test('alternate color back and forth', () => {
+      const hexchess = Hexchess.init()
+      expect(hexchess.turn).toBe('w')
+
+      hexchess.applyMove('g4g5')
+      expect(hexchess.turn).toBe('b')
+
+      hexchess.applyMove('e7e6')
+      expect(hexchess.turn).toBe('w')
+
+      hexchess.applyMove('f5f6')
+      expect(hexchess.turn).toBe('b')
+    })
+
+    test('sets and unsets en passant', () => {
+      const hexchess = Hexchess.init()
+
+      hexchess.applyMove('g4g6')
+      expect(hexchess.ep).toBe(index('g5'))
+
+      hexchess.applyMove('e7e5')
+      expect(hexchess.ep).toBe(index('e6'))
+
+      hexchess.applyMove('b1b2')
+      expect(hexchess.ep).toBe(null)
+    })
+
+    test('sets halfmove and fullmove', () => {
+      const hexchess = Hexchess.init()
+      expect(hexchess.halfmove).toBe(0)
+      expect(hexchess.fullmove).toBe(1)
+
+      hexchess.applyMove('e4e5')
+      expect(hexchess.halfmove).toBe(0)
+      expect(hexchess.fullmove).toBe(1)
+
+      hexchess.applyMove('f7f6')
+      expect(hexchess.halfmove).toBe(0)
+      expect(hexchess.fullmove).toBe(2)
+
+      hexchess.applyMove('f3c6')
+      expect(hexchess.halfmove).toBe(1)
+      expect(hexchess.fullmove).toBe(2)
+
+      hexchess.applyMove('i8h8')
+      expect(hexchess.halfmove).toBe(2)
+      expect(hexchess.fullmove).toBe(3)
+
+      hexchess.applyMove('c6e10')
+      expect(hexchess.halfmove).toBe(0)
+      expect(hexchess.fullmove).toBe(3)
+    })
+
+    test('promote white and black pieces', () => {
+      const hexchess = Hexchess.parse('1/3/1P1P1/7/1P5P1/11/11/11/11/2p1p1p1p2/11 w - 0 1')
+
+      hexchess.applyMove('c7c8r')
+      expect(hexchess.get('c8')).toBe('R')
+
+      hexchess.applyMove('c2c1r')
+      expect(hexchess.get('c1')).toBe('r')
+
+      hexchess.applyMove('e9e10b')
+      expect(hexchess.get('e10')).toBe('B')
+
+      hexchess.applyMove('e2e1b')
+      expect(hexchess.get('e1')).toBe('b')
+
+      hexchess.applyMove('g9g10q')
+      expect(hexchess.get('g10')).toBe('Q')
+
+      hexchess.applyMove('g2g1q')
+      expect(hexchess.get('g1')).toBe('q')
+
+      hexchess.applyMove('i7i8n')
+      expect(hexchess.get('i8')).toBe('N')
+
+      hexchess.applyMove('i2i1n')
+      expect(hexchess.get('i1')).toBe('n')
+    })
+
+    test('errors on illegal move', () => {
+      const hexchess = Hexchess.init()
+
+      expect(() => hexchess.applyMove('a4a5')).toThrow()
+    })
+  })
+
+  describe('applyUnsafe', () => {
+    test('errors on empty positions', () => {
+      const hexchess = Hexchess.init()
+
+      expect(() => hexchess.applyMoveUnsafe('a4a5')).toThrow()
+    })
+  })
+
   test('clone', () => {
     const hexchess = Hexchess.init()
     const clone = hexchess.clone()
@@ -167,147 +297,6 @@ describe('Hexchess', () => {
 
 // #[cfg(test)]
 // mod tests {
-//     use crate::{h, s};
-//     use super::*;
-
-//     mod apply_move {
-//         use super::*;
-
-//         #[test]
-//         fn sets_to_and_from_positions() {
-//             let mut hexchess = Hexchess::init();
-//             let _ = hexchess.apply_move(&s!("g4g5"));
-//             let _ = hexchess.apply_move(&s!("e7e6"));
-//             assert_eq!(hexchess.board[h!("g5")], Some(Piece::WhitePawn));
-//             assert_eq!(hexchess.board[h!("g4")], None);
-//             assert_eq!(hexchess.board[h!("e6")], Some(Piece::BlackPawn));
-//             assert_eq!(hexchess.board[h!("e7")], None);
-//         }
-
-//         #[test]
-//         fn clears_en_pasant_capture_white() {
-//             let mut hexchess = Hexchess::parse("b/qbk/n1b1n/r5r/ppppp1ppp/5P5/6p4/4P1P4/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w g6 0 2").unwrap();
-//             let _ = hexchess.apply_move(&s!("f6g6"));
-
-//             assert_eq!(hexchess.get("g5"), None);
-//         }
-
-//         #[test]
-//         fn clears_en_passant_capture_black() {
-//             let mut hexchess = Hexchess::parse("b/qbk/n1b1n/r5r/pppp1pppp/5pP4/4PP5/11/3P1B1P3/2P2B2P2/1PRNQBKNRP1 b g5 0 2").unwrap();
-//             let _ = hexchess.apply_move(&s!("f6g5"));
-
-//             assert_eq!(hexchess.get("g6"), None);
-//         }
-
-//         #[test]
-//         fn only_pawns_capture_en_passant() {
-//             let mut hexchess = Hexchess::parse("b/qbk/n1b1n/r5r/ppppp1ppp/11/5Pp4/4P1PB3/3P1B1P3/2P5P2/1PRNQBKNRP1 w g6 0 2").unwrap();
-//             let _ = hexchess.apply_move(&s!("h4g6")); // <- bishop to en passant
-
-//             assert_eq!(hexchess.get("g5"), Some(Piece::BlackPawn));
-//         }
-
-//         #[test]
-//         fn alternate_color_back_and_forth() {
-//             let mut hexchess = Hexchess::init();
-
-//             assert_eq!(hexchess.turn, Color::White);
-//             let _ = hexchess.apply_move(&s!("g4g5"));
-//             assert_eq!(hexchess.turn, Color::Black);
-//             let _ = hexchess.apply_move(&s!("e7e6"));
-//             assert_eq!(hexchess.turn, Color::White);
-//             let _ = hexchess.apply_move(&s!("f5f6"));
-//             assert_eq!(hexchess.turn, Color::Black);
-//         }
-
-//         #[test]
-//         fn sets_and_unsets_en_passant() {
-//             let mut hexchess = Hexchess::init();
-
-//             let _ = hexchess.apply_move(&s!("g4g6"));
-//             assert_eq!(hexchess.ep, Some(h!("g5")));
-
-//             let _ = hexchess.apply_move(&s!("e7e5"));
-//             assert_eq!(hexchess.ep, Some(h!("e6")));
-
-//             let _ = hexchess.apply_move(&s!("b1b2"));
-//             assert_eq!(hexchess.ep, None);
-//         }
-
-//         #[test]
-//         fn sets_halfmove_and_fullmove() {
-//             let mut hexchess = Hexchess::init();
-
-//             assert_eq!(hexchess.halfmove, 0);
-//             assert_eq!(hexchess.fullmove, 1);
-
-//             let _ = hexchess.apply_move(&s!("e4e5"));
-//             assert_eq!(hexchess.halfmove, 0);
-//             assert_eq!(hexchess.fullmove, 1);
-
-//             let _ = hexchess.apply_move(&s!("f7f6"));
-//             assert_eq!(hexchess.halfmove, 0);
-//             assert_eq!(hexchess.fullmove, 2);
-
-//             let _ = hexchess.apply_move(&s!("f3c6"));
-//             assert_eq!(hexchess.halfmove, 1);
-//             assert_eq!(hexchess.fullmove, 2);
-
-//             let _ = hexchess.apply_move(&s!("i8h8"));
-//             assert_eq!(hexchess.halfmove, 2);
-//             assert_eq!(hexchess.fullmove, 3);
-
-//             let _ = hexchess.apply_move(&s!("c6e10"));
-//             assert_eq!(hexchess.halfmove, 0);
-//             assert_eq!(hexchess.fullmove, 3);
-//         }
-
-//         // promote white pieces
-//         #[test]
-//         fn white_and_black_promotions() {
-//             let mut hexchess = Hexchess::parse("1/3/1P1P1/7/1P5P1/11/11/11/11/2p1p1p1p2/11 w - 0 1").unwrap();
-
-//             let _ = hexchess.apply_move(&s!("c7c8r"));
-//             assert_eq!(hexchess.board[h!("c8")], Some(Piece::WhiteRook));
-
-//             let _ = hexchess.apply_move(&s!("c2c1r"));
-//             assert_eq!(hexchess.board[h!("c1")], Some(Piece::BlackRook));
-
-//             let _ = hexchess.apply_move(&s!("e9e10b"));
-//             assert_eq!(hexchess.board[h!("e10")], Some(Piece::WhiteBishop));
-
-//             let _ = hexchess.apply_move(&s!("e2e1b"));
-//             assert_eq!(hexchess.board[h!("e1")], Some(Piece::BlackBishop));
-
-//             let _ = hexchess.apply_move(&s!("g9g10q"));
-//             assert_eq!(hexchess.board[h!("g10")], Some(Piece::WhiteQueen));
-
-//             let _ = hexchess.apply_move(&s!("g2g1q"));
-//             assert_eq!(hexchess.board[h!("g1")], Some(Piece::BlackQueen));
-
-//             let _ = hexchess.apply_move(&s!("i7i8n"));
-//             assert_eq!(hexchess.board[h!("i8")], Some(Piece::WhiteKnight));
-
-//             let _ = hexchess.apply_move(&s!("i2i1n"));
-//             assert_eq!(hexchess.board[h!("i1")], Some(Piece::BlackKnight));
-//         }
-
-//         #[test]
-//         fn errors_on_illegal_move() {
-//             let mut hexchess = Hexchess::init();
-
-//             assert_eq!(hexchess.apply_move(&s!("a4a5")).is_err(), true);
-//         }
-
-//         #[test]
-//         #[should_panic]
-//         fn apply_move_unsafe_panics_on_empty_positions() {
-//             let mut hexchess = Hexchess::init();
-
-//             hexchess.apply_move_unsafe(&s!("a4a5"));
-//         }
-//     }
 
 //     mod apply_sequence {
 //         use super::*;

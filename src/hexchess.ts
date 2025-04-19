@@ -14,7 +14,7 @@ import {
 } from './utils'
 
 import { San } from './san'
-import { initialPosition, positions } from './constants'
+import { initialPosition } from './constants'
 import { kingMovesUnsafe } from './pieces/king'
 import { knightMovesUnsafe } from './pieces/knight'
 import { pawnMovesUnsafe } from './pieces/pawn'
@@ -81,6 +81,17 @@ export class Hexchess implements HexchessStruct {
     this.fullmove = Math.max(1, parseInt(fullmove, 10))
   }
 
+  /** apply legal move */
+  applyMove(san: San | string) {
+    if (!this.isLegal(san)) {
+      error(`illegal move: ${san}`)
+    }
+
+    this.applyMoveUnsafe(san)
+
+    return this
+  }
+
   /** apply move, regardless of turn or legality */
   applyMoveUnsafe(san: San | string) {
     const { from, to, promotion } = typeof san === 'string' ? San.from(san) : san
@@ -119,7 +130,11 @@ export class Hexchess implements HexchessStruct {
 
     // clear captured en passant
     if (to === this.ep) {
-      const captured = piece === 'p' ? step(to, 0) : step(to, 6)
+      const captured = piece === 'p'
+        ? step(to, 0)
+        : piece === 'P'
+          ? step(to, 6)
+          : null
 
       if (typeof captured === 'number') {
         this.board[captured] = null
