@@ -7,6 +7,22 @@ import {
 } from '../src'
 
 describe('Hexchess', () => {
+  describe('apply', () => {
+    test('applying a sequence of moves', () => {
+      const hexchess = Hexchess.init().apply('g4g6 f7g6 f5f7 g6f6')
+
+      expect(hexchess.toString()).toBe('b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3')
+    })
+
+    test('apply sequence with invalid san', () => {
+      expect(() => Hexchess.init().apply('whoops')).toThrow()
+    })
+
+    test('apply sequence with illegal move', () => {
+      expect(() => Hexchess.init().apply('g4g5 a6a5')).toThrow()
+    })
+  })
+
   describe('applyMove', () => {
     test('sets to and from positions', () => {
       const hexchess = Hexchess.init()
@@ -128,27 +144,17 @@ describe('Hexchess', () => {
     })
   })
 
-  describe('apply', () => {
-    test('applying a sequence of moves', () => {
-      const hexchess = Hexchess.init().apply('g4g6 f7g6 f5f7 g6f6')
-
-      expect(hexchess.toString()).toBe('b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3')
-    })
-
-    test('apply sequence with invalid san', () => {
-      expect(() => Hexchess.init().apply('whoops')).toThrow()
-    })
-
-    test('apply sequence with illegal move', () => {
-      expect(() => Hexchess.init().apply('g4g5 a6a5')).toThrow()
-    })
-  })
-
-  describe('applyUnsafe', () => {
+  describe('applyMoveUnsafe', () => {
     test('errors on empty positions', () => {
       const hexchess = Hexchess.init()
 
       expect(() => hexchess.applyMoveUnsafe('a4a5')).toThrow()
+    })
+
+    test('illegal move succeeds', () => {
+      const hexchess = Hexchess.init().applyMoveUnsafe('b1b6') // <- illegal pawn move
+
+      expect(hexchess.toString()).toEqual('b/qbk/n1b1n/r5r/ppppppppp/1P9/5P5/4P1P4/3P1B1P3/2P2B2P2/2RNQBKNRP1 b - 0 1')
     })
   })
 
@@ -433,12 +439,6 @@ describe('Hexchess', () => {
 
       expect(moves.length).toBe(0)
     })
-  })
-
-  test('movesFromUnsafe', () => {
-    const hexchess = Hexchess.init()
-
-    expect(hexchess.movesFromUnsafe('a1')).toEqual([])
   })
 
   describe('parsing', () => {
