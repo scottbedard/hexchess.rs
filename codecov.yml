@@ -1,2 +1,3 @@
 ignore:
+  - "scripts"
   - "src/lib.rs"  # <- covered by vitest integration tests
