@@ -182,7 +182,23 @@ export class Hexchess implements HexchessStruct {
     return new Hexchess(initialPosition)
   }
 
-  // test if a position is threatened
+  /** test if move is legal */
+  isLegal(san: San | string): boolean {
+    const { from, promotion, to } = typeof san === 'string' ? San.from(san) : san
+    const piece = this.board[from]
+
+    if (!piece) {
+      return false
+    }
+
+    if (getColor(piece) !== this.turn) {
+      return false
+    }
+
+    return this.movesFrom(from).some(s => s.from === from && s.to === to && s.promotion === promotion)
+  }
+
+  // test if position is threatened
   isThreatened(position: Position | number): boolean {
     const p = typeof position === 'string' ? index(position) : position
 

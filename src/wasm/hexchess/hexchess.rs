@@ -307,7 +307,7 @@ impl Hexchess {
         Self::parse(INITIAL_POSITION).unwrap()
     }
 
-    /// test if a move is legal
+    /// test if move is legal
     pub fn is_legal(&self, san: &San) -> bool {
         let piece = match self.board[san.from as usize] {
             Some(piece) => piece,
@@ -323,7 +323,7 @@ impl Hexchess {
             .any(|move_san| move_san == san)
     }
 
-    /// test if a position is threatened
+    /// test if position is threatened
     pub fn is_threatened(&self, position: u8) -> bool {
         let threatened_piece = match self.board[position as usize] {
             Some(piece) => piece,
