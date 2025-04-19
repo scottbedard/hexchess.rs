@@ -1,4 +1,4 @@
-import { read } from './utils'
+import { dim, green, read } from './utils'
 import toml from 'smol-toml'
 
 function run() {
@@ -10,8 +10,8 @@ function run() {
 
   console.log('Checking versions...')
   console.log()
-  console.log(`Cargo:   ${cargoVersion}`)
   console.log(`NPM:     ${pkg.version}`)
+  console.log(`Cargo:   ${cargoVersion}`)
 
   if (cargoVersion !== pkg.version) {
     throw new Error(`Version mismatch [npm: ${pkg.version}, cargo: ${cargoVersion}]`)
@@ -33,11 +33,11 @@ function run() {
   }
 
   if (!releasing) {
-    console.log('Release: \x1b[2mNone')
+    console.log(`Release: ${dim('None')}`)
   }
 
   console.log()
-  console.log('\x1b[32mSuccess')
+  console.log(green('Success'))
 }
 
 run()

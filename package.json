@@ -34,10 +34,11 @@
   },
   "scripts": {
     "build": "jiti ./scripts/build.ts",
+    "check-versions": "jiti ./scripts/check-versions.ts",
     "lint:fix": "eslint --fix",
     "lint": "eslint",
-    "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "test": "vitest"
   },
   "type": "module",
   "types": "index.d.ts",

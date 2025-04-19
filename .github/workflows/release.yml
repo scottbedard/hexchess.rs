@@ -8,23 +8,6 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  versions:
-    name: Check versions
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - uses: pnpm/action-setup@v4
-      name: Install pnpm
-      with:
-        version: 9
-        run_install: false
-
-    - name: Install dependencies
-      run: pnpm install
-
   rust:
     name: Rust
 
@@ -68,10 +51,32 @@ jobs:
     - name: TypeScript tests
       run: pnpm test
 
+  
+
+  versions:
+    name: Check versions
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: pnpm/action-setup@v4
+      name: Install pnpm
+      with:
+        version: 9
+        run_install: false
+
+    - name: Install dependencies
+      run: pnpm install
+
+    - name: Check versions
+      run: pnpm check-version release=${{ github.ref_name }}
+
   publish:
     name: Publish
 
-    needs: [rust, node]
+    needs: [rust, node, versions]
 
     runs-on: ubuntu-latest
 
