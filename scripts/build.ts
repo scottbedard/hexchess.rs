@@ -1,4 +1,4 @@
-import { dim, green, read, resolve, write } from './utils'
+import { copy, dim, green, read, resolve, write } from './utils'
 import { execSync } from 'child_process'
 
 function run() {
@@ -12,6 +12,9 @@ function run() {
 
   // build npm package
   execSync('rollup --config rollup.config.ts --configPlugin @rollup/plugin-typescript')
+  copy('LICENSE', 'dist/LICENSE')
+  copy('package.json', 'dist/package.json')
+  copy('README.md', 'dist/README.md')
 
   // build wasm package
   execSync(`${resolve('node_modules/.bin/wasm-pack')} build --out-dir ${resolve('dist/wasm')} --out-name index`)
