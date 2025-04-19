@@ -6,9 +6,12 @@ import {
 } from '../src'
 
 import {
+  apply,
   applyMove,
+  applyMoveUnsafe,
   createHexchess,
   currentMoves,
+  findKing,
   get,
   initHexchess,
   isCheck,
@@ -22,6 +25,17 @@ import {
   stringifySan
 } from '../dist/wasm?init'
 
+test('apply', () => {
+  const hexchess = apply(initHexchess(), 'g4g6 f7g6 f5f7 g6f6')
+
+  expect(stringifyHexchess(hexchess)).toBe('b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3')
+})
+
+test('applyMoveUnsafe', () => {
+  const hexchess = applyMoveUnsafe(initHexchess(), parseSan('b1b6'))
+
+  expect(stringifyHexchess(hexchess)).toEqual('b/qbk/n1b1n/r5r/ppppppppp/1P9/5P5/4P1P4/3P1B1P3/2P2B2P2/2RNQBKNRP1 b - 0 1')
+})
 test('applyMove', () => {
   const hexchess = applyMove(initHexchess(), {
     from: index('g4'),
@@ -74,6 +88,20 @@ test('currentMoves', () => {
   ])
 })
 
+test('findKing', () => {
+  const hexchess = initHexchess()
+
+  expect(findKing(hexchess, 'b')).toEqual(index('g10'))
+  expect(findKing(hexchess, 'w')).toEqual(index('g1'))
+})
+
+test('get', () => {
+  const hexchess = initHexchess()
+
+  expect(get(hexchess, 'g4')).toEqual('P')
+  expect(get(hexchess, 'g5')).toEqual(null)
+})
+
 test('initHexchess', () => {
   const hexchess = initHexchess()
 
@@ -97,13 +125,6 @@ test('initHexchess', () => {
   })
 })
 
-test('get', () => {
-  const hexchess = initHexchess()
-
-  expect(get(hexchess, 'g4')).toEqual('P')
-  expect(get(hexchess, 'g5')).toEqual(null)
-})
-
 test('isCheck', () => {
   const hexchess = initHexchess()
 
@@ -125,7 +146,7 @@ test('isStalemate', () => {
 test('movesFrom', () => {
   const hexchess = initHexchess()
 
-  expect(movesFrom(hexchess, 'g4')).toEqual([
+  expect(movesFrom(hexchess, index('g4'))).toEqual([
     { from: 53, promotion: null, to: 42 }, // why are these from 0?
     { from: 53, promotion: null, to: 31 },
   ])
@@ -134,7 +155,7 @@ test('movesFrom', () => {
 test('movesFromUnsafe', () => {
   const hexchess = initHexchess()
 
-  expect(movesFromUnsafe(hexchess, 'a1')).toEqual([])
+  expect(movesFromUnsafe(hexchess, index('a1'))).toEqual([])
 })
 
 test('parseHexchess', () => {

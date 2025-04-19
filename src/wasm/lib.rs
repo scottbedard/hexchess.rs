@@ -2,11 +2,10 @@ pub mod constants;
 pub mod hexchess;
 pub mod macros;
 
-use constants::Piece;
-use hexchess::hexchess::{Hexchess};
+use constants::Color;
+use hexchess::hexchess::Hexchess;
 use hexchess::san::San;
 use hexchess::utils::index;
-use serde::Serialize;
 use wasm_bindgen::prelude::*;
 
 fn set_panic_hook() {
@@ -46,6 +45,14 @@ pub fn apply_move(hexchess: Hexchess, san: San) -> Hexchess {
     }
 }
 
+/// Apply `San` object to a `Hexchess` object, regardless of turn or legality.
+#[wasm_bindgen(js_name = applyMoveUnsafe)]
+pub fn apply_move_unsafe(hexchess: Hexchess, san: San) -> Hexchess {
+    set_panic_hook();
+
+    *hexchess.clone().apply_move_unsafe(&san)
+}
+
 /// Create a blank `Hexchess` object.
 #[wasm_bindgen(js_name = createHexchess)]
 pub fn create_hexchess() -> Hexchess {
@@ -68,6 +75,18 @@ pub fn init_hexchess() -> Hexchess {
     set_panic_hook();
 
     Hexchess::init()
+}
+
+/// Find the king of a given color.
+#[wasm_bindgen(js_name = findKing, skip_typescript)]
+pub fn find_king(hexchess: Hexchess, color: &str) -> JsValue {
+    set_panic_hook();
+
+    match color {
+        "w" => JsValue::from(hexchess.find_king(Color::White)),
+        "b" => JsValue::from(hexchess.find_king(Color::Black)),
+        _ => panic!("invalid color: {}", color),
+    }
 }
 
 /// Get piece at position
@@ -108,24 +127,18 @@ pub fn is_stalemate(hexchess: Hexchess) -> bool {
 
 /// Get legal moves from a position index.
 #[wasm_bindgen(js_name = movesFrom)]
-pub fn moves_from(hexchess: Hexchess, position: &str) -> Vec<San> {
+pub fn moves_from(hexchess: Hexchess, position: u8) -> Vec<San> {
     set_panic_hook();
 
-    match index(position) {
-        Ok(n) => hexchess.moves_from(n),
-        Err(_) => panic!("invalid position: {}", position),
-    }
+    hexchess.moves_from(position)
 }
 
 /// Get all possible moves, including ones that result in self-check.
 #[wasm_bindgen(js_name = movesFromUnsafe)]
-pub fn moves_from_unsafe(hexchess: Hexchess, position: &str) -> Vec<San> {
+pub fn moves_from_unsafe(hexchess: Hexchess, position: u8) -> Vec<San> {
     set_panic_hook();
 
-    match index(position) {
-        Ok(n) => hexchess.moves_from_unsafe(n),
-        Err(_) => panic!("invalid position: {}", position),
-    }
+    hexchess.moves_from_unsafe(position)
 }
 
 /// Parse `Hexchess` object from Forsyth–Edwards Notation.
