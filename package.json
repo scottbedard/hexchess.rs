@@ -3,6 +3,7 @@
   "bugs": {
     "url": "https://github.com/scottbedard/hexchess/issues"
   },
+  "description": "A Rust / TypeScript library for Gliński's hexagonal chess, and the brain of hexchess.club",
   "devDependencies": {
     "@eslint/js": "^9.24.0",
     "@rollup/plugin-typescript": "^12.1.2",
