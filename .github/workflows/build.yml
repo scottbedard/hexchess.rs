@@ -73,4 +73,4 @@ jobs:
       run: pnpm install
 
     - name: Check versions
-      run: pnpm check-version
+      run: pnpm check-versions

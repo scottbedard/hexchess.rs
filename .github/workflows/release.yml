@@ -71,7 +71,7 @@ jobs:
       run: pnpm install
 
     - name: Check versions
-      run: pnpm check-version release=${{ github.ref_name }}
+      run: pnpm check-versions release=${{ github.ref_name }}
 
   publish:
     name: Publish
