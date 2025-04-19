@@ -1384,8 +1384,8 @@ pub const HEXBOARD_GRAPH: [[Option<u8>; 12]; 91] = [
 ];
 
 /// Piece color
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
-#[tsify(into_wasm_abi, from_wasm_abi)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+#[wasm_bindgen(skip_typescript)]
 pub enum Color {
     #[serde(rename(deserialize = "b", serialize = "b"))]
     Black,
@@ -1394,8 +1394,8 @@ pub enum Color {
 }
 
 /// Piece symbols
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
-#[wasm_bindgen(js_name = Bar)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+#[wasm_bindgen(skip_typescript)]
 pub enum Piece {
     #[serde(rename(deserialize = "P", serialize = "P"))]
     WhitePawn,
@@ -1435,8 +1435,8 @@ pub enum Piece {
 }
 
 /// Promotion pieces
-#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
-#[tsify(into_wasm_abi, from_wasm_abi)]
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+#[wasm_bindgen(skip_typescript)]
 pub enum PromotionPiece {
     #[serde(rename(deserialize = "b", serialize = "b"))]
     Bishop,

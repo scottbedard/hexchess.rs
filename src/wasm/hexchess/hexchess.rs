@@ -29,7 +29,7 @@ use crate::hexchess::utils::{
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize, Tsify)]
 #[tsify(into_wasm_abi, from_wasm_abi, type_suffix = "Struct")]
 pub struct Hexchess {
-    #[tsify(type = "BoardArray")]
+    #[tsify(type = "Board")]
     #[serde_as(as = "[_; 91]")]
     pub board: [Option<Piece>; 91],
 
