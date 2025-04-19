@@ -307,6 +307,29 @@ impl Hexchess {
         Self::parse(INITIAL_POSITION).unwrap()
     }
 
+    /// test if the board is in check
+    pub fn is_check(&self) -> bool {
+        let king = match self.find_king(self.turn) {
+            Some(king) => king,
+            None => return false
+        };
+
+        let opposite_turn = match self.turn {
+            Color::Black => Color::White,
+            Color::White => Color::Black,
+        };
+
+        for n in self.get_color(opposite_turn) {
+            for san in self.moves_from_unsafe(n) {
+                if san.to == king {
+                    return true
+                }
+            }
+        }
+        
+        false
+    }
+
     /// test if move is legal
     pub fn is_legal(&self, san: &San) -> bool {
         let piece = match self.board[san.from as usize] {
@@ -851,6 +874,31 @@ mod tests {
         assert_eq!(results[15], h!("h7"));
         assert_eq!(results[16], h!("i7"));
         assert_eq!(results[17], h!("k7"));
+    }
+
+    mod is_check {
+        use super::*;
+
+        #[test]
+        fn no_king() {
+            let hexchess = Hexchess::new();
+
+            assert_eq!(hexchess.is_check(), false);
+        }
+
+        #[test]
+        fn not_in_check() {
+            let hexchess = Hexchess::parse("1/3/5/7/9/11/11/11/11/11/11 w - 0 1").unwrap();
+
+            assert_eq!(hexchess.is_check(), false);
+        }
+
+        #[test]
+        fn in_check() {
+            let hexchess = Hexchess::parse("K/3/5/7/9/5r5/11/11/11/11/11 w - 0 1").unwrap();
+
+            assert_eq!(hexchess.is_check(), true);
+        }
     }
 
     mod is_legal {
