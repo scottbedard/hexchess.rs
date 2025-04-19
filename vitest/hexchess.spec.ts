@@ -128,19 +128,19 @@ describe('Hexchess', () => {
     })
   })
 
-  describe('applySequence', () => {
+  describe('apply', () => {
     test('applying a sequence of moves', () => {
-      const hexchess = Hexchess.init().applySequence('g4g6 f7g6 f5f7 g6f6')
+      const hexchess = Hexchess.init().apply('g4g6 f7g6 f5f7 g6f6')
 
       expect(hexchess.toString()).toBe('b/qbk/n1b1n/r5r/pppp1pppp/5p5/11/4P6/3P1B1P3/2P2B2P2/1PRNQBKNRP1 w - 0 3')
     })
 
     test('apply sequence with invalid san', () => {
-      expect(() => Hexchess.init().applySequence('whoops')).toThrow()
+      expect(() => Hexchess.init().apply('whoops')).toThrow()
     })
 
     test('apply sequence with illegal move', () => {
-      expect(() => Hexchess.init().applySequence('g4g5 a6a5')).toThrow()
+      expect(() => Hexchess.init().apply('g4g5 a6a5')).toThrow()
     })
   })
 

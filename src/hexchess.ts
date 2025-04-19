@@ -99,6 +99,37 @@ export class Hexchess implements HexchessStruct {
     }
   }
 
+  /** apply a whitespace separated sequence of moves */
+  apply(sequence: string) {
+    const clone = this.clone()
+
+    sequence
+      .split(' ')
+      .map(str => str.trim())
+      .filter(str => str)
+      .forEach((part, i) => {
+        try {
+          const san = San.from(part)
+
+          try {
+            clone.applyMoveUnsafe(san)
+          } catch {
+            error(`illegal move at index ${i}: ${part}`)
+          }
+        } catch {
+          error(`invalid san at index ${i}: ${part}`)
+        }
+      })
+
+    this.board.splice(0, 91, ...clone.board)
+    this.turn = clone.turn
+    this.ep = clone.ep
+    this.fullmove = clone.fullmove
+    this.halfmove = clone.halfmove
+
+    return this
+  }
+
   /** apply legal move */
   applyMove(san: San | string) {
     if (!this.isLegal(san)) {
@@ -183,37 +214,6 @@ export class Hexchess implements HexchessStruct {
     } else {
       this.ep = null
     }
-
-    return this
-  }
-
-  /** apply a whitespace separated sequence of moves */
-  applySequence(sequence: string) {
-    const clone = this.clone()
-
-    sequence
-      .split(' ')
-      .map(str => str.trim())
-      .filter(str => str)
-      .forEach((part, i) => {
-        try {
-          const san = San.from(part)
-
-          try {
-            clone.applyMoveUnsafe(san)
-          } catch {
-            error(`illegal move at index ${i}: ${part}`)
-          }
-        } catch {
-          error(`invalid san at index ${i}: ${part}`)
-        }
-      })
-
-    this.board.splice(0, 91, ...clone.board)
-    this.turn = clone.turn
-    this.ep = clone.ep
-    this.fullmove = clone.fullmove
-    this.halfmove = clone.halfmove
 
     return this
   }
