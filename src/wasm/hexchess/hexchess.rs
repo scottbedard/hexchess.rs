@@ -330,6 +330,11 @@ impl Hexchess {
         false
     }
 
+    /// test if the board is in checkmate
+    pub fn is_checkmate(&self) -> bool {
+        self.is_check() && self.current_moves().len() == 0
+    }
+
     /// test if move is legal
     pub fn is_legal(&self, san: &San) -> bool {
         let piece = match self.board[san.from as usize] {
@@ -344,6 +349,11 @@ impl Hexchess {
         self.moves_from(san.from)
             .iter()
             .any(|move_san| move_san == san)
+    }
+
+    /// test if the board is in stalemate
+    pub fn is_stalemate(&self) -> bool {
+        !self.is_check() && self.current_moves().len() == 0
     }
 
     /// test if position is threatened
@@ -901,6 +911,17 @@ mod tests {
         }
     }
 
+    #[test]
+    fn is_checkmate() {
+        let mut hexchess = Hexchess::parse("K/3/5/3q3/2q6/11/11/11/11/11/11 b - 0 1").unwrap();
+
+        assert_eq!(hexchess.is_checkmate(), false);
+  
+        hexchess.apply_move(&s!("d7f9"));
+  
+        assert_eq!(hexchess.is_checkmate(), true);
+    }
+
     mod is_legal {
         use super::*;
 
@@ -971,6 +992,17 @@ mod tests {
             assert_eq!(hexchess.is_legal(&s!("f2f1")), false);
             assert_eq!(hexchess.is_legal(&s!("f2f1q")), true);
         }
+    }
+
+    #[test]
+    fn is_stalemate() {
+        let mut hexchess = Hexchess::parse("k/1P1/5/3K3/9/11/11/11/11/11/11 w - 0 1").unwrap();
+
+        assert_eq!(hexchess.is_stalemate(), false);
+  
+        hexchess.apply_move(&s!("f8f9"));
+  
+        assert_eq!(hexchess.is_stalemate(), true);
     }
 
     mod is_threatened {
